@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/omniaura/faircopy/compare/v1.0.3...v1.0.4) (2026-04-23)
+
+
+### Bug Fixes
+
+* use npm publish per-package for OIDC trusted publisher support ([78c0916](https://github.com/omniaura/faircopy/commit/78c0916f93bf9564db466976cafc62427df5e337))
+
 ## [1.0.3](https://github.com/omniaura/faircopy/compare/v1.0.2...v1.0.3) (2026-04-23)
 
 
