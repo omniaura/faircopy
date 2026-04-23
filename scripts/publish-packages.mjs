@@ -33,7 +33,7 @@ for (const dir of readdirSync('packages')) {
   writeFileSync(pkgPath, JSON.stringify(patched, null, 2) + '\n')
   try {
     console.log(`Publishing ${pkg.name}@${version}...`)
-    execSync('npm publish --provenance --access public', {
+    execSync('npm publish --access public', {
       cwd: join('packages', dir),
       stdio: 'inherit',
     })
