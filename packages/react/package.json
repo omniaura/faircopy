@@ -1,6 +1,6 @@
 {
   "name": "@faircopy/react",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "React/Vite adapter for faircopy — extracts prose from .tsx and .jsx files",
   "type": "module",
   "exports": {

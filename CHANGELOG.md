@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/omniaura/faircopy/compare/v1.0.6...v1.1.0) (2026-04-23)
+
+
+### Features
+
+* add @faircopy/react and @faircopy/solid adapters ([3e711a4](https://github.com/omniaura/faircopy/commit/3e711a48cfd6b64ea2dcab49954c06f59f13f42f))
+
 ## [1.0.6](https://github.com/omniaura/faircopy/compare/v1.0.5...v1.0.6) (2026-04-23)
 
 
