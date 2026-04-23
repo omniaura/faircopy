@@ -1,0 +1,39 @@
+{
+  "name": "faircopy",
+  "version": "0.1.0",
+  "description": "Copy linter for landing pages — catches em-dashes, weasel words, and rhetorical scaffolding",
+  "type": "module",
+  "bin": {
+    "faircopy": "./bin/faircopy.js"
+  },
+  "files": ["bin", "README.md"],
+  "scripts": {
+    "build": "echo 'no build — bin shim only'",
+    "typecheck": "echo 'no typecheck'",
+    "test": "echo 'no tests'",
+    "prepublishOnly": "echo 'ok'"
+  },
+  "dependencies": {
+    "@faircopy/cli": "workspace:*",
+    "@faircopy/core": "workspace:*",
+    "@faircopy/rules-default": "workspace:*"
+  },
+  "keywords": [
+    "linter",
+    "copy",
+    "marketing",
+    "astro",
+    "em-dash",
+    "prose"
+  ],
+  "license": "MIT",
+  "author": "omniaura",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omniaura/faircopy.git"
+  },
+  "homepage": "https://github.com/omniaura/faircopy",
+  "bugs": {
+    "url": "https://github.com/omniaura/faircopy/issues"
+  }
+}

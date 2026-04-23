@@ -109,6 +109,18 @@ importers:
         specifier: ^5.8.0
         version: 5.9.3
 
+  packages/faircopy:
+    dependencies:
+      '@faircopy/cli':
+        specifier: workspace:*
+        version: link:../cli
+      '@faircopy/core':
+        specifier: workspace:*
+        version: link:../core
+      '@faircopy/rules-default':
+        specifier: workspace:*
+        version: link:../rules-default
+
   packages/plugin: {}
 
   packages/rules-default:

@@ -10,35 +10,30 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    },
-    "./cli": {
-      "import": "./dist/cli.js"
     }
   },
-  "files": ["dist", "README.md"],
-  "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
-    "typecheck": "tsc --noEmit",
-    "test": "echo 'no tests yet'",
-    "prepublishOnly": "pnpm run build"
-  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "dependencies": {
-    "@faircopy/core": "workspace:*",
     "cac": "^6.7.14",
-    "picocolors": "^1.1.1"
+    "picocolors": "^1.1.1",
+    "@faircopy/core": "0.1.0"
   },
   "peerDependencies": {
-    "@faircopy/rules-default": "workspace:*"
+    "@faircopy/rules-default": "0.1.0"
   },
   "peerDependenciesMeta": {
-    "@faircopy/rules-default": { "optional": true }
+    "@faircopy/rules-default": {
+      "optional": true
+    }
   },
   "devDependencies": {
-    "@faircopy/rules-default": "workspace:*",
     "@types/node": "^22.0.0",
     "tsup": "^8.4.0",
-    "typescript": "^5.8.0"
+    "typescript": "^5.8.0",
+    "@faircopy/rules-default": "0.1.0"
   },
   "publishConfig": {
     "access": "public"
@@ -48,5 +43,11 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/omniaura/faircopy.git"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "echo 'no tests yet'"
   }
 }
