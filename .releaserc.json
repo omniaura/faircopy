@@ -35,7 +35,7 @@
     [
       "@semantic-release/exec",
       {
-        "publishCmd": "pnpm -r --filter='./packages/*' publish --provenance --access public --no-git-checks"
+        "publishCmd": "node scripts/publish-packages.mjs ${nextRelease.version}"
       }
     ],
     "@semantic-release/github",
