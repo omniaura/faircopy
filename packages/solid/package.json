@@ -1,0 +1,41 @@
+{
+  "name": "@faircopy/solid",
+  "version": "1.0.6",
+  "description": "SolidJS adapter for faircopy — extracts prose from .tsx and .jsx files",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "echo 'no tests'",
+    "prepublishOnly": "pnpm run build"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.26.0",
+    "@babel/types": "^7.26.0",
+    "@faircopy/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/omniaura/faircopy"
+  },
+  "license": "MIT",
+  "author": "omniaura"
+}
