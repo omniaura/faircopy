@@ -1,0 +1,15 @@
+{
+  "name": "faircopy",
+  "description": "Official faircopy plugin — copy linter for landing pages",
+  "plugins": [
+    {
+      "name": "faircopy",
+      "description": "Lint marketing copy for em-dashes, weasel words, and rhetorical scaffolding in Astro files. Includes a Claude Code stop hook and faircopy skill.",
+      "source": {
+        "source": "npm",
+        "package": "@faircopy/plugin"
+      },
+      "keywords": ["copy", "linter", "astro", "marketing"]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "@faircopy/plugin",
+  "version": "0.1.0",
+  "description": "Claude Code plugin for faircopy — stop hook + faircopy skill",
+  "type": "module",
+  "files": [
+    ".claude-plugin",
+    "skills",
+    "hooks",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "echo 'no build — static files only'",
+    "typecheck": "echo 'no typecheck — static files only'",
+    "test": "echo 'no tests'"
+  },
+  "publishConfig": { "access": "public" },
+  "license": "MIT",
+  "author": "omniaura",
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "agent-skills",
+    "copy-linter",
+    "faircopy"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omniaura/faircopy.git"
+  }
+}

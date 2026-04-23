@@ -1,0 +1,12 @@
+{
+  "name": "faircopy",
+  "description": "Copy linter for landing pages — catches em-dashes, weasel words, and rhetorical scaffolding in Astro files before they ship.",
+  "version": "0.1.0",
+  "author": {
+    "name": "omniaura",
+    "url": "https://github.com/omniaura/faircopy"
+  },
+  "homepage": "https://github.com/omniaura/faircopy",
+  "repository": "https://github.com/omniaura/faircopy",
+  "license": "MIT"
+}

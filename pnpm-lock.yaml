@@ -109,6 +109,8 @@ importers:
         specifier: ^5.8.0
         version: 5.9.3
 
+  packages/plugin: {}
+
   packages/rules-default:
     dependencies:
       '@faircopy/core':
