@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/omniaura/faircopy/compare/v1.0.2...v1.0.3) (2026-04-23)
+
+
+### Bug Fixes
+
+* remove NPM_TOKEN, use OIDC trusted publishing like solid-grab ([0e8bb8c](https://github.com/omniaura/faircopy/commit/0e8bb8c8bb6d74f2aa60d0098fd9fe83999f7248))
+
 ## [1.0.2](https://github.com/omniaura/faircopy/compare/v1.0.1...v1.0.2) (2026-04-23)
 
 
