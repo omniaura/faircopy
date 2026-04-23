@@ -14,7 +14,9 @@
     "prepublishOnly": "echo 'ok'"
   },
   "dependencies": {
+    "@faircopy/astro": "workspace:*",
     "@faircopy/cli": "workspace:*",
+    "@faircopy/config": "workspace:*",
     "@faircopy/core": "workspace:*",
     "@faircopy/rules-default": "workspace:*"
   },

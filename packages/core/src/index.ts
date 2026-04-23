@@ -11,7 +11,7 @@ export type {
   Suggestion,
 } from './types.js'
 
-export { loadConfig, ConfigError } from './config.js'
+export { loadConfig, ConfigError, defineConfig } from './config.js'
 export type { LoadConfigResult } from './config.js'
 
 export { resolveFiles } from './resolver.js'

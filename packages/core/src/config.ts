@@ -1,5 +1,7 @@
-import { createJiti } from 'jiti'
+import { access } from 'node:fs/promises'
 import path from 'node:path'
+import { pathToFileURL } from 'node:url'
+import { createJiti } from 'jiti'
 import type { FaircopyConfig } from './types.js'
 
 const CANDIDATES = [
@@ -17,17 +19,27 @@ export interface LoadConfigResult {
 export async function loadConfig(cwd: string = process.cwd()): Promise<LoadConfigResult> {
   for (const filename of CANDIDATES) {
     const configPath = path.resolve(cwd, filename)
+
+    // Skip silently if the file doesn't exist
     try {
-      const jiti = createJiti(import.meta.url, { moduleCache: false })
+      await access(configPath)
+    } catch {
+      continue
+    }
+
+    // File exists — resolve imports relative to the config file's location,
+    // not to faircopy's own package. This lets user configs import from their
+    // own node_modules (@faircopy/config, @faircopy/astro, etc.)
+    try {
+      const jiti = createJiti(pathToFileURL(configPath).href, { moduleCache: false })
       const mod = await jiti.import(configPath, { default: true }) as FaircopyConfig
       if (mod && typeof mod === 'object') {
         return { config: mod, configPath }
       }
+      throw new ConfigError(`${configPath} has no default export`)
     } catch (err) {
-      const code = (err as NodeJS.ErrnoException).code
-      if (code !== 'MODULE_NOT_FOUND' && code !== 'ERR_MODULE_NOT_FOUND') {
-        throw new ConfigError(`Failed to load ${configPath}:\n${(err as Error).message}`)
-      }
+      if (err instanceof ConfigError) throw err
+      throw new ConfigError(`Failed to load ${configPath}:\n${(err as Error).message}`)
     }
   }
 
@@ -36,6 +48,11 @@ export async function loadConfig(cwd: string = process.cwd()): Promise<LoadConfi
     `Expected one of: ${CANDIDATES.join(', ')}\n` +
     `Run \`faircopy init\` to scaffold one.`
   )
+}
+
+/** Identity function for TypeScript inference. Same as @faircopy/config's defineConfig. */
+export function defineConfig(config: FaircopyConfig): FaircopyConfig {
+  return config
 }
 
 export class ConfigError extends Error {
