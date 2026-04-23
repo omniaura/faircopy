@@ -1,6 +1,6 @@
 {
   "name": "@faircopy/rules-default",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Default ruleset for faircopy: no-em-dash, no-weasel-words, no-rhetorical-scaffolding",
   "type": "module",
   "exports": {

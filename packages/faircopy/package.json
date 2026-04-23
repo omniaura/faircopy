@@ -1,6 +1,6 @@
 {
   "name": "faircopy",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Copy linter for landing pages — catches em-dashes, weasel words, and rhetorical scaffolding",
   "type": "module",
   "bin": {

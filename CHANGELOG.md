@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/omniaura/faircopy/compare/v1.0.5...v1.0.6) (2026-04-23)
+
+
+### Bug Fixes
+
+* add repository.url to packages missing it for npm provenance ([029ffad](https://github.com/omniaura/faircopy/commit/029ffad970b43009e538645040bacb45f366e6fd))
+
 ## [1.0.5](https://github.com/omniaura/faircopy/compare/v1.0.4...v1.0.5) (2026-04-23)
 
 
