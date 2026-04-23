@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/omniaura/faircopy/compare/v1.1.0...v1.1.1) (2026-04-23)
+
+
+### Bug Fixes
+
+* trigger release to publish all packages via trusted publisher ([aa75154](https://github.com/omniaura/faircopy/commit/aa75154477fc4ef43ab3f470c1ecdefd74a50fe3))
+
 # [1.1.0](https://github.com/omniaura/faircopy/compare/v1.0.6...v1.1.0) (2026-04-23)
 
 
