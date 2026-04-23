@@ -1,6 +1,6 @@
 {
   "name": "@faircopy/core",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Core engine for faircopy — types, config loader, file resolver, rule runner",
   "type": "module",
   "exports": {

@@ -1,3 +1,11 @@
+## [1.0.5](https://github.com/omniaura/faircopy/compare/v1.0.4...v1.0.5) (2026-04-23)
+
+
+### Bug Fixes
+
+* upgrade npm to 11.5.1+ for OIDC trusted publishing support ([3826ef5](https://github.com/omniaura/faircopy/commit/3826ef53addbdc661baa32a98db48f950a4dad90))
+* use Node 24 which ships with npm 11 for OIDC trusted publishing ([5540d3a](https://github.com/omniaura/faircopy/commit/5540d3a4cfe7e08a7be71a25bce41b357ebf8a61))
+
 ## [1.0.4](https://github.com/omniaura/faircopy/compare/v1.0.3...v1.0.4) (2026-04-23)
 
 
