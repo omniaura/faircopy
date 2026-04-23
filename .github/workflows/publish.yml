@@ -1,34 +1,45 @@
-name: Publish
+name: Release
 
 on:
   push:
     branches: [main]
 
-permissions:
-  contents: write
-  id-token: write
-
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write      # create GitHub releases + push version commits
+      issues: write        # comment on referenced issues
+      pull-requests: write # comment on referenced PRs
+      id-token: write      # npm provenance
+
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # full history for semantic-release commit analysis
+
       - uses: pnpm/action-setup@v4
         with:
           version: 10
+
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          registry-url: https://registry.npmjs.org
+          node-version: 22
           cache: pnpm
-      - run: pnpm install
+          registry-url: https://registry.npmjs.org
+
+      - run: pnpm install --frozen-lockfile
+
       - run: pnpm build
-      - name: Release
+
+      - run: pnpm typecheck
+
+      - run: pnpm test
+
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bunx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          pnpm --filter @faircopy/core exec npx semantic-release
-          pnpm --filter @faircopy/cli exec npx semantic-release
