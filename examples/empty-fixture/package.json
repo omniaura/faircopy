@@ -1,0 +1,12 @@
+{
+  "name": "@faircopy-examples/empty-fixture",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "faircopy lint"
+  },
+  "devDependencies": {
+    "@faircopy/cli": "workspace:*"
+  }
+}

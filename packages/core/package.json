@@ -1,0 +1,38 @@
+{
+  "name": "@faircopy/core",
+  "version": "0.1.0",
+  "description": "Core engine for faircopy — types, config loader, file resolver, rule runner",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "echo 'no tests yet'",
+    "prepublishOnly": "pnpm run build"
+  },
+  "dependencies": {
+    "globby": "^14.0.0",
+    "jiti": "^2.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "author": "omniaura",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omniaura/faircopy.git"
+  }
+}
