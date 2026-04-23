@@ -44,13 +44,25 @@ export async function runLint(files: string[], options: LintOptions): Promise<vo
     ? files.map(f => path.resolve(cwd, f))
     : await resolveFiles(config, cwd)
 
-  // Rule resolution is wired in M1 when @faircopy/rules-default is available.
-  // For now, validated-but-unresolved rules are silently skipped.
+  // Load the default rule registry if @faircopy/rules-default is installed.
+  let defaultRegistry: Map<string, import('@faircopy/core').Rule> = new Map()
+  try {
+    const mod = await import('@faircopy/rules-default') as { ruleRegistry: Map<string, import('@faircopy/core').Rule> }
+    defaultRegistry = mod.ruleRegistry
+  } catch {
+    // rules-default not installed — rules configured by bare name will be skipped
+  }
+
   const resolvedRules: ResolvedRule[] = []
-  for (const [, ruleConfig] of Object.entries(config.rules)) {
-    const { severity } = parseSeverity(ruleConfig)
+  for (const [ruleId, ruleConfig] of Object.entries(config.rules)) {
+    const { severity, options: ruleOptions } = parseSeverity(ruleConfig)
     if (severity === 'off') continue
-    // TODO M1: look up rule by id from @faircopy/rules-default and push to resolvedRules
+    const rule = defaultRegistry.get(ruleId)
+    if (!rule) {
+      process.stderr.write(`warn: unknown rule "${ruleId}" — skipped\n`)
+      continue
+    }
+    resolvedRules.push({ rule, severity, options: ruleOptions })
   }
 
   const adapters = config.adapters ?? []

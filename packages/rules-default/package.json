@@ -1,0 +1,30 @@
+{
+  "name": "@faircopy/rules-default",
+  "version": "0.1.0",
+  "description": "Default ruleset for faircopy: no-em-dash, no-weasel-words, no-rhetorical-scaffolding",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "prepublishOnly": "pnpm run build"
+  },
+  "dependencies": {
+    "@faircopy/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.0"
+  },
+  "publishConfig": { "access": "public" },
+  "license": "MIT",
+  "author": "omniaura"
+}

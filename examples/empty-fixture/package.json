@@ -7,6 +7,9 @@
     "lint": "faircopy lint"
   },
   "devDependencies": {
-    "@faircopy/cli": "workspace:*"
+    "@faircopy/astro": "workspace:*",
+    "@faircopy/cli": "workspace:*",
+    "@faircopy/config": "workspace:*",
+    "@faircopy/rules-default": "workspace:*"
   }
 }

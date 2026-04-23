@@ -1,0 +1,29 @@
+{
+  "name": "@faircopy/config",
+  "version": "0.1.0",
+  "description": "defineConfig helper and type re-exports for faircopy",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "echo 'no tests'",
+    "prepublishOnly": "pnpm run build"
+  },
+  "dependencies": {
+    "@faircopy/core": "workspace:*"
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.0"
+  },
+  "publishConfig": { "access": "public" },
+  "license": "MIT",
+  "author": "omniaura"
+}

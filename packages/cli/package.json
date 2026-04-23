@@ -25,7 +25,14 @@
     "cac": "^6.7.14",
     "picocolors": "^1.1.1"
   },
+  "peerDependencies": {
+    "@faircopy/rules-default": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@faircopy/rules-default": { "optional": true }
+  },
   "devDependencies": {
+    "@faircopy/rules-default": "workspace:*",
     "@types/node": "^22.0.0",
     "tsup": "^8.4.0",
     "typescript": "^5.8.0"

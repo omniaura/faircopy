@@ -1,6 +1,12 @@
-import type { FaircopyConfig } from '@faircopy/core'
+import { defineConfig } from '@faircopy/config'
+import { astro } from '@faircopy/astro'
 
-export default {
+export default defineConfig({
   files: ['src/**/*.astro'],
-  rules: {},
-} satisfies FaircopyConfig
+  adapters: [astro()],
+  rules: {
+    'no-em-dash': 'error',
+    'no-weasel-words': 'error',
+    'no-rhetorical-scaffolding': 'error',
+  },
+})
