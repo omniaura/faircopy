@@ -126,9 +126,15 @@ importers:
 
   packages/faircopy:
     dependencies:
+      '@faircopy/astro':
+        specifier: workspace:*
+        version: link:../astro
       '@faircopy/cli':
         specifier: workspace:*
         version: link:../cli
+      '@faircopy/config':
+        specifier: workspace:*
+        version: link:../config
       '@faircopy/core':
         specifier: workspace:*
         version: link:../core
