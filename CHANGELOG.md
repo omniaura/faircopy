@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/omniaura/faircopy/compare/v1.0.1...v1.0.2) (2026-04-23)
+
+
+### Bug Fixes
+
+* add NPM_TOKEN auth to publish step ([2c8731a](https://github.com/omniaura/faircopy/commit/2c8731ab628914c1704e374ead47fe9d7bb377a5))
+
 ## [1.0.1](https://github.com/omniaura/faircopy/compare/v1.0.0...v1.0.1) (2026-04-23)
 
 
