@@ -23,7 +23,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "pnpm version ${nextRelease.version} --no-git-tag-version --workspace-concurrency=1"
+        "prepareCmd": "pnpm -r version ${nextRelease.version} --no-git-tag-version --workspace-concurrency=1"
       }
     ],
     [
