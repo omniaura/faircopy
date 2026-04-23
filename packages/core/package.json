@@ -1,6 +1,6 @@
 {
   "name": "@faircopy/core",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "description": "Core engine for faircopy — types, config loader, file resolver, rule runner",
   "type": "module",
   "exports": {
@@ -9,7 +9,10 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

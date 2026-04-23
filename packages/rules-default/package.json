@@ -1,6 +1,6 @@
 {
   "name": "@faircopy/rules-default",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "description": "Default ruleset for faircopy: no-em-dash, no-weasel-words, no-rhetorical-scaffolding",
   "type": "module",
   "exports": {
@@ -9,7 +9,10 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
@@ -24,7 +27,9 @@
     "tsup": "^8.4.0",
     "typescript": "^5.8.0"
   },
-  "publishConfig": { "access": "public" },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "author": "omniaura"
 }

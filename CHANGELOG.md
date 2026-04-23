@@ -1,3 +1,12 @@
+## [1.0.1](https://github.com/omniaura/faircopy/compare/v1.0.0...v1.0.1) (2026-04-23)
+
+
+### Bug Fixes
+
+* bump all workspace packages in release prepareCmd ([3c84a4b](https://github.com/omniaura/faircopy/commit/3c84a4b6fae4579aa3f06f726a8971fead20f9a9))
+* remove glob dep from bump script, use fs.readdirSync ([2a8dce7](https://github.com/omniaura/faircopy/commit/2a8dce7012b03fb9d8d91cde165292e2e4a8fce4))
+* use node script to bump workspace package versions for release ([ce574eb](https://github.com/omniaura/faircopy/commit/ce574ebd29cba8833672001735be65180a3cfcc1))
+
 # 1.0.0 (2026-04-23)
 
 

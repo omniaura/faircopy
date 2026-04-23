@@ -1,6 +1,6 @@
 {
   "name": "@faircopy/plugin",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "description": "Claude Code plugin for faircopy — stop hook + faircopy skill",
   "type": "module",
   "files": [
@@ -14,7 +14,9 @@
     "typecheck": "echo 'no typecheck — static files only'",
     "test": "echo 'no tests'"
   },
-  "publishConfig": { "access": "public" },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "author": "omniaura",
   "keywords": [

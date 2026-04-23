@@ -1,6 +1,6 @@
 {
   "name": "@faircopy/cli",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "description": "CLI for faircopy — faircopy lint, fix, explain",
   "type": "module",
   "bin": {
@@ -15,7 +15,10 @@
       "import": "./dist/cli.js"
     }
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -32,7 +35,9 @@
     "@faircopy/rules-default": "workspace:*"
   },
   "peerDependenciesMeta": {
-    "@faircopy/rules-default": { "optional": true }
+    "@faircopy/rules-default": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@faircopy/rules-default": "workspace:*",
