@@ -28,8 +28,6 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      - uses: oven-sh/setup-bun@v2
-
       - run: pnpm install --frozen-lockfile
 
       - run: pnpm build
@@ -39,6 +37,6 @@ jobs:
       - run: pnpm test
 
       # Auth via OIDC trusted publishing — no NPM_TOKEN needed
-      - run: bunx semantic-release
+      - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
