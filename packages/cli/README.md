@@ -22,7 +22,7 @@ faircopy --version
 | Flag | Default | Description |
 |---|---|---|
 | `--config <path>` | auto-detect | Explicit config file |
-| `--format <name>` | `pretty` | `pretty` / `json` / `github` / `compact` |
+| `--format <name>` | `pretty` | `pretty` / `json` / `github` / `compact` / `agent-compact` |
 | `--quiet` | false | Suppress warnings, only show errors |
 | `--max-warnings <n>` | unset | Exit 1 if warnings exceed n |
 | `--no-color` | auto | Disable ANSI colors |
@@ -42,3 +42,5 @@ faircopy --version
 **`json`** — JSON array of diagnostic objects
 
 **`compact`** — `path:line:col severity [ruleId] message`, one per line
+
+**`agent-compact`** — grouped, token-efficient output for coding agents. It includes line/column ranges, messages, help text, and normalized span snippets by default.

@@ -7,6 +7,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./reporting": {
+      "types": "./dist/reporting.d.ts",
+      "import": "./dist/reporting.js"
     }
   },
   "files": [

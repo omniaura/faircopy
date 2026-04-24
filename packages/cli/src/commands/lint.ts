@@ -6,6 +6,8 @@ import {
   lintFile,
   parseSeverity,
   ConfigError,
+  formatAgentCompact,
+  offsetToLineCol,
 } from '@faircopy/core'
 import type { Diagnostic, ResolvedRule } from '@faircopy/core'
 import { formatPretty } from '../reporters/pretty.js'
@@ -91,6 +93,8 @@ export async function runLint(files: string[], options: LintOptions): Promise<vo
         process.stdout.write(`${filePath}:${line}:${col} ${d.severity} [${d.ruleId}] ${d.message}\n`)
       }
     }
+  } else if (fmt === 'agent-compact') {
+    process.stdout.write(formatAgentCompact(results, { ...config.output?.agentCompact, includeFile: true }) + '\n')
   } else {
     process.stdout.write(formatPretty(results, elapsed) + '\n')
   }
@@ -108,10 +112,4 @@ export async function runLint(files: string[], options: LintOptions): Promise<vo
   if (errorCount > 0 || (maxWarnings !== undefined && warnCount > maxWarnings)) {
     process.exit(1)
   }
-}
-
-function offsetToLineCol(source: string, offset: number): { line: number; col: number } {
-  const before = source.slice(0, offset)
-  const linesBefore = before.split('\n')
-  return { line: linesBefore.length, col: (linesBefore.at(-1) ?? '').length + 1 }
 }

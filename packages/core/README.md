@@ -52,3 +52,28 @@ interface ExtractedText { text, sourceMap, meta? }
 ```
 
 See [types.ts](src/types.ts) for the full schema.
+
+## Agent Output
+
+`@faircopy/core/reporting` exposes reusable formatters for CLI, docs, and integrations:
+
+```ts
+import { formatAgentCompact, buildAgentJsonPayload } from '@faircopy/core/reporting'
+```
+
+`formatAgentCompact()` prints grouped diagnostics for coding agents. Snippets are enabled by default, character byte ranges are disabled by default, and both can be configured globally or per rule through `output.agentCompact`.
+
+```ts
+export default defineConfig({
+  output: {
+    agentCompact: {
+      snippets: 'all',
+      snippetChars: 140,
+      chars: false,
+      rules: {
+        'no-em-dash': { snippets: 'first' },
+      },
+    },
+  },
+})
+```
