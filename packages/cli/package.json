@@ -32,15 +32,20 @@
     "picocolors": "^1.1.1"
   },
   "peerDependencies": {
-    "@faircopy/rules-default": "workspace:*"
+    "@faircopy/rules-default": "workspace:*",
+    "@faircopy/rules-nlp": "workspace:*"
   },
   "peerDependenciesMeta": {
     "@faircopy/rules-default": {
+      "optional": true
+    },
+    "@faircopy/rules-nlp": {
       "optional": true
     }
   },
   "devDependencies": {
     "@faircopy/rules-default": "workspace:*",
+    "@faircopy/rules-nlp": "workspace:*",
     "@types/node": "^22.0.0",
     "tsup": "^8.4.0",
     "typescript": "^5.8.0"

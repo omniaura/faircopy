@@ -10,7 +10,7 @@ export default defineConfig([
     platform: 'node',
     target: 'node20',
     banner: { js: '#!/usr/bin/env node' },
-    external: ['@faircopy/core'],
+    external: ['@faircopy/core', '@faircopy/rules-default'],
     noExternal: ['cac', 'picocolors'],
   },
   {
@@ -20,6 +20,6 @@ export default defineConfig([
     sourcemap: true,
     platform: 'node',
     target: 'node20',
-    external: ['@faircopy/core'],
+    external: ['@faircopy/core', '@faircopy/rules-default'],
   },
 ])

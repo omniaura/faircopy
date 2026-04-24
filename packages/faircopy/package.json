@@ -21,7 +21,8 @@
     "@faircopy/cli": "workspace:*",
     "@faircopy/config": "workspace:*",
     "@faircopy/core": "workspace:*",
-    "@faircopy/rules-default": "workspace:*"
+    "@faircopy/rules-default": "workspace:*",
+    "@faircopy/rules-nlp": "workspace:*"
   },
   "keywords": [
     "linter",
