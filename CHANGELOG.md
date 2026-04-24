@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/omniaura/faircopy/compare/v1.1.1...v1.2.0) (2026-04-24)
+
+
+### Features
+
+* add agent compact reporting ([#3](https://github.com/omniaura/faircopy/issues/3)) ([688fc25](https://github.com/omniaura/faircopy/commit/688fc25e782e185785e9efd5faa6c1f9c8f18bdf))
+
 ## [1.1.1](https://github.com/omniaura/faircopy/compare/v1.1.0...v1.1.1) (2026-04-23)
 
 
