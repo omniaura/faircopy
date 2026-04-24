@@ -11,11 +11,39 @@ export interface FaircopyConfig {
   noGitignore?: boolean
   /** Maximum concurrent file processing. Defaults to os.cpus().length. */
   concurrency?: number
+  /** Output formatter defaults. CLI flags may override the selected format. */
+  output?: FaircopyOutputConfig
 }
 
 export type RuleConfig =
   | Severity
   | [Severity, Record<string, unknown>]
+
+export interface FaircopyOutputConfig {
+  agentCompact?: AgentCompactConfig
+}
+
+export interface AgentCompactConfig {
+  /**
+   * Controls diagnostic snippets in agent-compact output.
+   * `all` is most useful for grep/edit loops; `first` is leaner for repeated hits.
+   */
+  snippets?: AgentCompactSnippetMode
+  /** Include byte-offset character ranges. Default false. */
+  chars?: boolean
+  /** Maximum normalized snippet length. Default 140. */
+  snippetChars?: number
+  /** Per-rule overrides keyed by rule id. */
+  rules?: Record<string, AgentCompactRuleConfig>
+}
+
+export type AgentCompactSnippetMode = 'none' | 'first' | 'all'
+
+export interface AgentCompactRuleConfig {
+  snippets?: AgentCompactSnippetMode
+  chars?: boolean
+  snippetChars?: number
+}
 
 export type Severity = 'off' | 'warn' | 'error'
 
