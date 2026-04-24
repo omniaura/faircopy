@@ -9,6 +9,7 @@ import {
 } from '@faircopy/core'
 import type { Diagnostic, ResolvedRule } from '@faircopy/core'
 import { formatPretty } from '../reporters/pretty.js'
+import { findRuleInRegistries, loadRuleRegistries } from '../rule-loader.js'
 
 export interface LintOptions {
   config?: string
@@ -44,20 +45,13 @@ export async function runLint(files: string[], options: LintOptions): Promise<vo
     ? files.map(f => path.resolve(cwd, f))
     : await resolveFiles(config, cwd)
 
-  // Load the default rule registry if @faircopy/rules-default is installed.
-  let defaultRegistry: Map<string, import('@faircopy/core').Rule> = new Map()
-  try {
-    const mod = await import('@faircopy/rules-default') as { ruleRegistry: Map<string, import('@faircopy/core').Rule> }
-    defaultRegistry = mod.ruleRegistry
-  } catch {
-    // rules-default not installed — rules configured by bare name will be skipped
-  }
+  const registries = await loadRuleRegistries(Object.keys(config.rules))
 
   const resolvedRules: ResolvedRule[] = []
   for (const [ruleId, ruleConfig] of Object.entries(config.rules)) {
     const { severity, options: ruleOptions } = parseSeverity(ruleConfig)
     if (severity === 'off') continue
-    const rule = defaultRegistry.get(ruleId)
+    const rule = findRuleInRegistries(ruleId, registries)
     if (!rule) {
       process.stderr.write(`warn: unknown rule "${ruleId}" — skipped\n`)
       continue

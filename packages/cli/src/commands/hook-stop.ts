@@ -9,6 +9,7 @@ import {
 } from '@faircopy/core'
 import type { Diagnostic, ResolvedRule } from '@faircopy/core'
 import { formatPretty } from '../reporters/pretty.js'
+import { findRuleInRegistries, loadRuleRegistries } from '../rule-loader.js'
 
 interface StopHookInput {
   session_id?: string
@@ -75,19 +76,13 @@ export async function runHookStop(): Promise<void> {
   }
 
   // Load rules
-  let defaultRegistry: Map<string, import('@faircopy/core').Rule> = new Map()
-  try {
-    const mod = await import('@faircopy/rules-default') as { ruleRegistry: Map<string, import('@faircopy/core').Rule> }
-    defaultRegistry = mod.ruleRegistry
-  } catch {
-    process.exit(0) // No rules installed — nothing to enforce
-  }
+  const registries = await loadRuleRegistries(Object.keys(config.rules))
 
   const resolvedRules: ResolvedRule[] = []
   for (const [ruleId, ruleConfig] of Object.entries(config.rules)) {
     const { severity, options } = parseSeverity(ruleConfig)
     if (severity === 'off') continue
-    const rule = defaultRegistry.get(ruleId)
+    const rule = findRuleInRegistries(ruleId, registries)
     if (rule) resolvedRules.push({ rule, severity, options })
   }
 
