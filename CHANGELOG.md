@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/omniaura/faircopy/compare/v1.2.1...v1.3.0) (2026-04-27)
+
+
+### Features
+
+* add nlp copy rules ([#6](https://github.com/omniaura/faircopy/issues/6)) ([90fb076](https://github.com/omniaura/faircopy/commit/90fb076c98fe8ba412cbfe0bfa4851e4311c9257))
+
 ## [1.2.1](https://github.com/omniaura/faircopy/compare/v1.2.0...v1.2.1) (2026-04-27)
 
 
