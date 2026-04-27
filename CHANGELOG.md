@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/omniaura/faircopy/compare/v1.2.0...v1.2.1) (2026-04-27)
+
+
+### Bug Fixes
+
+* trigger release ([52067de](https://github.com/omniaura/faircopy/commit/52067dee0d155fd76147208ce696a24f45371bc2))
+
 # [1.2.0](https://github.com/omniaura/faircopy/compare/v1.1.1...v1.2.0) (2026-04-24)
 
 

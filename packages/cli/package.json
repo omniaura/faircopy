@@ -1,6 +1,6 @@
 {
   "name": "@faircopy/cli",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "CLI for faircopy — faircopy lint, fix, explain",
   "type": "module",
   "bin": {
