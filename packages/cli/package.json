@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@faircopy/core": "workspace:*",
-    "cac": "^6.7.14",
+    "cac": "^7.0.0",
     "picocolors": "^1.1.1"
   },
   "peerDependencies": {
@@ -46,9 +46,9 @@
   "devDependencies": {
     "@faircopy/rules-default": "workspace:*",
     "@faircopy/rules-nlp": "workspace:*",
-    "@types/node": "^22.0.0",
-    "tsup": "^8.4.0",
-    "typescript": "^5.8.0"
+    "@types/node": "^25.6.0",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3"
   },
   "publishConfig": {
     "access": "public"
