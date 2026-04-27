@@ -12,7 +12,7 @@ import {
 } from '@faircopy/core'
 import type { Diagnostic, ResolvedRule } from '@faircopy/core'
 import { formatPretty } from '../reporters/pretty.js'
-import { findRuleInRegistries, loadRuleRegistries } from '../rule-loader.js'
+import { loadRuleRegistries, resolveRuleInRegistries } from '../rule-loader.js'
 
 export interface LintOptions {
   config?: string
@@ -49,18 +49,24 @@ export async function runLint(files: string[], options: LintOptions): Promise<vo
     ? files.map(f => path.resolve(cwd, f))
     : await resolveFiles(config, cwd)
 
-  const registries = await loadRuleRegistries(Object.keys(config.rules))
+  const registries = await loadRuleRegistries(Object.keys(config.rules), config.rulesets)
 
   const resolvedRules: ResolvedRule[] = []
   for (const [ruleId, ruleConfig] of Object.entries(config.rules)) {
     const { severity, options: ruleOptions } = parseSeverity(ruleConfig)
     if (severity === 'off') continue
-    const rule = findRuleInRegistries(ruleId, registries)
-    if (!rule) {
+    const result = resolveRuleInRegistries(ruleId, registries)
+    if (result.status === 'not-found') {
       process.stderr.write(`warn: unknown rule "${ruleId}" — skipped\n`)
       continue
     }
-    resolvedRules.push({ rule, severity, options: ruleOptions })
+    if (result.status === 'ambiguous') {
+      process.stderr.write(
+        `warn: ambiguous rule "${ruleId}" found in ${result.packageNames.join(', ')} — use a package-qualified rule ID\n`
+      )
+      continue
+    }
+    resolvedRules.push({ rule: result.rule, severity, options: ruleOptions })
   }
 
   const adapters = config.adapters ?? []

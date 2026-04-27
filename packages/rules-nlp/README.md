@@ -6,16 +6,20 @@ Optional NLP-powered ruleset for faircopy using `compromise`.
 npm i -D @faircopy/rules-nlp
 ```
 
-Configure rules with the package-qualified rule ID:
+Load the ruleset once, then configure rules with bare rule IDs:
 
 ```ts
+rulesets: ['@faircopy/rules-nlp'],
 rules: {
-  '@faircopy/rules-nlp/no-passive-voice': 'warn',
-  '@faircopy/rules-nlp/no-weak-modals': 'warn',
-  '@faircopy/rules-nlp/no-stacked-adjectives': 'warn',
-  '@faircopy/rules-nlp/no-nominalized-phrases': 'warn',
+  'no-filter-words': 'warn',
+  'no-passive-voice': 'warn',
+  'no-weak-modals': 'warn',
+  'no-stacked-adjectives': 'warn',
+  'no-nominalized-phrases': 'warn',
 }
 ```
+
+Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and are required if another loaded ruleset exposes the same bare rule name.
 
 ## Rules
 

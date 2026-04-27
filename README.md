@@ -70,7 +70,22 @@ Install the plugin to get a stop hook (blocks the turn if lint errors are found)
 | `no-weasel-words` | `error` | Ban `actually`, `truly`, `really`, `literally` |
 | `no-rhetorical-scaffolding` | `error` | Ban `X is Y, not Z` and `Without X / With X` patterns |
 
-Optional NLP rules live in `@faircopy/rules-nlp` and are configured with package-qualified IDs:
+Optional NLP rules live in `@faircopy/rules-nlp`. Load the ruleset once to configure its rules with bare IDs:
+
+```ts
+export default defineConfig({
+  rulesets: ['@faircopy/rules-nlp'],
+  rules: {
+    'no-filter-words': 'warn',
+    'no-passive-voice': 'warn',
+    'no-weak-modals': 'warn',
+    'no-stacked-adjectives': 'warn',
+    'no-nominalized-phrases': 'warn',
+  },
+})
+```
+
+Use a package-qualified ID if two loaded rulesets expose the same bare rule name.
 
 | Rule | Description |
 |---|---|
