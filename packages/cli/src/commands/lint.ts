@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
+import { performance } from 'node:perf_hooks'
 import {
   loadConfig,
   resolveFiles,
@@ -41,6 +42,7 @@ export async function runLint(files: string[], options: LintOptions): Promise<vo
     const msg = err instanceof ConfigError ? err.message : (err as Error).message
     process.stderr.write(`error: ${msg}\n`)
     process.exit(2)
+    return
   }
 
   const filePaths = files.length > 0
