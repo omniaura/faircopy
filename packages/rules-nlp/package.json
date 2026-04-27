@@ -1,6 +1,6 @@
 {
   "name": "@faircopy/rules-nlp",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Optional NLP-powered ruleset for faircopy using compromise",
   "type": "module",
   "exports": {

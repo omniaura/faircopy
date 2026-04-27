@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/omniaura/faircopy/compare/v1.3.0...v1.4.0) (2026-04-27)
+
+
+### Features
+
+* Add optional NLP ruleset with bare rule IDs ([#8](https://github.com/omniaura/faircopy/issues/8)) ([ff249ca](https://github.com/omniaura/faircopy/commit/ff249ca9483aacece3d3b443037cdf9d1b994884))
+
 # [1.3.0](https://github.com/omniaura/faircopy/compare/v1.2.1...v1.3.0) (2026-04-27)
 
 
