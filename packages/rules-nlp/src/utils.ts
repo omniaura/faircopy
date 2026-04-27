@@ -1,4 +1,5 @@
 import nlp from 'compromise'
+import type { Diagnostic } from '@faircopy/core'
 import type { DocView, JsonOffsetEntry, JsonOffsetTerm, MatchView } from './types.js'
 
 export interface MatchOccurrence {
@@ -28,6 +29,14 @@ export function getMatchOccurrences(text: string, matches: MatchView): MatchOccu
       end: start + length,
     }]
   })
+}
+
+export function getOccurrenceRange(sourceMap: number[], occurrence: MatchOccurrence): Diagnostic['range'] | null {
+  const start = sourceMap[occurrence.start]
+  const end = sourceMap[occurrence.end - 1]
+  if (start === undefined || end === undefined) return null
+
+  return { start, end: end + 1 }
 }
 
 function sumTermLengths(terms: JsonOffsetTerm[] | undefined): number | undefined {

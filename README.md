@@ -70,6 +70,16 @@ Install the plugin to get a stop hook (blocks the turn if lint errors are found)
 | `no-weasel-words` | `error` | Ban `actually`, `truly`, `really`, `literally` |
 | `no-rhetorical-scaffolding` | `error` | Ban `X is Y, not Z` and `Without X / With X` patterns |
 
+Optional NLP rules live in `@faircopy/rules-nlp` and are configured with package-qualified IDs:
+
+| Rule | Description |
+|---|---|
+| `@faircopy/rules-nlp/no-filter-words` | Ban filter phrases like `I think` and `it seems` |
+| `@faircopy/rules-nlp/no-passive-voice` | Flag likely passive-voice constructions |
+| `@faircopy/rules-nlp/no-weak-modals` | Flag hedged modal claims like `can help` and `might improve` |
+| `@faircopy/rules-nlp/no-stacked-adjectives` | Flag noun phrases with multiple adjectives before the noun |
+| `@faircopy/rules-nlp/no-nominalized-phrases` | Flag nominalized `X of Y` phrases like `optimization of onboarding` |
+
 ## Packages
 
 | Package | Purpose |
@@ -79,6 +89,7 @@ Install the plugin to get a stop hook (blocks the turn if lint errors are found)
 | [`@faircopy/core`](packages/core) | Engine: types, config loader, file resolver, rule runner |
 | [`@faircopy/astro`](packages/astro) | Astro adapter |
 | [`@faircopy/rules-default`](packages/rules-default) | Default ruleset |
+| [`@faircopy/rules-nlp`](packages/rules-nlp) | Optional NLP-powered ruleset |
 | [`@faircopy/config`](packages/config) | `defineConfig()` helper |
 | [`@faircopy/plugin`](packages/plugin) | Claude Code plugin |
 
