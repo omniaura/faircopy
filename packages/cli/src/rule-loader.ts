@@ -11,14 +11,23 @@ export interface LoadedRegistry {
   registry: Map<string, Rule>
 }
 
-export async function loadRuleRegistries(ruleIds: string[]): Promise<LoadedRegistry[]> {
-  const packageNames = getRulePackageNames(ruleIds)
+export type RuleLookupResult =
+  | { status: 'found'; rule: Rule }
+  | { status: 'not-found' }
+  | { status: 'ambiguous'; packageNames: string[] }
+
+export async function loadRuleRegistries(ruleIds: string[], rulesets: string[] = []): Promise<LoadedRegistry[]> {
+  const packageNames = getRulePackageNames(ruleIds, rulesets)
   const registries = await Promise.all(packageNames.map(loadRegistry))
   return registries.filter((registry): registry is LoadedRegistry => registry !== null)
 }
 
-function getRulePackageNames(ruleIds: string[]): string[] {
+function getRulePackageNames(ruleIds: string[], rulesets: string[]): string[] {
   const packageNames = new Set<string>(['@faircopy/rules-default'])
+
+  for (const ruleset of rulesets) {
+    packageNames.add(ruleset)
+  }
 
   for (const ruleId of ruleIds) {
     const packageName = getPackageNameForRule(ruleId)
@@ -61,15 +70,37 @@ async function loadRegistry(packageName: string): Promise<LoadedRegistry | null>
 }
 
 export function findRuleInRegistries(ruleId: string, registries: LoadedRegistry[]): Rule | null {
+  const result = resolveRuleInRegistries(ruleId, registries)
+  return result.status === 'found' ? result.rule : null
+}
+
+export function resolveRuleInRegistries(ruleId: string, registries: LoadedRegistry[]): RuleLookupResult {
   const packageName = getPackageNameForRule(ruleId)
   const ruleName = getRuleName(ruleId)
 
-  for (const { packageName: registryPackageName, registry } of registries) {
-    if (packageName !== null && registryPackageName !== packageName) continue
+  if (packageName === null) {
+    const matches = registries.flatMap(({ packageName: registryPackageName, registry }) => {
+      const rule = registry.get(ruleName)
+      return rule ? [{ packageName: registryPackageName, rule }] : []
+    })
 
-    const rule = registry.get(ruleName)
-    if (rule) return rule
+    if (matches.length === 0) return { status: 'not-found' }
+    if (matches.length > 1) {
+      return {
+        status: 'ambiguous',
+        packageNames: matches.map(match => match.packageName),
+      }
+    }
+
+    return { status: 'found', rule: matches[0]!.rule }
   }
 
-  return null
+  for (const { packageName: registryPackageName, registry } of registries) {
+    if (registryPackageName !== packageName) continue
+
+    const rule = registry.get(ruleName)
+    if (rule) return { status: 'found', rule }
+  }
+
+  return { status: 'not-found' }
 }

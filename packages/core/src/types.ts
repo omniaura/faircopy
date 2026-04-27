@@ -5,6 +5,8 @@ export interface FaircopyConfig {
   ignore?: string[]
   /** Registered adapters, in priority order. */
   adapters?: Adapter[]
+  /** Optional rule packages to load so their rule IDs can be used bare. */
+  rulesets?: string[]
   /** Rule severity and options. Key is `<package>/<rule>` or bare `<rule>`. */
   rules: Record<string, RuleConfig>
   /** Disable .gitignore integration. Default false. */
