@@ -81,6 +81,8 @@ export default defineConfig({
     'no-weak-modals': 'warn',
     'no-stacked-adjectives': 'warn',
     'no-nominalized-phrases': 'warn',
+    'no-pronoun-led-claims': 'warn',
+    'no-buzzword-stacks': 'warn',
   },
 })
 ```
@@ -94,6 +96,8 @@ Use a package-qualified ID if two loaded rulesets expose the same bare rule name
 | `@faircopy/rules-nlp/no-weak-modals` | Flag hedged modal claims like `can help` and `might improve` |
 | `@faircopy/rules-nlp/no-stacked-adjectives` | Flag noun phrases with multiple adjectives before the noun |
 | `@faircopy/rules-nlp/no-nominalized-phrases` | Flag nominalized `X of Y` phrases like `optimization of onboarding` |
+| `@faircopy/rules-nlp/no-pronoun-led-claims` | Flag vague sentence openers like `This helps` and `It enables` |
+| `@faircopy/rules-nlp/no-buzzword-stacks` | Flag sentences overloaded with abstract benefit nouns |
 
 ## Packages
 

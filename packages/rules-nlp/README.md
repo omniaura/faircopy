@@ -16,6 +16,8 @@ rules: {
   'no-weak-modals': 'warn',
   'no-stacked-adjectives': 'warn',
   'no-nominalized-phrases': 'warn',
+  'no-pronoun-led-claims': 'warn',
+  'no-buzzword-stacks': 'warn',
 }
 ```
 
@@ -30,3 +32,5 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 | `no-weak-modals` | Flag hedged modal claims like `can help` and `might improve` |
 | `no-stacked-adjectives` | Flag noun phrases with multiple adjectives before the noun |
 | `no-nominalized-phrases` | Flag nominalized `X of Y` phrases like `optimization of onboarding` |
+| `no-pronoun-led-claims` | Flag vague sentence openers like `This helps` and `It enables` |
+| `no-buzzword-stacks` | Flag sentences overloaded with abstract benefit nouns |
