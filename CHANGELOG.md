@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/omniaura/faircopy/compare/v1.4.0...v1.5.0) (2026-05-03)
+
+
+### Features
+
+* **rules-nlp:** flag empty transformation claims ([#9](https://github.com/omniaura/faircopy/issues/9)) ([c798ecf](https://github.com/omniaura/faircopy/commit/c798ecf8e12da92ef033f84420e280fadae1068b))
+
 # [1.4.0](https://github.com/omniaura/faircopy/compare/v1.3.0...v1.4.0) (2026-04-27)
 
 
