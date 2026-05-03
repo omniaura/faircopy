@@ -52,6 +52,48 @@ const publishPackage = (dir) => {
   }
 }
 
+const getWorkspaceDeps = (pkg, packageNames) => {
+  const deps = {
+    ...pkg.dependencies,
+    ...pkg.peerDependencies,
+    ...pkg.optionalDependencies,
+  }
+
+  return Object.entries(deps)
+    .filter(([name, range]) => (
+      typeof range === 'string' && range.startsWith('workspace:') && packageNames.has(name)
+    ))
+    .map(([name]) => name)
+    .sort()
+}
+
+const sortPackagesForPublish = (packages) => {
+  const packageNames = new Set(packages.map(pkg => pkg.name))
+  const packageByName = new Map(packages.map(pkg => [pkg.name, pkg]))
+  const sorted = []
+  const visiting = new Set()
+  const visited = new Set()
+
+  const visit = (pkg, path = []) => {
+    if (visited.has(pkg.name)) return
+    if (visiting.has(pkg.name)) {
+      throw new Error(`Workspace dependency cycle detected: ${[...path, pkg.name].join(' -> ')}`)
+    }
+
+    visiting.add(pkg.name)
+    for (const depName of getWorkspaceDeps(pkg.manifest, packageNames)) {
+      visit(packageByName.get(depName), [...path, pkg.name])
+    }
+    visiting.delete(pkg.name)
+    visited.add(pkg.name)
+    sorted.push(pkg)
+  }
+
+  for (const pkg of packages) visit(pkg)
+  return sorted
+}
+
+const packages = []
 for (const dir of packageDirs) {
   const pkgPath = join('packages', dir, 'package.json')
   try { statSync(pkgPath) } catch { continue }
@@ -59,6 +101,10 @@ for (const dir of packageDirs) {
   const original = readFileSync(pkgPath, 'utf8')
   const pkg = JSON.parse(original)
   if (pkg.private) continue
+  packages.push({ dir, manifest: pkg, name: pkg.name, original, pkgPath })
+}
+
+for (const { dir, manifest: pkg, original, pkgPath } of sortPackagesForPublish(packages)) {
   publishedPackages.push(pkg.name)
 
   if (await isPublished(pkg.name)) {
