@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
+  noExpletiveOpeners,
   noNominalizedPhrases,
   noStackedAdjectives,
   noWeakModals,
@@ -59,7 +60,25 @@ test('no-nominalized-phrases allows configured concrete nouns', () => {
   assert.equal(diagnostics.length, 0)
 })
 
+test('no-expletive-openers flags there and it sentence openers', () => {
+  const text = 'There are faster ways to ship. It is easier with Faircopy.'
+  const diagnostics = run(noExpletiveOpeners, text)
+
+  assert.equal(diagnostics.length, 2)
+  assert.equal(diagnostics[0].ruleId, 'no-expletive-openers')
+  assert.deepEqual(diagnostics[0].range, { start: 0, end: 9 })
+  assert.deepEqual(diagnostics[1].range, { start: 31, end: 36 })
+})
+
+test('no-expletive-openers ignores matching phrases mid-sentence', () => {
+  const text = 'We know there are faster ways to ship.'
+  const diagnostics = run(noExpletiveOpeners, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
 test('rule registry exposes all nlp rules', () => {
+  assert.ok(ruleRegistry.has('no-expletive-openers'))
   assert.ok(ruleRegistry.has('no-filter-words'))
   assert.ok(ruleRegistry.has('no-passive-voice'))
   assert.ok(ruleRegistry.has('no-weak-modals'))
