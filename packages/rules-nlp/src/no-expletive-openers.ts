@@ -11,15 +11,13 @@ const DEFAULT_PHRASES = [
   'there was',
   'there were',
   'there will be',
-  'it is',
-  'it was',
 ]
 
 export const noExpletiveOpeners: Rule<NoExpletiveOpenersOptions> = {
   id: 'no-expletive-openers',
   description: 'Flag sentence openings that delay the real subject',
   defaults: { phrases: DEFAULT_PHRASES },
-  help: 'Expletive openers like "there are" and "it is" make copy indirect. Start with the actor, product, or benefit so the sentence lands faster.',
+  help: 'Expletive openers like "there are" make copy indirect. Start with the actor, product, or benefit so the sentence lands faster.',
 
   check({ text, sourceMap, options }: RuleInput<NoExpletiveOpenersOptions>): Diagnostic[] {
     const diagnostics: Diagnostic[] = []
@@ -44,7 +42,7 @@ export const noExpletiveOpeners: Rule<NoExpletiveOpenersOptions> = {
       }
     }
 
-    return diagnostics
+    return diagnostics.sort((left, right) => left.range.start - right.range.start)
   },
 }
 
