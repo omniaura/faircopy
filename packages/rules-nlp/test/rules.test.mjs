@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
+  noEmptyTransformationClaims,
   noNominalizedPhrases,
   noStackedAdjectives,
   noWeakModals,
@@ -15,6 +16,43 @@ function run(rule, text, options = {}) {
     options,
   })
 }
+
+test('no-empty-transformation-claims flags broad transformation cliches', () => {
+  const text = 'Faircopy transforms the way teams work. It also reduces review time by 30%.'
+  const diagnostics = run(noEmptyTransformationClaims, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].ruleId, 'no-empty-transformation-claims')
+  assert.deepEqual(diagnostics[0].range, { start: 9, end: 38 })
+  assert.match(diagnostics[0].message, /concrete outcome/)
+})
+
+test('no-empty-transformation-claims flags next-level and unlock claims', () => {
+  const text = 'Unlock your productivity. Take your workflow to the next level.'
+  const diagnostics = run(noEmptyTransformationClaims, text)
+
+  assert.equal(diagnostics.length, 2)
+  assert.deepEqual(diagnostics.map(diagnostic => diagnostic.range), [
+    { start: 0, end: 24 },
+    { start: 26, end: 62 },
+  ])
+})
+
+test('no-empty-transformation-claims avoids concrete transformation language', () => {
+  const text = 'Convert support tickets into prioritized Jira issues in one click.'
+  const diagnostics = run(noEmptyTransformationClaims, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-empty-transformation-claims respects allowed phrases', () => {
+  const text = 'Faircopy transforms the way teams work.'
+  const diagnostics = run(noEmptyTransformationClaims, text, {
+    allowedPhrases: ['transforms the way teams work'],
+  })
+
+  assert.equal(diagnostics.length, 0)
+})
 
 test('no-weak-modals flags hedged helper claims but allows concrete capabilities', () => {
   const text = 'This can help teams grow. You can export CSV.'
@@ -60,6 +98,7 @@ test('no-nominalized-phrases allows configured concrete nouns', () => {
 })
 
 test('rule registry exposes all nlp rules', () => {
+  assert.ok(ruleRegistry.has('no-empty-transformation-claims'))
   assert.ok(ruleRegistry.has('no-filter-words'))
   assert.ok(ruleRegistry.has('no-passive-voice'))
   assert.ok(ruleRegistry.has('no-weak-modals'))

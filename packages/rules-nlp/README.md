@@ -12,6 +12,7 @@ Load the ruleset once, then configure rules with bare rule IDs:
 rulesets: ['@faircopy/rules-nlp'],
 rules: {
   'no-filter-words': 'warn',
+  'no-empty-transformation-claims': 'warn',
   'no-passive-voice': 'warn',
   'no-weak-modals': 'warn',
   'no-stacked-adjectives': 'warn',
@@ -25,6 +26,7 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 
 | Rule | Description |
 |---|---|
+| `no-empty-transformation-claims` | Flag broad transformation cliches like `transform the way teams work` |
 | `no-filter-words` | Ban filter phrases like `I think` and `it seems` |
 | `no-passive-voice` | Flag likely passive-voice constructions |
 | `no-weak-modals` | Flag hedged modal claims like `can help` and `might improve` |
