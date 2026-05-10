@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/omniaura/faircopy/compare/v1.9.0...v1.10.0) (2026-05-10)
+
+
+### Features
+
+* **rules-nlp:** add vague quantifier rule ([#18](https://github.com/omniaura/faircopy/issues/18)) ([872c99f](https://github.com/omniaura/faircopy/commit/872c99f57f77fb088bcf6197dffbb70926d31eab))
+
 # [1.9.0](https://github.com/omniaura/faircopy/compare/v1.8.0...v1.9.0) (2026-05-10)
 
 
