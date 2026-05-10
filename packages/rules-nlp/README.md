@@ -23,6 +23,7 @@ rules: {
   'no-pronoun-led-claims': 'warn',
   'no-buzzword-stacks': 'warn',
   'no-vague-quantifiers': 'warn',
+  'no-meaningless-modifiers': 'warn',
 }
 ```
 
@@ -44,3 +45,4 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 | `no-pronoun-led-claims` | Flag vague sentence openers like `This helps` and `It enables` |
 | `no-buzzword-stacks` | Flag sentences overloaded with abstract benefit nouns |
 | `no-vague-quantifiers` | Flag bare quantifiers without numeric anchors |
+| `no-meaningless-modifiers` | Flag intensifiers like `very` and `obviously` that add no information |

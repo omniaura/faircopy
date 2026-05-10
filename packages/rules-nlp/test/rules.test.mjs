@@ -5,6 +5,7 @@ import {
   noEmptyTransformationClaims,
   noExpletiveOpeners,
   noHedgeWords,
+  noMeaninglessModifiers,
   noNominalizedPhrases,
   noPronounLedClaims,
   noRedundantPairs,
@@ -241,12 +242,44 @@ test('no-vague-quantifiers flags matching phrases mid-sentence', () => {
   assert.deepEqual(diagnostics[0].range, { start: 20, end: 27 })
 })
 
+test('no-meaningless-modifiers flags default intensifiers', () => {
+  const text = 'This is very fast and obviously better. It is really useful.'
+  const diagnostics = run(noMeaninglessModifiers, text)
+
+  assert.equal(diagnostics.length, 3)
+  assert.equal(diagnostics[0].ruleId, 'no-meaningless-modifiers')
+  assert.deepEqual(diagnostics.map(diagnostic => diagnostic.range), [
+    { start: 8, end: 12 },
+    { start: 22, end: 31 },
+    { start: 46, end: 52 },
+  ])
+})
+
+test('no-meaningless-modifiers supports custom modifier lists', () => {
+  const text = 'This is super fast and very stable.'
+  const diagnostics = run(noMeaninglessModifiers, text, {
+    modifiers: ['super'],
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /super/)
+})
+
+test('no-meaningless-modifiers matches modifiers mid-sentence', () => {
+  const text = 'The workflow is clearly faster after caching.'
+  const diagnostics = run(noMeaninglessModifiers, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.deepEqual(diagnostics[0].range, { start: 16, end: 23 })
+})
+
 test('rule registry exposes all nlp rules', () => {
   assert.ok(ruleRegistry.has('no-buzzword-stacks'))
   assert.ok(ruleRegistry.has('no-empty-transformation-claims'))
   assert.ok(ruleRegistry.has('no-expletive-openers'))
   assert.ok(ruleRegistry.has('no-filter-words'))
   assert.ok(ruleRegistry.has('no-hedge-words'))
+  assert.ok(ruleRegistry.has('no-meaningless-modifiers'))
   assert.ok(ruleRegistry.has('no-passive-voice'))
   assert.ok(ruleRegistry.has('no-pronoun-led-claims'))
   assert.ok(ruleRegistry.has('no-redundant-pairs'))
