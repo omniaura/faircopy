@@ -85,6 +85,7 @@ export default defineConfig({
     'no-nominalized-phrases': 'warn',
     'no-pronoun-led-claims': 'warn',
     'no-buzzword-stacks': 'warn',
+    'no-vague-quantifiers': 'warn',
   },
 })
 ```
@@ -102,6 +103,7 @@ Use a package-qualified ID if two loaded rulesets expose the same bare rule name
 | `@faircopy/rules-nlp/no-nominalized-phrases` | Flag nominalized `X of Y` phrases like `optimization of onboarding` |
 | `@faircopy/rules-nlp/no-pronoun-led-claims` | Flag vague sentence openers like `This helps` and `It enables` |
 | `@faircopy/rules-nlp/no-buzzword-stacks` | Flag sentences overloaded with abstract benefit nouns |
+| `@faircopy/rules-nlp/no-vague-quantifiers` | Flag bare quantifiers without numeric anchors |
 
 ## Packages
 

@@ -9,6 +9,7 @@ import {
   noPronounLedClaims,
   noRedundantPairs,
   noStackedAdjectives,
+  noVagueQuantifiers,
   noWeakModals,
   ruleRegistry,
 } from '../dist/index.js'
@@ -209,6 +210,37 @@ test('no-buzzword-stacks respects the configured threshold', () => {
   assert.equal(diagnostics.length, 0)
 })
 
+test('no-vague-quantifiers flags default bare quantifiers', () => {
+  const text = 'Many teams see several wins across a range of workflows.'
+  const diagnostics = run(noVagueQuantifiers, text)
+
+  assert.equal(diagnostics.length, 3)
+  assert.equal(diagnostics[0].ruleId, 'no-vague-quantifiers')
+  assert.deepEqual(diagnostics.map(diagnostic => diagnostic.range), [
+    { start: 0, end: 4 },
+    { start: 15, end: 22 },
+    { start: 35, end: 45 },
+  ])
+})
+
+test('no-vague-quantifiers supports custom phrases', () => {
+  const text = 'Heaps of users asked for a bunch of exports.'
+  const diagnostics = run(noVagueQuantifiers, text, {
+    quantifiers: ['a bunch of'],
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /a bunch of/)
+})
+
+test('no-vague-quantifiers flags matching phrases mid-sentence', () => {
+  const text = 'The report mentions lots of customers but includes no count.'
+  const diagnostics = run(noVagueQuantifiers, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.deepEqual(diagnostics[0].range, { start: 20, end: 27 })
+})
+
 test('rule registry exposes all nlp rules', () => {
   assert.ok(ruleRegistry.has('no-buzzword-stacks'))
   assert.ok(ruleRegistry.has('no-empty-transformation-claims'))
@@ -221,4 +253,5 @@ test('rule registry exposes all nlp rules', () => {
   assert.ok(ruleRegistry.has('no-weak-modals'))
   assert.ok(ruleRegistry.has('no-stacked-adjectives'))
   assert.ok(ruleRegistry.has('no-nominalized-phrases'))
+  assert.ok(ruleRegistry.has('no-vague-quantifiers'))
 })

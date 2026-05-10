@@ -22,6 +22,7 @@ rules: {
   'no-nominalized-phrases': 'warn',
   'no-pronoun-led-claims': 'warn',
   'no-buzzword-stacks': 'warn',
+  'no-vague-quantifiers': 'warn',
 }
 ```
 
@@ -42,3 +43,4 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 | `no-nominalized-phrases` | Flag nominalized `X of Y` phrases like `optimization of onboarding` |
 | `no-pronoun-led-claims` | Flag vague sentence openers like `This helps` and `It enables` |
 | `no-buzzword-stacks` | Flag sentences overloaded with abstract benefit nouns |
+| `no-vague-quantifiers` | Flag bare quantifiers without numeric anchors |
