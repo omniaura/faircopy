@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/omniaura/faircopy/compare/v1.6.0...v1.7.0) (2026-05-10)
+
+
+### Features
+
+* **rules-nlp:** flag redundant fixed phrases ([#12](https://github.com/omniaura/faircopy/issues/12)) ([2749462](https://github.com/omniaura/faircopy/commit/27494625885b781b32fd40aa0b51d9262d074277))
+
 # [1.6.0](https://github.com/omniaura/faircopy/compare/v1.5.0...v1.6.0) (2026-05-10)
 
 
