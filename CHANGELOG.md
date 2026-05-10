@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/omniaura/faircopy/compare/v1.8.0...v1.9.0) (2026-05-10)
+
+
+### Features
+
+* **rules-nlp:** flag hedge words ([#13](https://github.com/omniaura/faircopy/issues/13)) ([0fbc63c](https://github.com/omniaura/faircopy/commit/0fbc63c70973919918c94f29cabfb30a71cf24e4))
+
 # [1.8.0](https://github.com/omniaura/faircopy/compare/v1.7.0...v1.8.0) (2026-05-10)
 
 
