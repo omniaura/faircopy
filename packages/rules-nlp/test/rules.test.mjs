@@ -4,6 +4,7 @@ import {
   noEmptyTransformationClaims,
   noExpletiveOpeners,
   noNominalizedPhrases,
+  noRedundantPairs,
   noStackedAdjectives,
   noWeakModals,
   ruleRegistry,
@@ -98,6 +99,29 @@ test('no-nominalized-phrases allows configured concrete nouns', () => {
   assert.equal(diagnostics.length, 0)
 })
 
+test('no-redundant-pairs flags default redundant phrases', () => {
+  const text = 'First and foremost, remove the end result from your future plans.'
+  const diagnostics = run(noRedundantPairs, text)
+
+  assert.equal(diagnostics.length, 3)
+  assert.equal(diagnostics[0].ruleId, 'no-redundant-pairs')
+  assert.deepEqual(diagnostics.map(diagnostic => diagnostic.range), [
+    { start: 0, end: 18 },
+    { start: 31, end: 41 },
+    { start: 52, end: 64 },
+  ])
+})
+
+test('no-redundant-pairs supports custom phrase lists', () => {
+  const text = 'The real truth is clear, but the end result is noisy.'
+  const diagnostics = run(noRedundantPairs, text, {
+    phrases: ['real truth'],
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /real truth/)
+})
+
 test('no-expletive-openers flags there sentence openers', () => {
   const text = 'There are faster ways to ship. There is less review churn with Faircopy.'
   const diagnostics = run(noExpletiveOpeners, text)
@@ -127,6 +151,7 @@ test('rule registry exposes all nlp rules', () => {
   assert.ok(ruleRegistry.has('no-expletive-openers'))
   assert.ok(ruleRegistry.has('no-filter-words'))
   assert.ok(ruleRegistry.has('no-passive-voice'))
+  assert.ok(ruleRegistry.has('no-redundant-pairs'))
   assert.ok(ruleRegistry.has('no-weak-modals'))
   assert.ok(ruleRegistry.has('no-stacked-adjectives'))
   assert.ok(ruleRegistry.has('no-nominalized-phrases'))
