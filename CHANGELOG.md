@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/omniaura/faircopy/compare/v1.10.0...v1.11.0) (2026-05-10)
+
+
+### Features
+
+* **rules-nlp:** add meaningless modifier rule ([#19](https://github.com/omniaura/faircopy/issues/19)) ([c4b4f36](https://github.com/omniaura/faircopy/commit/c4b4f3601bd6109f5d5ddfe548e85fd03e5e8ae0))
+
 # [1.10.0](https://github.com/omniaura/faircopy/compare/v1.9.0...v1.10.0) (2026-05-10)
 
 
