@@ -76,6 +76,7 @@ Optional NLP rules live in `@faircopy/rules-nlp`. Load the ruleset once to confi
 export default defineConfig({
   rulesets: ['@faircopy/rules-nlp'],
   rules: {
+    'no-expletive-openers': 'warn',
     'no-filter-words': 'warn',
     'no-passive-voice': 'warn',
     'no-weak-modals': 'warn',
@@ -89,6 +90,7 @@ Use a package-qualified ID if two loaded rulesets expose the same bare rule name
 
 | Rule | Description |
 |---|---|
+| `@faircopy/rules-nlp/no-expletive-openers` | Flag sentence openings like `There are` |
 | `@faircopy/rules-nlp/no-filter-words` | Ban filter phrases like `I think` and `it seems` |
 | `@faircopy/rules-nlp/no-passive-voice` | Flag likely passive-voice constructions |
 | `@faircopy/rules-nlp/no-weak-modals` | Flag hedged modal claims like `can help` and `might improve` |

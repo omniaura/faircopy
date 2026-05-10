@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/omniaura/faircopy/compare/v1.5.0...v1.6.0) (2026-05-10)
+
+
+### Features
+
+* add expletive opener NLP rule ([#10](https://github.com/omniaura/faircopy/issues/10)) ([07023de](https://github.com/omniaura/faircopy/commit/07023dec228cab611e9e80c8db1a3ffd34fb5ef0))
+
 # [1.5.0](https://github.com/omniaura/faircopy/compare/v1.4.0...v1.5.0) (2026-05-03)
 
 

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
   noEmptyTransformationClaims,
+  noExpletiveOpeners,
   noNominalizedPhrases,
   noRedundantPairs,
   noStackedAdjectives,
@@ -121,8 +122,33 @@ test('no-redundant-pairs supports custom phrase lists', () => {
   assert.match(diagnostics[0].message, /real truth/)
 })
 
+test('no-expletive-openers flags there sentence openers', () => {
+  const text = 'There are faster ways to ship. There is less review churn with Faircopy.'
+  const diagnostics = run(noExpletiveOpeners, text)
+
+  assert.equal(diagnostics.length, 2)
+  assert.equal(diagnostics[0].ruleId, 'no-expletive-openers')
+  assert.deepEqual(diagnostics[0].range, { start: 0, end: 9 })
+  assert.deepEqual(diagnostics[1].range, { start: 31, end: 39 })
+})
+
+test('no-expletive-openers ignores referential it openers by default', () => {
+  const text = 'Faircopy is small. It is fast.'
+  const diagnostics = run(noExpletiveOpeners, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-expletive-openers ignores matching phrases mid-sentence', () => {
+  const text = 'We know there are faster ways to ship.'
+  const diagnostics = run(noExpletiveOpeners, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
 test('rule registry exposes all nlp rules', () => {
   assert.ok(ruleRegistry.has('no-empty-transformation-claims'))
+  assert.ok(ruleRegistry.has('no-expletive-openers'))
   assert.ok(ruleRegistry.has('no-filter-words'))
   assert.ok(ruleRegistry.has('no-passive-voice'))
   assert.ok(ruleRegistry.has('no-redundant-pairs'))
