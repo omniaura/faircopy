@@ -8,6 +8,7 @@ import { noPassiveVoice } from './no-passive-voice.js'
 import { noPronounLedClaims } from './no-pronoun-led-claims.js'
 import { noRedundantPairs } from './no-redundant-pairs.js'
 import { noStackedAdjectives } from './no-stacked-adjectives.js'
+import { noVagueQuantifiers } from './no-vague-quantifiers.js'
 import { noWeakModals } from './no-weak-modals.js'
 
 export { noBuzzwordStacks } from './no-buzzword-stacks.js'
@@ -19,6 +20,7 @@ export { noPassiveVoice } from './no-passive-voice.js'
 export { noPronounLedClaims } from './no-pronoun-led-claims.js'
 export { noRedundantPairs } from './no-redundant-pairs.js'
 export { noStackedAdjectives } from './no-stacked-adjectives.js'
+export { noVagueQuantifiers } from './no-vague-quantifiers.js'
 export { noWeakModals } from './no-weak-modals.js'
 export type { NoBuzzwordStacksOptions } from './no-buzzword-stacks.js'
 export type { NoExpletiveOpenersOptions } from './no-expletive-openers.js'
@@ -29,6 +31,7 @@ export type { NoPassiveVoiceOptions } from './no-passive-voice.js'
 export type { NoPronounLedClaimsOptions } from './no-pronoun-led-claims.js'
 export type { NoRedundantPairsOptions } from './no-redundant-pairs.js'
 export type { NoStackedAdjectivesOptions } from './no-stacked-adjectives.js'
+export type { NoVagueQuantifiersOptions } from './no-vague-quantifiers.js'
 export type { NoWeakModalsOptions } from './no-weak-modals.js'
 
 /** All NLP rules keyed by their rule ID. */
@@ -42,5 +45,6 @@ export const ruleRegistry: Map<string, Rule> = new Map([
   ['no-pronoun-led-claims', noPronounLedClaims as Rule],
   ['no-redundant-pairs', noRedundantPairs as Rule],
   ['no-stacked-adjectives', noStackedAdjectives as Rule],
+  ['no-vague-quantifiers', noVagueQuantifiers as Rule],
   ['no-weak-modals', noWeakModals as Rule],
 ])
