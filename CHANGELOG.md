@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/omniaura/faircopy/compare/v1.7.0...v1.8.0) (2026-05-10)
+
+
+### Features
+
+* **rules-nlp:** add pronoun and buzzword rules ([#11](https://github.com/omniaura/faircopy/issues/11)) ([1f5b0c9](https://github.com/omniaura/faircopy/commit/1f5b0c9e435e2b94411fb72182b0b9e8f8d57865))
+
 # [1.7.0](https://github.com/omniaura/faircopy/compare/v1.6.0...v1.7.0) (2026-05-10)
 
 
