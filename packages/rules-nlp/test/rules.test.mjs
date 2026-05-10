@@ -4,6 +4,7 @@ import {
   noBuzzwordStacks,
   noEmptyTransformationClaims,
   noExpletiveOpeners,
+  noHedgeWords,
   noNominalizedPhrases,
   noPronounLedClaims,
   noRedundantPairs,
@@ -148,6 +149,29 @@ test('no-expletive-openers ignores matching phrases mid-sentence', () => {
   assert.equal(diagnostics.length, 0)
 })
 
+test('no-hedge-words flags default hedge words', () => {
+  const text = 'This is kind of fast, somewhat useful, and more or less ready.'
+  const diagnostics = run(noHedgeWords, text)
+
+  assert.equal(diagnostics.length, 3)
+  assert.equal(diagnostics[0].ruleId, 'no-hedge-words')
+  assert.deepEqual(diagnostics.map(diagnostic => diagnostic.range), [
+    { start: 8, end: 15 },
+    { start: 22, end: 30 },
+    { start: 43, end: 55 },
+  ])
+})
+
+test('no-hedge-words supports custom hedge lists', () => {
+  const text = 'The workflow is pretty fast and arguably safer.'
+  const diagnostics = run(noHedgeWords, text, {
+    hedges: ['arguably'],
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /arguably/)
+})
+
 test('no-pronoun-led-claims flags vague sentence openers', () => {
   const text = 'This helps teams move faster. The assistant helps teams decide.'
   const diagnostics = run(noPronounLedClaims, text)
@@ -190,6 +214,7 @@ test('rule registry exposes all nlp rules', () => {
   assert.ok(ruleRegistry.has('no-empty-transformation-claims'))
   assert.ok(ruleRegistry.has('no-expletive-openers'))
   assert.ok(ruleRegistry.has('no-filter-words'))
+  assert.ok(ruleRegistry.has('no-hedge-words'))
   assert.ok(ruleRegistry.has('no-passive-voice'))
   assert.ok(ruleRegistry.has('no-pronoun-led-claims'))
   assert.ok(ruleRegistry.has('no-redundant-pairs'))
