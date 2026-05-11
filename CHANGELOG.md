@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/omniaura/faircopy/compare/v1.12.0...v1.13.0) (2026-05-11)
+
+
+### Features
+
+* **rules-nlp:** add no-future-promises rule ([#22](https://github.com/omniaura/faircopy/issues/22)) ([c8a2550](https://github.com/omniaura/faircopy/commit/c8a2550c9b280b449c313698054bb7dd8b2a7125))
+
 # [1.12.0](https://github.com/omniaura/faircopy/compare/v1.11.0...v1.12.0) (2026-05-11)
 
 
