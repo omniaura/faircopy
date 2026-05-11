@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/omniaura/faircopy/compare/v1.13.0...v1.14.0) (2026-05-11)
+
+
+### Features
+
+* **rules-nlp:** add no-superlative-claims rule ([#23](https://github.com/omniaura/faircopy/issues/23)) ([770ce91](https://github.com/omniaura/faircopy/commit/770ce919ce6edd85ef72300beb50e57e0565fd6f))
+
 # [1.13.0](https://github.com/omniaura/faircopy/compare/v1.12.0...v1.13.0) (2026-05-11)
 
 
