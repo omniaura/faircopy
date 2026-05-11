@@ -78,7 +78,9 @@ export default defineConfig({
   rules: {
     'no-expletive-openers': 'warn',
     'no-filter-words': 'warn',
+    'no-future-promises': 'warn',
     'no-hedge-words': 'warn',
+    'no-jargon': 'warn',
     'no-passive-voice': 'warn',
     'no-weak-modals': 'warn',
     'no-stacked-adjectives': 'warn',
@@ -98,7 +100,9 @@ Use a package-qualified ID if two loaded rulesets expose the same bare rule name
 |---|---|
 | `@faircopy/rules-nlp/no-expletive-openers` | Flag sentence openings like `There are` |
 | `@faircopy/rules-nlp/no-filter-words` | Ban filter phrases like `I think` and `it seems` |
+| `@faircopy/rules-nlp/no-future-promises` | Flag future-tense promises like `will help you` |
 | `@faircopy/rules-nlp/no-hedge-words` | Flag hedge words like `kind of` and `somewhat` |
+| `@faircopy/rules-nlp/no-jargon` | Flag business jargon like `leverage` and `circle back` |
 | `@faircopy/rules-nlp/no-passive-voice` | Flag likely passive-voice constructions |
 | `@faircopy/rules-nlp/no-weak-modals` | Flag hedged modal claims like `can help` and `might improve` |
 | `@faircopy/rules-nlp/no-stacked-adjectives` | Flag noun phrases with multiple adjectives before the noun |

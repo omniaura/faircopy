@@ -4,7 +4,9 @@ import {
   noBuzzwordStacks,
   noEmptyTransformationClaims,
   noExpletiveOpeners,
+  noFuturePromises,
   noHedgeWords,
+  noJargon,
   noMeaninglessModifiers,
   noNominalizedPhrases,
   noPronounLedClaims,
@@ -312,12 +314,76 @@ test('no-superlative-claims does not match substrings inside longer words', () =
   assert.equal(diagnostics.length, 0)
 })
 
+test('no-future-promises flags default future-tense promises', () => {
+  const text = 'Faircopy will help you write faster and will enable cleaner launches.'
+  const diagnostics = run(noFuturePromises, text)
+
+  assert.equal(diagnostics.length, 2)
+  assert.equal(diagnostics[0].ruleId, 'no-future-promises')
+  assert.deepEqual(diagnostics.map(diagnostic => diagnostic.range), [
+    { start: 9, end: 22 },
+    { start: 40, end: 51 },
+  ])
+})
+
+test('no-future-promises supports custom phrase lists', () => {
+  const text = 'The assistant will streamline approvals and will help you ship.'
+  const diagnostics = run(noFuturePromises, text, {
+    phrases: ['will streamline'],
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /will streamline/)
+})
+
+test('no-future-promises matches phrases mid-sentence', () => {
+  const text = 'The onboarding checklist will allow you to launch without rewriting copy.'
+  const diagnostics = run(noFuturePromises, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.deepEqual(diagnostics[0].range, { start: 25, end: 42 })
+})
+
+test('no-jargon flags default business jargon phrases', () => {
+  const text = 'We leverage synergy, circle back, and move the needle.'
+  const diagnostics = run(noJargon, text)
+
+  assert.equal(diagnostics.length, 4)
+  assert.equal(diagnostics[0].ruleId, 'no-jargon')
+  assert.deepEqual(diagnostics.map(diagnostic => diagnostic.range), [
+    { start: 3, end: 11 },
+    { start: 12, end: 19 },
+    { start: 21, end: 32 },
+    { start: 38, end: 53 },
+  ])
+})
+
+test('no-jargon supports custom phrase lists', () => {
+  const text = 'We leverage data and boil the ocean later.'
+  const diagnostics = run(noJargon, text, {
+    phrases: ['boil the ocean'],
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /boil the ocean/)
+})
+
+test('no-jargon matches phrases mid-sentence', () => {
+  const text = 'The migration plan includes a deep dive after schema review.'
+  const diagnostics = run(noJargon, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.deepEqual(diagnostics[0].range, { start: 30, end: 39 })
+})
+
 test('rule registry exposes all nlp rules', () => {
   assert.ok(ruleRegistry.has('no-buzzword-stacks'))
   assert.ok(ruleRegistry.has('no-empty-transformation-claims'))
   assert.ok(ruleRegistry.has('no-expletive-openers'))
   assert.ok(ruleRegistry.has('no-filter-words'))
+  assert.ok(ruleRegistry.has('no-future-promises'))
   assert.ok(ruleRegistry.has('no-hedge-words'))
+  assert.ok(ruleRegistry.has('no-jargon'))
   assert.ok(ruleRegistry.has('no-meaningless-modifiers'))
   assert.ok(ruleRegistry.has('no-passive-voice'))
   assert.ok(ruleRegistry.has('no-pronoun-led-claims'))
