@@ -3,6 +3,7 @@ import { noBuzzwordStacks } from './no-buzzword-stacks.js'
 import { noExpletiveOpeners } from './no-expletive-openers.js'
 import { noFilterWords } from './no-filter-words.js'
 import { noEmptyTransformationClaims } from './no-empty-transformation-claims.js'
+import { noFuturePromises } from './no-future-promises.js'
 import { noHedgeWords } from './no-hedge-words.js'
 import { noJargon } from './no-jargon.js'
 import { noMeaninglessModifiers } from './no-meaningless-modifiers.js'
@@ -18,6 +19,7 @@ export { noBuzzwordStacks } from './no-buzzword-stacks.js'
 export { noExpletiveOpeners } from './no-expletive-openers.js'
 export { noFilterWords } from './no-filter-words.js'
 export { noEmptyTransformationClaims } from './no-empty-transformation-claims.js'
+export { noFuturePromises } from './no-future-promises.js'
 export { noHedgeWords } from './no-hedge-words.js'
 export { noJargon } from './no-jargon.js'
 export { noMeaninglessModifiers } from './no-meaningless-modifiers.js'
@@ -32,6 +34,7 @@ export type { NoBuzzwordStacksOptions } from './no-buzzword-stacks.js'
 export type { NoExpletiveOpenersOptions } from './no-expletive-openers.js'
 export type { NoFilterWordsOptions } from './no-filter-words.js'
 export type { NoEmptyTransformationClaimsOptions } from './no-empty-transformation-claims.js'
+export type { NoFuturePromisesOptions } from './no-future-promises.js'
 export type { NoHedgeWordsOptions } from './no-hedge-words.js'
 export type { NoJargonOptions } from './no-jargon.js'
 export type { NoMeaninglessModifiersOptions } from './no-meaningless-modifiers.js'
@@ -49,6 +52,7 @@ export const ruleRegistry: Map<string, Rule> = new Map([
   ['no-empty-transformation-claims', noEmptyTransformationClaims as Rule],
   ['no-expletive-openers', noExpletiveOpeners as Rule],
   ['no-filter-words', noFilterWords as Rule],
+  ['no-future-promises', noFuturePromises as Rule],
   ['no-hedge-words', noHedgeWords as Rule],
   ['no-jargon', noJargon as Rule],
   ['no-meaningless-modifiers', noMeaninglessModifiers as Rule],

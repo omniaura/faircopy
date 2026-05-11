@@ -13,6 +13,7 @@ rulesets: ['@faircopy/rules-nlp'],
 rules: {
   'no-expletive-openers': 'warn',
   'no-filter-words': 'warn',
+  'no-future-promises': 'warn',
   'no-hedge-words': 'warn',
   'no-empty-transformation-claims': 'warn',
   'no-passive-voice': 'warn',
@@ -36,6 +37,7 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 | `no-empty-transformation-claims` | Flag broad transformation cliches like `transform the way teams work` |
 | `no-expletive-openers` | Flag sentence openings like `There are` |
 | `no-filter-words` | Ban filter phrases like `I think` and `it seems` |
+| `no-future-promises` | Flag future-tense promises like `will help you` |
 | `no-hedge-words` | Flag hedge words like `kind of` and `somewhat` |
 | `no-jargon` | Flag business jargon like `leverage` and `circle back` |
 | `no-passive-voice` | Flag likely passive-voice constructions |
