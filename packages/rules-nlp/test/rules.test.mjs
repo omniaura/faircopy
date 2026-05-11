@@ -12,6 +12,7 @@ import {
   noPronounLedClaims,
   noRedundantPairs,
   noStackedAdjectives,
+  noSuperlativeClaims,
   noVagueQuantifiers,
   noWeakModals,
   ruleRegistry,
@@ -275,6 +276,53 @@ test('no-meaningless-modifiers matches modifiers mid-sentence', () => {
   assert.deepEqual(diagnostics[0].range, { start: 16, end: 23 })
 })
 
+test('no-superlative-claims flags default superlatives', () => {
+  const text = 'The best world-class platform uses state-of-the-art review.'
+  const diagnostics = run(noSuperlativeClaims, text)
+
+  assert.equal(diagnostics.length, 3)
+  assert.equal(diagnostics[0].ruleId, 'no-superlative-claims')
+  assert.deepEqual(diagnostics.map(diagnostic => diagnostic.range), [
+    { start: 4, end: 8 },
+    { start: 9, end: 20 },
+    { start: 35, end: 51 },
+  ])
+})
+
+test('no-superlative-claims supports custom phrase lists', () => {
+  const text = 'The gold standard workflow is the best option.'
+  const diagnostics = run(noSuperlativeClaims, text, {
+    phrases: ['gold standard'],
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /gold standard/)
+})
+
+test('no-superlative-claims matches phrases mid-sentence', () => {
+  const text = 'The workflow is cutting-edge after caching.'
+  const diagnostics = run(noSuperlativeClaims, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.deepEqual(diagnostics[0].range, { start: 16, end: 28 })
+})
+
+test('no-superlative-claims prefers longer overlapping phrases', () => {
+  const text = 'The workflow is industry-leading after caching.'
+  const diagnostics = run(noSuperlativeClaims, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].message, 'prove or remove superlative claim "industry-leading"')
+  assert.deepEqual(diagnostics[0].range, { start: 16, end: 32 })
+})
+
+test('no-superlative-claims does not match substrings inside longer words', () => {
+  const text = 'The topology page mentions bestowed access and premiere support.'
+  const diagnostics = run(noSuperlativeClaims, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
 test('no-future-promises flags default future-tense promises', () => {
   const text = 'Faircopy will help you write faster and will enable cleaner launches.'
   const diagnostics = run(noFuturePromises, text)
@@ -351,6 +399,7 @@ test('rule registry exposes all nlp rules', () => {
   assert.ok(ruleRegistry.has('no-redundant-pairs'))
   assert.ok(ruleRegistry.has('no-weak-modals'))
   assert.ok(ruleRegistry.has('no-stacked-adjectives'))
+  assert.ok(ruleRegistry.has('no-superlative-claims'))
   assert.ok(ruleRegistry.has('no-nominalized-phrases'))
   assert.ok(ruleRegistry.has('no-vague-quantifiers'))
 })
