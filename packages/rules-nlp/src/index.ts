@@ -4,6 +4,7 @@ import { noExpletiveOpeners } from './no-expletive-openers.js'
 import { noFilterWords } from './no-filter-words.js'
 import { noEmptyTransformationClaims } from './no-empty-transformation-claims.js'
 import { noHedgeWords } from './no-hedge-words.js'
+import { noJargon } from './no-jargon.js'
 import { noMeaninglessModifiers } from './no-meaningless-modifiers.js'
 import { noNominalizedPhrases } from './no-nominalized-phrases.js'
 import { noPassiveVoice } from './no-passive-voice.js'
@@ -18,6 +19,7 @@ export { noExpletiveOpeners } from './no-expletive-openers.js'
 export { noFilterWords } from './no-filter-words.js'
 export { noEmptyTransformationClaims } from './no-empty-transformation-claims.js'
 export { noHedgeWords } from './no-hedge-words.js'
+export { noJargon } from './no-jargon.js'
 export { noMeaninglessModifiers } from './no-meaningless-modifiers.js'
 export { noNominalizedPhrases } from './no-nominalized-phrases.js'
 export { noPassiveVoice } from './no-passive-voice.js'
@@ -31,6 +33,7 @@ export type { NoExpletiveOpenersOptions } from './no-expletive-openers.js'
 export type { NoFilterWordsOptions } from './no-filter-words.js'
 export type { NoEmptyTransformationClaimsOptions } from './no-empty-transformation-claims.js'
 export type { NoHedgeWordsOptions } from './no-hedge-words.js'
+export type { NoJargonOptions } from './no-jargon.js'
 export type { NoMeaninglessModifiersOptions } from './no-meaningless-modifiers.js'
 export type { NoNominalizedPhrasesOptions } from './no-nominalized-phrases.js'
 export type { NoPassiveVoiceOptions } from './no-passive-voice.js'
@@ -47,6 +50,7 @@ export const ruleRegistry: Map<string, Rule> = new Map([
   ['no-expletive-openers', noExpletiveOpeners as Rule],
   ['no-filter-words', noFilterWords as Rule],
   ['no-hedge-words', noHedgeWords as Rule],
+  ['no-jargon', noJargon as Rule],
   ['no-meaningless-modifiers', noMeaninglessModifiers as Rule],
   ['no-nominalized-phrases', noNominalizedPhrases as Rule],
   ['no-passive-voice', noPassiveVoice as Rule],
