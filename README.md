@@ -87,6 +87,7 @@ export default defineConfig({
     'no-buzzword-stacks': 'warn',
     'no-vague-quantifiers': 'warn',
     'no-meaningless-modifiers': 'warn',
+    'no-superlative-claims': 'warn',
   },
 })
 ```
@@ -106,6 +107,7 @@ Use a package-qualified ID if two loaded rulesets expose the same bare rule name
 | `@faircopy/rules-nlp/no-buzzword-stacks` | Flag sentences overloaded with abstract benefit nouns |
 | `@faircopy/rules-nlp/no-vague-quantifiers` | Flag bare quantifiers without numeric anchors |
 | `@faircopy/rules-nlp/no-meaningless-modifiers` | Flag intensifiers like `very` and `obviously` that add no information |
+| `@faircopy/rules-nlp/no-superlative-claims` | Flag unproven superlatives like `best` and `world-class` |
 
 ## Packages
 
