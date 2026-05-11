@@ -5,6 +5,7 @@ import { noFilterWords } from './no-filter-words.js'
 import { noEmptyTransformationClaims } from './no-empty-transformation-claims.js'
 import { noFuturePromises } from './no-future-promises.js'
 import { noHedgeWords } from './no-hedge-words.js'
+import { noJargon } from './no-jargon.js'
 import { noMeaninglessModifiers } from './no-meaningless-modifiers.js'
 import { noNominalizedPhrases } from './no-nominalized-phrases.js'
 import { noPassiveVoice } from './no-passive-voice.js'
@@ -20,6 +21,7 @@ export { noFilterWords } from './no-filter-words.js'
 export { noEmptyTransformationClaims } from './no-empty-transformation-claims.js'
 export { noFuturePromises } from './no-future-promises.js'
 export { noHedgeWords } from './no-hedge-words.js'
+export { noJargon } from './no-jargon.js'
 export { noMeaninglessModifiers } from './no-meaningless-modifiers.js'
 export { noNominalizedPhrases } from './no-nominalized-phrases.js'
 export { noPassiveVoice } from './no-passive-voice.js'
@@ -34,6 +36,7 @@ export type { NoFilterWordsOptions } from './no-filter-words.js'
 export type { NoEmptyTransformationClaimsOptions } from './no-empty-transformation-claims.js'
 export type { NoFuturePromisesOptions } from './no-future-promises.js'
 export type { NoHedgeWordsOptions } from './no-hedge-words.js'
+export type { NoJargonOptions } from './no-jargon.js'
 export type { NoMeaninglessModifiersOptions } from './no-meaningless-modifiers.js'
 export type { NoNominalizedPhrasesOptions } from './no-nominalized-phrases.js'
 export type { NoPassiveVoiceOptions } from './no-passive-voice.js'
@@ -51,6 +54,7 @@ export const ruleRegistry: Map<string, Rule> = new Map([
   ['no-filter-words', noFilterWords as Rule],
   ['no-future-promises', noFuturePromises as Rule],
   ['no-hedge-words', noHedgeWords as Rule],
+  ['no-jargon', noJargon as Rule],
   ['no-meaningless-modifiers', noMeaninglessModifiers as Rule],
   ['no-nominalized-phrases', noNominalizedPhrases as Rule],
   ['no-passive-voice', noPassiveVoice as Rule],

@@ -6,6 +6,7 @@ import {
   noExpletiveOpeners,
   noFuturePromises,
   noHedgeWords,
+  noJargon,
   noMeaninglessModifiers,
   noNominalizedPhrases,
   noPronounLedClaims,
@@ -304,6 +305,38 @@ test('no-future-promises matches phrases mid-sentence', () => {
   assert.deepEqual(diagnostics[0].range, { start: 25, end: 42 })
 })
 
+test('no-jargon flags default business jargon phrases', () => {
+  const text = 'We leverage synergy, circle back, and move the needle.'
+  const diagnostics = run(noJargon, text)
+
+  assert.equal(diagnostics.length, 4)
+  assert.equal(diagnostics[0].ruleId, 'no-jargon')
+  assert.deepEqual(diagnostics.map(diagnostic => diagnostic.range), [
+    { start: 3, end: 11 },
+    { start: 12, end: 19 },
+    { start: 21, end: 32 },
+    { start: 38, end: 53 },
+  ])
+})
+
+test('no-jargon supports custom phrase lists', () => {
+  const text = 'We leverage data and boil the ocean later.'
+  const diagnostics = run(noJargon, text, {
+    phrases: ['boil the ocean'],
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /boil the ocean/)
+})
+
+test('no-jargon matches phrases mid-sentence', () => {
+  const text = 'The migration plan includes a deep dive after schema review.'
+  const diagnostics = run(noJargon, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.deepEqual(diagnostics[0].range, { start: 30, end: 39 })
+})
+
 test('rule registry exposes all nlp rules', () => {
   assert.ok(ruleRegistry.has('no-buzzword-stacks'))
   assert.ok(ruleRegistry.has('no-empty-transformation-claims'))
@@ -311,6 +344,7 @@ test('rule registry exposes all nlp rules', () => {
   assert.ok(ruleRegistry.has('no-filter-words'))
   assert.ok(ruleRegistry.has('no-future-promises'))
   assert.ok(ruleRegistry.has('no-hedge-words'))
+  assert.ok(ruleRegistry.has('no-jargon'))
   assert.ok(ruleRegistry.has('no-meaningless-modifiers'))
   assert.ok(ruleRegistry.has('no-passive-voice'))
   assert.ok(ruleRegistry.has('no-pronoun-led-claims'))

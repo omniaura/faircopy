@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/omniaura/faircopy/compare/v1.11.0...v1.12.0) (2026-05-11)
+
+
+### Features
+
+* **rules-nlp:** add no-jargon rule ([#21](https://github.com/omniaura/faircopy/issues/21)) ([4bbe834](https://github.com/omniaura/faircopy/commit/4bbe8340fd76e475264c01cb4a7771876d852f51))
+
 # [1.11.0](https://github.com/omniaura/faircopy/compare/v1.10.0...v1.11.0) (2026-05-10)
 
 
