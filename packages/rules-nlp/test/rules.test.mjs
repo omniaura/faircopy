@@ -307,6 +307,15 @@ test('no-superlative-claims matches phrases mid-sentence', () => {
   assert.deepEqual(diagnostics[0].range, { start: 16, end: 28 })
 })
 
+test('no-superlative-claims prefers longer overlapping phrases', () => {
+  const text = 'The workflow is industry-leading after caching.'
+  const diagnostics = run(noSuperlativeClaims, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].message, 'prove or remove superlative claim "industry-leading"')
+  assert.deepEqual(diagnostics[0].range, { start: 16, end: 32 })
+})
+
 test('no-superlative-claims does not match substrings inside longer words', () => {
   const text = 'The topology page mentions bestowed access and premiere support.'
   const diagnostics = run(noSuperlativeClaims, text)

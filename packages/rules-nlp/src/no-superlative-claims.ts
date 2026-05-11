@@ -24,7 +24,10 @@ export const noSuperlativeClaims: Rule<NoSuperlativeClaimsOptions> = {
 
   check({ text, sourceMap, options }: RuleInput<NoSuperlativeClaimsOptions>): Diagnostic[] {
     const diagnostics: Diagnostic[] = []
-    const phrases = options.phrases?.length ? options.phrases : DEFAULT_PHRASES
+    const phrases = getLongestPhrasesFirst(
+      options.phrases?.length ? options.phrases : DEFAULT_PHRASES
+    )
+    const claimedRanges: Array<{ start: number; end: number }> = []
 
     for (const phrase of phrases) {
       const re = new RegExp(`\\b${escapeRegExp(phrase).replace(/\\s+/g, '\\s+')}\\b`, 'gi')
@@ -32,9 +35,14 @@ export const noSuperlativeClaims: Rule<NoSuperlativeClaimsOptions> = {
 
       while ((match = re.exec(text)) !== null) {
         const matchedPhrase = match[0]
+        const matchStart = match.index
+        const matchEnd = match.index + matchedPhrase.length
+        if (claimedRanges.some(range => rangesOverlap(range, matchStart, matchEnd))) continue
+
         const start = sourceMap[match.index]
         const end = sourceMap[match.index + matchedPhrase.length - 1]
         if (start === undefined || end === undefined) continue
+        claimedRanges.push({ start: matchStart, end: matchEnd })
 
         diagnostics.push({
           ruleId: 'no-superlative-claims',
@@ -48,6 +56,14 @@ export const noSuperlativeClaims: Rule<NoSuperlativeClaimsOptions> = {
 
     return diagnostics.sort((left, right) => left.range.start - right.range.start)
   },
+}
+
+function getLongestPhrasesFirst(phrases: string[]): string[] {
+  return [...phrases].sort((left, right) => right.length - left.length)
+}
+
+function rangesOverlap(range: { start: number; end: number }, start: number, end: number): boolean {
+  return start < range.end && end > range.start
 }
 
 function escapeRegExp(value: string): string {
