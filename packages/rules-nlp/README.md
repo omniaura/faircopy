@@ -37,6 +37,7 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 | `no-expletive-openers` | Flag sentence openings like `There are` |
 | `no-filter-words` | Ban filter phrases like `I think` and `it seems` |
 | `no-hedge-words` | Flag hedge words like `kind of` and `somewhat` |
+| `no-jargon` | Flag business jargon like `leverage` and `circle back` |
 | `no-passive-voice` | Flag likely passive-voice constructions |
 | `no-redundant-pairs` | Flag redundant fixed phrases like `first and foremost` |
 | `no-weak-modals` | Flag hedged modal claims like `can help` and `might improve` |
