@@ -23,6 +23,26 @@ const { config, configPath } = await loadConfig(process.cwd())
 
 Resolves file globs from `config.files`, respecting `config.ignore` and `.gitignore`.
 
+## Ignore comments
+
+Suppress every rule for one source line with either directive:
+
+```tsx
+// faircopy-ignore-next-line
+<p>Intentional copy that would otherwise be reported.</p>
+
+<p>Intentional copy.</p> {/* faircopy-ignore-line */}
+```
+
+Add comma-separated rule IDs to suppress only those rules:
+
+```tsx
+// faircopy-ignore-next-line no-em-dash, no-weasel-words
+<p>Intentional rule exceptions.</p>
+```
+
+The directives work with line, block, JSX, and HTML comment markers.
+
 ```ts
 import { resolveFiles } from '@faircopy/core'
 const files = await resolveFiles(config, cwd)
