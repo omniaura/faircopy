@@ -26,6 +26,7 @@ export async function lintFile(
   if (!adapter) return []
 
   const extractions = await adapter.extract(filePath, source)
+  const ignoredLines = collectIgnoredLines(source)
   const diagnostics: Diagnostic[] = []
 
   for (const extraction of extractions) {
@@ -39,10 +40,41 @@ export async function lintFile(
         meta: extraction.meta,
       })
       for (const diag of results) {
+        const line = lineAtOffset(source, diag.range.start)
+        const ignoredRules = ignoredLines.get(line)
+        if (ignoredRules?.has('*') || ignoredRules?.has(diag.ruleId)) continue
         diagnostics.push({ ...diag, severity })
       }
     }
   }
 
   return diagnostics
+}
+
+function collectIgnoredLines(source: string): Map<number, Set<string>> {
+  const ignored = new Map<number, Set<string>>()
+  const lines = source.split(/\r?\n/)
+
+  lines.forEach((line, index) => {
+    const directive = line.match(
+      /(?:\/\/|\/\*+|\*|<!--|\{\/\*)\s*faircopy-ignore-(line|next-line)(?:\s+([\w-]+(?:\s*,\s*[\w-]+)*))?/,
+    )
+    if (!directive) return
+
+    const targetLine = index + (directive[1] === 'next-line' ? 2 : 1)
+    const rules = directive[2]?.split(',').map(rule => rule.trim()) ?? ['*']
+    const existing = ignored.get(targetLine) ?? new Set<string>()
+    rules.forEach(rule => existing.add(rule))
+    ignored.set(targetLine, existing)
+  })
+
+  return ignored
+}
+
+function lineAtOffset(source: string, offset: number): number {
+  let line = 1
+  for (let index = 0; index < offset; index++) {
+    if (source[index] === '\n') line++
+  }
+  return line
 }
