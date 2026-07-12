@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/omniaura/faircopy/compare/v1.14.0...v1.15.0) (2026-07-12)
+
+
+### Features
+
+* **core:** add ignore comment directives ([#24](https://github.com/omniaura/faircopy/issues/24)) ([dc4c686](https://github.com/omniaura/faircopy/commit/dc4c686b2474de0f3608875b3606403e05434265))
+
 # [1.14.0](https://github.com/omniaura/faircopy/compare/v1.13.0...v1.14.0) (2026-05-11)
 
 
