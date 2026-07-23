@@ -1,5 +1,6 @@
 import type { Rule } from '@faircopy/core'
 import { noBuzzwordStacks } from './no-buzzword-stacks.js'
+import { noComplexReadability } from './no-complex-readability.js'
 import { noExpletiveOpeners } from './no-expletive-openers.js'
 import { noFilterWords } from './no-filter-words.js'
 import { noEmptyTransformationClaims } from './no-empty-transformation-claims.js'
@@ -17,6 +18,7 @@ import { noVagueQuantifiers } from './no-vague-quantifiers.js'
 import { noWeakModals } from './no-weak-modals.js'
 
 export { noBuzzwordStacks } from './no-buzzword-stacks.js'
+export { noComplexReadability } from './no-complex-readability.js'
 export { noExpletiveOpeners } from './no-expletive-openers.js'
 export { noFilterWords } from './no-filter-words.js'
 export { noEmptyTransformationClaims } from './no-empty-transformation-claims.js'
@@ -33,6 +35,7 @@ export { noSuperlativeClaims } from './no-superlative-claims.js'
 export { noVagueQuantifiers } from './no-vague-quantifiers.js'
 export { noWeakModals } from './no-weak-modals.js'
 export type { NoBuzzwordStacksOptions } from './no-buzzword-stacks.js'
+export type { NoComplexReadabilityOptions } from './no-complex-readability.js'
 export type { NoExpletiveOpenersOptions } from './no-expletive-openers.js'
 export type { NoFilterWordsOptions } from './no-filter-words.js'
 export type { NoEmptyTransformationClaimsOptions } from './no-empty-transformation-claims.js'
@@ -52,6 +55,7 @@ export type { NoWeakModalsOptions } from './no-weak-modals.js'
 /** All NLP rules keyed by their rule ID. */
 export const ruleRegistry: Map<string, Rule> = new Map([
   ['no-buzzword-stacks', noBuzzwordStacks as Rule],
+  ['no-complex-readability', noComplexReadability as Rule],
   ['no-empty-transformation-claims', noEmptyTransformationClaims as Rule],
   ['no-expletive-openers', noExpletiveOpeners as Rule],
   ['no-filter-words', noFilterWords as Rule],

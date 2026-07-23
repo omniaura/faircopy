@@ -69,6 +69,7 @@ Install the plugin to get a stop hook (blocks the turn if lint errors are found)
 | `no-em-dash` | `error` | Ban `—` in marketing copy |
 | `no-weasel-words` | `error` | Ban `actually`, `truly`, `really`, `literally` |
 | `no-rhetorical-scaffolding` | `error` | Ban `X is Y, not Z` and `Without X / With X` patterns |
+| `no-complex-readability` | `warn` | Flag prose whose Flesch-Kincaid grade level exceeds a target |
 
 Optional NLP rules live in `@faircopy/rules-nlp`. Load the ruleset once to configure its rules with bare IDs:
 
@@ -87,6 +88,7 @@ export default defineConfig({
     'no-nominalized-phrases': 'warn',
     'no-pronoun-led-claims': 'warn',
     'no-buzzword-stacks': 'warn',
+    'no-complex-readability': 'warn',
     'no-vague-quantifiers': 'warn',
     'no-meaningless-modifiers': 'warn',
     'no-superlative-claims': 'warn',

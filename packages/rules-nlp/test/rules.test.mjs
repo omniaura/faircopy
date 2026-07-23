@@ -403,3 +403,55 @@ test('rule registry exposes all nlp rules', () => {
   assert.ok(ruleRegistry.has('no-nominalized-phrases'))
   assert.ok(ruleRegistry.has('no-vague-quantifiers'))
 })
+
+import { noComplexReadability } from '../dist/index.js'
+
+test('no-complex-readability flags dense academic prose', () => {
+  const text = 'The implementation of multifaceted computational methodologies necessitates the rigorous examination of numerous interdependent variables, which consequently produces a substantial augmentation in cognitive load for the average reader. Furthermore, the proliferation of obfuscatory terminology within technical documentation frequently undermines the accessibility of otherwise straightforward conceptual frameworks. Consequently, practitioners must prioritize clarity and concision when communicating complex ideas to heterogeneous audiences.'
+  const diagnostics = run(noComplexReadability, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].ruleId, 'no-complex-readability')
+  assert.match(diagnostics[0].message, /grade/)
+})
+
+test('no-complex-readability allows simple landing-page copy', () => {
+  const text = 'Faircopy checks your copy. It finds weak words and passive voice. Your landing page reads better with every edit.'
+  const diagnostics = run(noComplexReadability, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-complex-readability ignores short passages', () => {
+  const text = 'The implementation of multifaceted computational methodologies necessitates rigorous examination.'
+  const diagnostics = run(noComplexReadability, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-complex-readability respects custom max grade level', () => {
+  const text = 'The implementation of multifaceted computational methodologies necessitates the rigorous examination of numerous interdependent variables, which consequently produces a substantial augmentation in cognitive load for the average reader. Furthermore, the proliferation of obfuscatory terminology within technical documentation frequently undermines the accessibility of otherwise straightforward conceptual frameworks. Consequently, practitioners must prioritize clarity and concision when communicating complex ideas to heterogeneous audiences.'
+  const diagnostics = run(noComplexReadability, text, { maxGradeLevel: -2 })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /simplify to -2/)
+})
+
+test('no-complex-readability respects custom minimum thresholds', () => {
+  const text = 'The implementation of multifaceted computational methodologies necessitates rigorous examination of interdependent variables, which consequently produces substantial augmentation in cognitive load for the average reader.'
+  const diagnostics = run(noComplexReadability, text, { minSentences: 5, minWords: 100 })
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-complex-readability handles empty text', () => {
+  const diagnostics = run(noComplexReadability, '')
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-complex-readability handles text without sentence terminators', () => {
+  const text = 'The implementation of multifaceted computational methodologies necessitates rigorous examination of interdependent variables'
+  const diagnostics = run(noComplexReadability, text)
+
+  assert.equal(diagnostics.length, 0)
+})
