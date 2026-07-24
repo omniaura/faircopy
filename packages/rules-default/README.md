@@ -1,6 +1,6 @@
 # @faircopy/rules-default
 
-Default ruleset for faircopy. Ships three rules targeting the most common landing-page copy patterns.
+Default ruleset for faircopy. Ships four rules targeting the most common landing-page copy patterns.
 
 ## Install
 
@@ -86,3 +86,40 @@ error[no-rhetorical-scaffolding]: avoid "Without X / With X" — drop the setup 
   extraPatterns?: string[]               // Additional regex patterns to ban.
 }
 ```
+
+---
+
+### `no-non-inclusive-language`
+
+Flags non-inclusive terms and suggests neutral alternatives.
+
+Default terms include `guys`, `manpower`, `whitelist`, `blacklist`, `master`, `slave`, `crazy`, `insane`, `dumb`, `lame`, `sanity check`, `blind spot`, `grandfathered`, and `mankind`.
+
+```
+error[no-non-inclusive-language]: replace "guys" with a neutral alternative such as "everyone, team, folks"
+```
+
+**Options:**
+
+```ts
+{
+  terms?: { term: string; alternatives: string[]; exact?: boolean }[]
+  allowedTerms?: string[]
+}
+```
+
+**Config example:**
+
+```ts
+rules: {
+  'no-non-inclusive-language': ['error', {
+    terms: [
+      { term: 'guys', alternatives: ['everyone', 'team'] },
+      { term: 'rockstar', alternatives: ['expert', 'skilled'] },
+    ],
+    allowedTerms: ['master'],
+  }],
+}
+```
+
+Set `exact: true` on a multi-word term to match the whole phrase with word boundaries. This is useful for phrases like `sanity check`, ensuring `sanity checker` is not flagged.

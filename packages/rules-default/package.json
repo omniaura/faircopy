@@ -1,7 +1,7 @@
 {
   "name": "@faircopy/rules-default",
   "version": "1.15.0",
-  "description": "Default ruleset for faircopy: no-em-dash, no-weasel-words, no-rhetorical-scaffolding",
+  "description": "Default ruleset for faircopy: no-em-dash, no-weasel-words, no-rhetorical-scaffolding, no-non-inclusive-language",
   "type": "module",
   "exports": {
     ".": {
@@ -16,7 +16,7 @@
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
-    "test": "echo 'no tests'",
+    "test": "node --test test/*.test.mjs",
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
