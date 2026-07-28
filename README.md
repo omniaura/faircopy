@@ -77,6 +77,7 @@ Optional NLP rules live in `@faircopy/rules-nlp`. Load the ruleset once to confi
 export default defineConfig({
   rulesets: ['@faircopy/rules-nlp'],
   rules: {
+    'no-adverb-overuse': 'warn',
     'no-expletive-openers': 'warn',
     'no-filter-words': 'warn',
     'no-future-promises': 'warn',
@@ -100,6 +101,7 @@ Use a package-qualified ID if two loaded rulesets expose the same bare rule name
 
 | Rule | Description |
 |---|---|
+| `@faircopy/rules-nlp/no-adverb-overuse` | Flag overuse of adverbs ending in `-ly` |
 | `@faircopy/rules-nlp/no-expletive-openers` | Flag sentence openings like `There are` |
 | `@faircopy/rules-nlp/no-filter-words` | Ban filter phrases like `I think` and `it seems` |
 | `@faircopy/rules-nlp/no-future-promises` | Flag future-tense promises like `will help you` |

@@ -11,6 +11,7 @@ Load the ruleset once, then configure rules with bare rule IDs:
 ```ts
 rulesets: ['@faircopy/rules-nlp'],
 rules: {
+  'no-adverb-overuse': 'warn',
   'no-expletive-openers': 'warn',
   'no-filter-words': 'warn',
   'no-future-promises': 'warn',
@@ -36,6 +37,7 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 
 | Rule | Description |
 |---|---|
+| `no-adverb-overuse` | Flag overuse of adverbs ending in `-ly` |
 | `no-empty-transformation-claims` | Flag broad transformation cliches like `transform the way teams work` |
 | `no-expletive-openers` | Flag sentence openings like `There are` |
 | `no-filter-words` | Ban filter phrases like `I think` and `it seems` |

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
+  noAdverbOveruse,
   noBuzzwordStacks,
   noEmptyTransformationClaims,
   noExpletiveOpeners,
@@ -454,4 +455,49 @@ test('no-complex-readability handles text without sentence terminators', () => {
   const diagnostics = run(noComplexReadability, text)
 
   assert.equal(diagnostics.length, 0)
+})
+
+test('no-adverb-overuse flags adverbs beyond the default threshold', () => {
+  const text = 'Quickly, quietly, and carefully, she walked slowly into the dark room.'
+  const diagnostics = run(noAdverbOveruse, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].ruleId, 'no-adverb-overuse')
+  assert.equal(diagnostics[0].severity, 'warn')
+  assert.equal(diagnostics[0].message, 'reduce adverb overuse: "slowly" exceeds the limit of 3 -ly adverbs')
+})
+
+test('no-adverb-overuse ignores allowed adverbs and non-adverbs ending in -ly', () => {
+  const text = 'Only family members can apply this policy easily.'
+  const diagnostics = run(noAdverbOveruse, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-adverb-overuse respects custom maxAdverbs', () => {
+  const text = 'She ran quickly, easily, slowly, and loudly.'
+  const diagnostics = run(noAdverbOveruse, text, { maxAdverbs: 2 })
+
+  assert.equal(diagnostics.length, 2)
+  assert.match(diagnostics[0].message, /slowly/)
+  assert.match(diagnostics[1].message, /loudly/)
+})
+
+test('no-adverb-overuse respects custom allowedAdverbs', () => {
+  const text = 'Truly, honestly, and deeply, he cared.'
+  const diagnostics = run(noAdverbOveruse, text, { allowedAdverbs: ['truly'], maxAdverbs: 1 })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /deeply/)
+})
+
+test('no-adverb-overuse reports nothing when adverb count is within threshold', () => {
+  const text = 'The team shipped quickly and quietly.'
+  const diagnostics = run(noAdverbOveruse, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('ruleRegistry contains no-adverb-overuse', () => {
+  assert.ok(ruleRegistry.has('no-adverb-overuse'))
 })
