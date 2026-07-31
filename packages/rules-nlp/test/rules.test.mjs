@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
   noAdverbOveruse,
+  noAiGenericPhrases,
   noBuzzwordStacks,
   noEmptyTransformationClaims,
   noExpletiveOpeners,
@@ -14,6 +15,7 @@ import {
   noRedundantPairs,
   noStackedAdjectives,
   noSuperlativeClaims,
+  noUnsupportedClaims,
   noVagueQuantifiers,
   noWeakModals,
   ruleRegistry,
@@ -500,4 +502,100 @@ test('no-adverb-overuse reports nothing when adverb count is within threshold', 
 
 test('ruleRegistry contains no-adverb-overuse', () => {
   assert.ok(ruleRegistry.has('no-adverb-overuse'))
+})
+
+test('no-ai-generic-phrases flags common AI filler phrases', () => {
+  const text = 'In the world of modern tooling, it is important to note that we leverage best practices.'
+  const diagnostics = run(noAiGenericPhrases, text)
+
+  assert.equal(diagnostics.length, 3)
+  assert.equal(diagnostics[0].ruleId, 'no-ai-generic-phrases')
+  assert.match(diagnostics[0].message, /in the world of/i)
+  assert.match(diagnostics[1].message, /it is important to note/i)
+  assert.match(diagnostics[2].message, /leverage/)
+})
+
+test('no-ai-generic-phrases flags empty rhetorical fillers', () => {
+  const text = 'Needless to say, the solution is robust. Ultimately, we deliver value.'
+  const diagnostics = run(noAiGenericPhrases, text)
+
+  assert.equal(diagnostics.length, 3)
+  assert.deepEqual(diagnostics.map(diagnostic => diagnostic.message.toLowerCase()), [
+    'replace generic phrase "needless to say"',
+    'replace generic phrase "robust"',
+    'replace generic phrase "ultimately"',
+  ])
+})
+
+test('no-ai-generic-phrases ignores allowed phrases', () => {
+  const text = 'We leverage best practices every day.'
+  const diagnostics = run(noAiGenericPhrases, text, { allowedPhrases: ['leverage'] })
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-ai-generic-phrases supports custom phrase lists', () => {
+  const text = 'This copy is on-brand and mission-critical.'
+  const diagnostics = run(noAiGenericPhrases, text, { phrases: ['on-brand', 'mission-critical'] })
+
+  assert.equal(diagnostics.length, 2)
+  assert.match(diagnostics[0].message, /on-brand/)
+  assert.match(diagnostics[1].message, /mission-critical/)
+})
+
+test('no-ai-generic-phrases does not match substrings inside longer words', () => {
+  const text = 'The tapestries we deliver are robustly engineered.'
+  const diagnostics = run(noAiGenericPhrases, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-unsupported-claims flags vague appeals to authority', () => {
+  const text = 'Studies show that experts agree. Research suggests faster reviews.'
+  const diagnostics = run(noUnsupportedClaims, text)
+
+  assert.equal(diagnostics.length, 3)
+  assert.equal(diagnostics[0].ruleId, 'no-unsupported-claims')
+  assert.match(diagnostics[0].message, /studies show/i)
+  assert.match(diagnostics[1].message, /experts agree/i)
+  assert.match(diagnostics[2].message, /research suggests/i)
+})
+
+test('no-unsupported-claims flags consensus cliches', () => {
+  const text = 'It is widely known that well established tools save time.'
+  const diagnostics = run(noUnsupportedClaims, text)
+
+  assert.equal(diagnostics.length, 2)
+  assert.match(diagnostics[0].message, /widely known/)
+  assert.match(diagnostics[1].message, /well established/)
+})
+
+test('no-unsupported-claims ignores allowed phrases', () => {
+  const text = 'Experts agree this is the right call.'
+  const diagnostics = run(noUnsupportedClaims, text, { allowedPhrases: ['experts agree'] })
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-unsupported-claims supports custom phrase lists', () => {
+  const text = 'Analysts predict strong growth.'
+  const diagnostics = run(noUnsupportedClaims, text, { phrases: ['analysts predict'] })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /analysts predict/i)
+})
+
+test('no-unsupported-claims allows specific sourced statements', () => {
+  const text = 'The 2023 Forrester Total Economic Impact study found a 40% reduction in review time.'
+  const diagnostics = run(noUnsupportedClaims, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('ruleRegistry contains no-ai-generic-phrases', () => {
+  assert.ok(ruleRegistry.has('no-ai-generic-phrases'))
+})
+
+test('ruleRegistry contains no-unsupported-claims', () => {
+  assert.ok(ruleRegistry.has('no-unsupported-claims'))
 })

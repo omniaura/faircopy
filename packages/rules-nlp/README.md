@@ -12,6 +12,7 @@ Load the ruleset once, then configure rules with bare rule IDs:
 rulesets: ['@faircopy/rules-nlp'],
 rules: {
   'no-adverb-overuse': 'warn',
+  'no-ai-generic-phrases': 'warn',
   'no-expletive-openers': 'warn',
   'no-filter-words': 'warn',
   'no-future-promises': 'warn',
@@ -28,6 +29,7 @@ rules: {
   'no-vague-quantifiers': 'warn',
   'no-meaningless-modifiers': 'warn',
   'no-superlative-claims': 'warn',
+  'no-unsupported-claims': 'warn',
 }
 ```
 
@@ -38,6 +40,7 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 | Rule | Description |
 |---|---|
 | `no-adverb-overuse` | Flag overuse of adverbs ending in `-ly` |
+| `no-ai-generic-phrases` | Flag generic AI-text phrases and empty rhetorical fillers |
 | `no-empty-transformation-claims` | Flag broad transformation cliches like `transform the way teams work` |
 | `no-expletive-openers` | Flag sentence openings like `There are` |
 | `no-filter-words` | Ban filter phrases like `I think` and `it seems` |
@@ -55,3 +58,4 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 | `no-vague-quantifiers` | Flag bare quantifiers without numeric anchors |
 | `no-meaningless-modifiers` | Flag intensifiers like `very` and `obviously` that add no information |
 | `no-superlative-claims` | Flag unproven superlatives like `best` and `world-class` |
+| `no-unsupported-claims` | Flag vague appeals to authority or consensus without a source |

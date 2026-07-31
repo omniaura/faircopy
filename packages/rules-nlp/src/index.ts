@@ -1,5 +1,6 @@
 import type { Rule } from '@faircopy/core'
 import { noAdverbOveruse } from './no-adverb-overuse.js'
+import { noAiGenericPhrases } from './no-ai-generic-phrases.js'
 import { noBuzzwordStacks } from './no-buzzword-stacks.js'
 import { noComplexReadability } from './no-complex-readability.js'
 import { noExpletiveOpeners } from './no-expletive-openers.js'
@@ -15,10 +16,12 @@ import { noPronounLedClaims } from './no-pronoun-led-claims.js'
 import { noRedundantPairs } from './no-redundant-pairs.js'
 import { noStackedAdjectives } from './no-stacked-adjectives.js'
 import { noSuperlativeClaims } from './no-superlative-claims.js'
+import { noUnsupportedClaims } from './no-unsupported-claims.js'
 import { noVagueQuantifiers } from './no-vague-quantifiers.js'
 import { noWeakModals } from './no-weak-modals.js'
 
 export { noAdverbOveruse } from './no-adverb-overuse.js'
+export { noAiGenericPhrases } from './no-ai-generic-phrases.js'
 export { noBuzzwordStacks } from './no-buzzword-stacks.js'
 export { noComplexReadability } from './no-complex-readability.js'
 export { noExpletiveOpeners } from './no-expletive-openers.js'
@@ -34,9 +37,11 @@ export { noPronounLedClaims } from './no-pronoun-led-claims.js'
 export { noRedundantPairs } from './no-redundant-pairs.js'
 export { noStackedAdjectives } from './no-stacked-adjectives.js'
 export { noSuperlativeClaims } from './no-superlative-claims.js'
+export { noUnsupportedClaims } from './no-unsupported-claims.js'
 export { noVagueQuantifiers } from './no-vague-quantifiers.js'
 export { noWeakModals } from './no-weak-modals.js'
 export type { NoAdverbOveruseOptions } from './no-adverb-overuse.js'
+export type { NoAiGenericPhrasesOptions } from './no-ai-generic-phrases.js'
 export type { NoBuzzwordStacksOptions } from './no-buzzword-stacks.js'
 export type { NoComplexReadabilityOptions } from './no-complex-readability.js'
 export type { NoExpletiveOpenersOptions } from './no-expletive-openers.js'
@@ -52,12 +57,14 @@ export type { NoPronounLedClaimsOptions } from './no-pronoun-led-claims.js'
 export type { NoRedundantPairsOptions } from './no-redundant-pairs.js'
 export type { NoStackedAdjectivesOptions } from './no-stacked-adjectives.js'
 export type { NoSuperlativeClaimsOptions } from './no-superlative-claims.js'
+export type { NoUnsupportedClaimsOptions } from './no-unsupported-claims.js'
 export type { NoVagueQuantifiersOptions } from './no-vague-quantifiers.js'
 export type { NoWeakModalsOptions } from './no-weak-modals.js'
 
 /** All NLP rules keyed by their rule ID. */
 export const ruleRegistry: Map<string, Rule> = new Map([
   ['no-adverb-overuse', noAdverbOveruse as Rule],
+  ['no-ai-generic-phrases', noAiGenericPhrases as Rule],
   ['no-buzzword-stacks', noBuzzwordStacks as Rule],
   ['no-complex-readability', noComplexReadability as Rule],
   ['no-empty-transformation-claims', noEmptyTransformationClaims as Rule],
@@ -73,6 +80,7 @@ export const ruleRegistry: Map<string, Rule> = new Map([
   ['no-redundant-pairs', noRedundantPairs as Rule],
   ['no-stacked-adjectives', noStackedAdjectives as Rule],
   ['no-superlative-claims', noSuperlativeClaims as Rule],
+  ['no-unsupported-claims', noUnsupportedClaims as Rule],
   ['no-vague-quantifiers', noVagueQuantifiers as Rule],
   ['no-weak-modals', noWeakModals as Rule],
 ])
