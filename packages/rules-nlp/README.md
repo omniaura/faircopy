@@ -37,7 +37,7 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 
 | Rule | Description |
 |---|---|
-| `no-adverb-overuse` | Flag overuse of adverbs ending in `-ly` |
+| `no-adverb-overuse` | Flag sentences with more than two adverbs ending in `-ly` |
 | `no-empty-transformation-claims` | Flag broad transformation cliches like `transform the way teams work` |
 | `no-expletive-openers` | Flag sentence openings like `There are` |
 | `no-filter-words` | Ban filter phrases like `I think` and `it seems` |

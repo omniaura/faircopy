@@ -457,14 +457,24 @@ test('no-complex-readability handles text without sentence terminators', () => {
   assert.equal(diagnostics.length, 0)
 })
 
-test('no-adverb-overuse flags adverbs beyond the default threshold', () => {
-  const text = 'Quickly, quietly, and carefully, she walked slowly into the dark room.'
+test('no-adverb-overuse flags the third -ly adverb in a sentence', () => {
+  const text = 'Quickly, quietly, and carefully, she walked into the dark room.'
   const diagnostics = run(noAdverbOveruse, text)
 
   assert.equal(diagnostics.length, 1)
   assert.equal(diagnostics[0].ruleId, 'no-adverb-overuse')
   assert.equal(diagnostics[0].severity, 'warn')
-  assert.equal(diagnostics[0].message, 'reduce adverb overuse: "slowly" exceeds the limit of 3 -ly adverbs')
+  assert.equal(diagnostics[0].message, 'reduce adverb overuse: "carefully" exceeds the limit of 2 -ly adverbs per sentence')
+  assert.deepEqual(diagnostics[0].range, { start: 22, end: 31 })
+})
+
+test('no-adverb-overuse flags multiple adverbs beyond the threshold', () => {
+  const text = 'She ran quickly, easily, slowly, and loudly.'
+  const diagnostics = run(noAdverbOveruse, text)
+
+  assert.equal(diagnostics.length, 2)
+  assert.match(diagnostics[0].message, /slowly/)
+  assert.match(diagnostics[1].message, /loudly/)
 })
 
 test('no-adverb-overuse ignores allowed adverbs and non-adverbs ending in -ly', () => {
@@ -475,12 +485,11 @@ test('no-adverb-overuse ignores allowed adverbs and non-adverbs ending in -ly', 
 })
 
 test('no-adverb-overuse respects custom maxAdverbs', () => {
-  const text = 'She ran quickly, easily, slowly, and loudly.'
-  const diagnostics = run(noAdverbOveruse, text, { maxAdverbs: 2 })
+  const text = 'She ran quickly and quietly.'
+  const diagnostics = run(noAdverbOveruse, text, { maxAdverbs: 1 })
 
-  assert.equal(diagnostics.length, 2)
-  assert.match(diagnostics[0].message, /slowly/)
-  assert.match(diagnostics[1].message, /loudly/)
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /quietly/)
 })
 
 test('no-adverb-overuse respects custom allowedAdverbs', () => {
@@ -496,6 +505,14 @@ test('no-adverb-overuse reports nothing when adverb count is within threshold', 
   const diagnostics = run(noAdverbOveruse, text)
 
   assert.equal(diagnostics.length, 0)
+})
+
+test('no-adverb-overuse evaluates each sentence independently', () => {
+  const text = 'She walked slowly. He ran quickly, easily, and quietly.'
+  const diagnostics = run(noAdverbOveruse, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /quietly/)
 })
 
 test('ruleRegistry contains no-adverb-overuse', () => {

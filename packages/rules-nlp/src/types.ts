@@ -1,5 +1,7 @@
 export interface JsonOffsetTerm {
+  text?: string
   offset?: { start?: number; length?: number }
+  tags?: string[]
 }
 
 export interface JsonOffsetEntry {
@@ -14,4 +16,5 @@ export interface MatchView {
 
 export interface DocView extends MatchView {
   match(pattern: string): MatchView
+  sentences(): MatchView
 }
