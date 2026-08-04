@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { noNonInclusiveLanguage, ruleRegistry } from '../dist/index.js'
+import { noNonInclusiveLanguage, noRedundantPhrases, ruleRegistry } from '../dist/index.js'
 
 function run(rule, text, options = {}) {
   return rule.check({
@@ -110,4 +110,60 @@ test('no-non-inclusive-language is case-insensitive', () => {
 
 test('rule registry exposes the new inclusive-language rule', () => {
   assert.ok(ruleRegistry.has('no-non-inclusive-language'))
+})
+
+test('no-redundant-phrases flags default redundant phrases', () => {
+  const text = 'In order to win, we must act now. Due to the fact that we shipped early, we lead the market.'
+  const diagnostics = run(noRedundantPhrases, text)
+
+  assert.equal(diagnostics.length, 2)
+  assert.equal(diagnostics[0].ruleId, 'no-redundant-phrases')
+  assert.match(diagnostics[0].message, /in order to/i)
+  assert.match(diagnostics[0].message, /to/)
+  assert.deepEqual(diagnostics[0].range, { start: 0, end: 11 })
+  assert.equal(diagnostics[0].suggest.edits[0].replacement, 'to')
+  assert.equal(diagnostics[1].ruleId, 'no-redundant-phrases')
+  assert.match(diagnostics[1].message, /due to the fact that/i)
+  assert.match(diagnostics[1].message, /because/)
+  assert.deepEqual(diagnostics[1].range, { start: 34, end: 54 })
+  assert.equal(diagnostics[1].suggest.edits[0].replacement, 'because')
+})
+
+test('no-redundant-phrases suggests deleting empty-replacement phrases', () => {
+  const text = 'Needless to say, the product is fast.'
+  const diagnostics = run(noRedundantPhrases, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /needless to say/i)
+  assert.equal(diagnostics[0].suggest.edits[0].replacement, '')
+})
+
+test('no-redundant-phrases is case-insensitive', () => {
+  const text = 'IN ORDER TO succeed, plan ahead.'
+  const diagnostics = run(noRedundantPhrases, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /IN ORDER TO/)
+})
+
+test('no-redundant-phrases supports custom phrases', () => {
+  const text = 'We should touch base before the launch.'
+  const diagnostics = run(noRedundantPhrases, text, {
+    phrases: [{ phrase: 'touch base', replacement: 'talk' }],
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /touch base/)
+  assert.equal(diagnostics[0].suggest.edits[0].replacement, 'talk')
+})
+
+test('no-redundant-phrases does not match substrings inside longer words', () => {
+  const text = 'The proximity sensor is in order.'
+  const diagnostics = run(noRedundantPhrases, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('rule registry exposes the new redundant-phrases rule', () => {
+  assert.ok(ruleRegistry.has('no-redundant-phrases'))
 })

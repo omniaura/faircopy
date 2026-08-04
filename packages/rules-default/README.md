@@ -123,3 +123,53 @@ rules: {
 ```
 
 Set `exact: true` on a multi-word term to match the whole phrase with word boundaries. This is useful for phrases like `sanity check`, ensuring `sanity checker` is not flagged.
+
+---
+
+### `no-redundant-phrases`
+
+Flags wordy redundant phrases and suggests concise replacements.
+
+Default phrases include:
+
+| Phrase | Suggested replacement |
+|---|---|
+| `in order to` | `to` |
+| `due to the fact that` | `because` |
+| `in spite of the fact that` | `although` |
+| `at this point in time` | `now` |
+| `in the event that` | `if` |
+| `for the purpose of` | `to` |
+| `with regard to` | `about` |
+| `in close proximity to` | `near` |
+| `a large number of` | `many` |
+| `the reason is that` | `because` |
+| `it is important to note that` | *(delete)* |
+| `needless to say` | *(delete)* |
+
+```
+warn[no-redundant-phrases]: "in order to" is redundant — use "to"
+```
+
+**Options:**
+
+```ts
+{
+  phrases?: { phrase: string; replacement: string }[]
+}
+```
+
+**Config example:**
+
+```ts
+rules: {
+  'no-redundant-phrases': ['warn', {
+    phrases: [
+      { phrase: 'in order to', replacement: 'to' },
+      { phrase: 'touch base', replacement: 'talk' },
+    ],
+  }],
+}
+```
+
+Set `replacement` to an empty string to suggest deleting the phrase entirely.
