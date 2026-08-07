@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
+  noAbsoluteIntensifiers,
   noAdverbOveruse,
   noBuzzwordStacks,
   noEmptyTransformationClaims,
@@ -513,6 +514,98 @@ test('no-adverb-overuse evaluates each sentence independently', () => {
 
   assert.equal(diagnostics.length, 1)
   assert.match(diagnostics[0].message, /quietly/)
+})
+
+test('no-absolute-intensifiers flags default intensifier + absolute pairs', () => {
+  const text = 'This is very unique and completely finished.'
+  const diagnostics = run(noAbsoluteIntensifiers, text)
+
+  assert.equal(diagnostics.length, 2)
+  assert.equal(diagnostics[0].ruleId, 'no-absolute-intensifiers')
+  assert.deepEqual(diagnostics[0].range, { start: 8, end: 19 })
+  assert.match(diagnostics[0].message, /very unique/i)
+  assert.equal(diagnostics[0].suggest.edits[0].replacement, 'unique')
+  assert.deepEqual(diagnostics[1].range, { start: 24, end: 43 })
+  assert.match(diagnostics[1].message, /completely finished/i)
+  assert.equal(diagnostics[1].suggest.edits[0].replacement, 'finished')
+})
+
+test('no-absolute-intensifiers is case-insensitive', () => {
+  const text = 'It is VERY UNIQUE.'
+  const diagnostics = run(noAbsoluteIntensifiers, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /VERY UNIQUE/)
+  assert.equal(diagnostics[0].suggest.edits[0].replacement, 'UNIQUE')
+})
+
+test('no-absolute-intensifiers does not match absolutes without intensifiers', () => {
+  const text = 'The design is unique and the work is finished.'
+  const diagnostics = run(noAbsoluteIntensifiers, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-absolute-intensifiers does not match intensifiers before non-absolutes', () => {
+  const text = 'It is very fast and completely done.'
+  const diagnostics = run(noAbsoluteIntensifiers, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-absolute-intensifiers does not match substrings inside longer words', () => {
+  const text = 'The uniqueness is very clearly shown.'
+  const diagnostics = run(noAbsoluteIntensifiers, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-absolute-intensifiers does not match hyphenated or possessive compounds', () => {
+  const text = 'A very unique-ish design and completely finished-looking work.'
+  const diagnostics = run(noAbsoluteIntensifiers, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-absolute-intensifiers does not match when absolute is embedded in another word', () => {
+  const text = 'It is very 123unique and completely abcfinished.'
+  const diagnostics = run(noAbsoluteIntensifiers, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-absolute-intensifiers supports custom intensifiers and absolutes', () => {
+  const text = 'The plan is highly critical and somewhat absolute.'
+  const diagnostics = run(noAbsoluteIntensifiers, text, {
+    intensifiers: ['highly', 'somewhat'],
+    absolutes: ['critical', 'absolute'],
+  })
+
+  assert.equal(diagnostics.length, 2)
+  assert.match(diagnostics[0].message, /highly critical/)
+  assert.equal(diagnostics[0].suggest.edits[0].replacement, 'critical')
+  assert.match(diagnostics[1].message, /somewhat absolute/)
+  assert.equal(diagnostics[1].suggest.edits[0].replacement, 'absolute')
+})
+
+test('no-absolute-intensifiers handles multiple spaces between words', () => {
+  const text = 'It is very   unique.'
+  const diagnostics = run(noAbsoluteIntensifiers, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].suggest.edits[0].replacement, 'unique')
+})
+
+test('no-absolute-intensifiers falls back to defaults when options are empty', () => {
+  const text = 'It is very unique.'
+  const diagnostics = run(noAbsoluteIntensifiers, text, {})
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /very unique/i)
+})
+
+test('ruleRegistry contains no-absolute-intensifiers', () => {
+  assert.ok(ruleRegistry.has('no-absolute-intensifiers'))
 })
 
 test('ruleRegistry contains no-adverb-overuse', () => {

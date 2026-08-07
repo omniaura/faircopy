@@ -11,6 +11,7 @@ Load the ruleset once, then configure rules with bare rule IDs:
 ```ts
 rulesets: ['@faircopy/rules-nlp'],
 rules: {
+  'no-absolute-intensifiers': 'warn',
   'no-adverb-overuse': 'warn',
   'no-expletive-openers': 'warn',
   'no-filter-words': 'warn',
@@ -37,6 +38,7 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 
 | Rule | Description |
 |---|---|
+| `no-absolute-intensifiers` | Flag intensifiers before absolute adjectives like `very unique` |
 | `no-adverb-overuse` | Flag sentences with more than two adverbs ending in `-ly` |
 | `no-empty-transformation-claims` | Flag broad transformation cliches like `transform the way teams work` |
 | `no-expletive-openers` | Flag sentence openings like `There are` |
@@ -55,3 +57,29 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 | `no-vague-quantifiers` | Flag bare quantifiers without numeric anchors |
 | `no-meaningless-modifiers` | Flag intensifiers like `very` and `obviously` that add no information |
 | `no-superlative-claims` | Flag unproven superlatives like `best` and `world-class` |
+
+### `no-absolute-intensifiers`
+
+Absolute adjectives already express an extreme, so intensifiers such as `very` are redundant.
+
+```ts
+rules: {
+  'no-absolute-intensifiers': 'warn',
+}
+```
+
+Options:
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `intensifiers` | `string[]` | `['very', 'really', 'completely', ...]` | Words or phrases to treat as intensifiers |
+| `absolutes` | `string[]` | `['unique', 'finished', 'destroyed', ...]` | Absolute adjectives that should not be intensified |
+
+Example:
+
+```ts
+'no-absolute-intensifiers': ['warn', {
+  intensifiers: ['very', 'highly'],
+  absolutes: ['unique', 'critical'],
+}]
+```
