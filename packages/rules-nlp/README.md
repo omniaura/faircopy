@@ -83,3 +83,29 @@ Example:
   absolutes: ['unique', 'critical'],
 }]
 ```
+
+### `no-adverb-overuse`
+
+Sentences stacked with `-ly` adverbs feel padded. This rule flags each adverb past the configured threshold so you can replace it with a stronger verb or adjective.
+
+```ts
+rules: {
+  'no-adverb-overuse': 'warn',
+}
+```
+
+Options:
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `maxAdverbs` | `number` | `2` | Maximum `-ly` adverbs allowed per sentence before the rest are flagged |
+| `allowedAdverbs` | `string[]` | `['only']` | Adverbs to ignore entirely |
+
+Example:
+
+```ts
+'no-adverb-overuse': ['warn', {
+  maxAdverbs: 3,
+  allowedAdverbs: ['only', 'truly'],
+}]
+```
