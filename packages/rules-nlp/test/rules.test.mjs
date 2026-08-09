@@ -18,6 +18,7 @@ import {
   noVagueQuantifiers,
   noWeakModals,
   ruleRegistry,
+  sentenceComplexity,
 } from '../dist/index.js'
 
 function run(rule, text, options = {}) {
@@ -610,4 +611,102 @@ test('ruleRegistry contains no-absolute-intensifiers', () => {
 
 test('ruleRegistry contains no-adverb-overuse', () => {
   assert.ok(ruleRegistry.has('no-adverb-overuse'))
+})
+
+test('sentence-complexity flags sentences that exceed the default word limit', () => {
+  const text = 'The quick brown fox jumps over the lazy dog and then runs through the meadow while the sun sets behind the hills and the birds begin to sing in the trees.'
+  const diagnostics = run(sentenceComplexity, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].ruleId, 'sentence-complexity')
+  assert.match(diagnostics[0].message, /words \(max 25\)/)
+  assert.match(diagnostics[0].message, /consider splitting/)
+  assert.equal(diagnostics[0].severity, 'warn')
+  assert.ok(diagnostics[0].suggest)
+  assert.match(diagnostics[0].suggest.description, /shorter sentences/)
+})
+
+test('sentence-complexity flags sentences that exceed the default clause limit', () => {
+  const text = 'I woke up and I ate breakfast and I went to work and I attended a meeting and I returned home.'
+  const diagnostics = run(sentenceComplexity, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].ruleId, 'sentence-complexity')
+  assert.match(diagnostics[0].message, /clauses \(max 3\)/)
+})
+
+test('sentence-complexity flags sentences that exceed both limits', () => {
+  const text = 'The engineer reviewed the requirements and wrote the code and ran the tests and deployed the application while the team watched and celebrated the release together.'
+  const diagnostics = run(sentenceComplexity, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /words \(max 25\)/)
+  assert.match(diagnostics[0].message, /clauses \(max 3\)/)
+})
+
+test('sentence-complexity allows short simple sentences', () => {
+  const text = 'The fox jumps. The dog sleeps.'
+  const diagnostics = run(sentenceComplexity, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('sentence-complexity allows sentences at the word threshold', () => {
+  // Exactly 25 words, no extra clauses.
+  const text = 'One two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty.'
+  const diagnostics = run(sentenceComplexity, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('sentence-complexity flags sentences just above the word threshold', () => {
+  const text = 'One two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty twenty-one twenty-two twenty-three twenty-four twenty-five twenty-six.'
+  const diagnostics = run(sentenceComplexity, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /words \(max 25\)/)
+})
+
+test('sentence-complexity allows sentences at the clause threshold', () => {
+  const text = 'I ran, I swam, and I cycled.'
+  const diagnostics = run(sentenceComplexity, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('sentence-complexity respects custom word threshold', () => {
+  const text = 'The cat sat on the mat and looked at the bird.'
+  const diagnostics = run(sentenceComplexity, text, { maxWordCount: 5 })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /words \(max 5\)/)
+})
+
+test('sentence-complexity respects custom clause threshold', () => {
+  const text = 'I ran and I swam.'
+  const diagnostics = run(sentenceComplexity, text, { maxClauseCount: 1 })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /clauses \(max 1\)/)
+})
+
+test('sentence-complexity ignores punctuation-only tokens when counting words', () => {
+  const text = 'Well — that is it, then.'
+  const diagnostics = run(sentenceComplexity, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('sentence-complexity reports accurate byte ranges', () => {
+  const prefix = 'Short sentence. '
+  const longSentence = 'The quick brown fox jumps over the lazy dog and then runs through the meadow while the sun sets behind the hills and the birds begin to sing in the trees.'
+  const text = prefix + longSentence
+  const diagnostics = run(sentenceComplexity, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.deepEqual(diagnostics[0].range, { start: prefix.length, end: text.length })
+})
+
+test('ruleRegistry contains sentence-complexity', () => {
+  assert.ok(ruleRegistry.has('sentence-complexity'))
 })

@@ -57,6 +57,7 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 | `no-vague-quantifiers` | Flag bare quantifiers without numeric anchors |
 | `no-meaningless-modifiers` | Flag intensifiers like `very` and `obviously` that add no information |
 | `no-superlative-claims` | Flag unproven superlatives like `best` and `world-class` |
+| `sentence-complexity` | Flag sentences that exceed a word or clause threshold |
 
 ### `no-absolute-intensifiers`
 
@@ -82,4 +83,42 @@ Example:
   intensifiers: ['very', 'highly'],
   absolutes: ['unique', 'critical'],
 }]
+```
+
+### `sentence-complexity`
+
+Long, clause-heavy sentences are harder to read. This rule flags any sentence that exceeds a configurable word count or contains too many finite-verb clauses, and suggests splitting it into shorter sentences.
+
+```ts
+rules: {
+  'sentence-complexity': 'warn',
+}
+```
+
+Options:
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `maxWordCount` | `number` | `25` | Maximum words allowed per sentence |
+| `maxClauseCount` | `number` | `3` | Maximum finite-verb clauses allowed per sentence |
+
+Example with custom thresholds:
+
+```ts
+'sentence-complexity': ['warn', {
+  maxWordCount: 20,
+  maxClauseCount: 2,
+}]
+```
+
+Flagged example:
+
+```text
+The engineer reviewed the requirements and wrote the code and ran the tests and deployed the application while the team watched and celebrated the release together.
+```
+
+Suggested fix: split the sentence around each independent clause.
+
+```text
+The engineer reviewed the requirements. They wrote the code, ran the tests, and deployed the application. The team watched and celebrated the release together.
 ```
