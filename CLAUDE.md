@@ -7,7 +7,7 @@ A copy linter for landing pages and marketing surfaces. Catches em-dashes, wease
 - `packages/core` — types, config loader, file resolver, rule runner
 - `packages/cli` — `faircopy` binary, reporters
 - `packages/config` — `defineConfig()` helper (M1)
-- `packages/rules-default` — default ruleset: no-em-dash, no-weasel-words, no-rhetorical-scaffolding (M1)
+- `packages/rules-default` — default ruleset: no-em-dash, no-weasel-words, no-rhetorical-scaffolding, no-passive-voice (M1)
 - `packages/astro` — Astro adapter (M1)
 - `examples/` — integration examples
 

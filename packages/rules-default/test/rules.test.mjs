@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { noNonInclusiveLanguage, noRedundantPhrases, ruleRegistry } from '../dist/index.js'
+import { noNonInclusiveLanguage, noRedundantPhrases, noPassiveVoice, ruleRegistry } from '../dist/index.js'
 
 function run(rule, text, options = {}) {
   return rule.check({
@@ -166,4 +166,68 @@ test('no-redundant-phrases does not match substrings inside longer words', () =>
 
 test('rule registry exposes the new redundant-phrases rule', () => {
   assert.ok(ruleRegistry.has('no-redundant-phrases'))
+})
+
+test('no-passive-voice flags common passive constructions', () => {
+  const text = 'The page was approved. The rollout is delayed by unclear ownership. The report has been written.'
+  const diagnostics = run(noPassiveVoice, text)
+
+  assert.equal(diagnostics.length, 3)
+  assert.equal(diagnostics[0].ruleId, 'no-passive-voice')
+  assert.match(diagnostics[0].message, /was approved/)
+  assert.deepEqual(diagnostics[0].range, { start: 9, end: 21 })
+  assert.match(diagnostics[1].message, /is delayed/)
+  assert.deepEqual(diagnostics[1].range, { start: 35, end: 45 })
+  assert.match(diagnostics[2].message, /been written/)
+  assert.deepEqual(diagnostics[2].range, { start: 83, end: 95 })
+})
+
+test('no-passive-voice ignores active voice', () => {
+  const text = 'The team approved the page. Unclear ownership delayed the rollout.'
+  const diagnostics = run(noPassiveVoice, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-passive-voice respects allowed phrases', () => {
+  const text = 'The page was approved by the committee.'
+  const diagnostics = run(noPassiveVoice, text, { allowedPhrases: ['was approved'] })
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-passive-voice supports custom auxiliaries', () => {
+  const text = 'The feature gets deployed every Friday.'
+  const diagnostics = run(noPassiveVoice, text, { auxiliaries: ['gets'], participles: ['deployed'] })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /gets deployed/)
+})
+
+test('no-passive-voice supports custom participles', () => {
+  const text = 'The build is greenlit every morning.'
+  const diagnostics = run(noPassiveVoice, text, { participles: ['greenlit'] })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /is greenlit/)
+})
+
+test('no-passive-voice is case-insensitive', () => {
+  const text = 'The Page Was Approved.'
+  const diagnostics = run(noPassiveVoice, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /Was Approved/)
+})
+
+test('no-passive-voice does not match substrings inside longer words', () => {
+  const text = 'The approvedly happy team was welcomed.'
+  const diagnostics = run(noPassiveVoice, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /was welcomed/)
+})
+
+test('rule registry exposes the new passive-voice rule', () => {
+  assert.ok(ruleRegistry.has('no-passive-voice'))
 })

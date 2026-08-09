@@ -1,6 +1,6 @@
 # @faircopy/rules-default
 
-Default ruleset for faircopy. Ships four rules targeting the most common landing-page copy patterns.
+Default ruleset for faircopy. Ships five rules targeting the most common landing-page copy patterns.
 
 ## Install
 
@@ -173,3 +173,35 @@ rules: {
 ```
 
 Set `replacement` to an empty string to suggest deleting the phrase entirely.
+
+---
+
+### `no-passive-voice`
+
+Flags likely passive-voice constructions using auxiliary + past participle patterns.
+
+```
+warn[no-passive-voice]: rewrite passive construction "was approved" with a named actor
+```
+
+Passive voice often hides the actor and adds drag. Prefer naming who did the action unless the actor genuinely does not matter.
+
+**Options:**
+
+```ts
+{
+  auxiliaries?: string[]  // Default: ['is', 'are', 'was', 'were', 'be', 'been', 'being']
+  participles?: string[]  // Past participles to flag. Default is a curated list of common action participles.
+  allowedPhrases?: string[] // Phrases to allow even if they match the passive pattern.
+}
+```
+
+**Config example:**
+
+```ts
+rules: {
+  'no-passive-voice': ['warn', {
+    allowedPhrases: ['is licensed', 'was founded'],
+  }],
+}
+```
