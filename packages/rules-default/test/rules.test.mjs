@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { noNonInclusiveLanguage, noRedundantPhrases, noPassiveVoice, ruleRegistry } from '../dist/index.js'
+import { noComplexSentences, noNonInclusiveLanguage, noRedundantPhrases, noPassiveVoice, ruleRegistry } from '../dist/index.js'
 
 function run(rule, text, options = {}) {
   return rule.check({
@@ -230,4 +230,86 @@ test('no-passive-voice does not match substrings inside longer words', () => {
 
 test('rule registry exposes the new passive-voice rule', () => {
   assert.ok(ruleRegistry.has('no-passive-voice'))
+})
+
+test('no-complex-sentences flags a dense, multi-clause sentence', () => {
+  const text = 'The implementation of multifaceted computational methodologies necessitates the rigorous examination of numerous interdependent variables, which consequently produces a substantial augmentation in cognitive load for the average reader.'
+  const diagnostics = run(noComplexSentences, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].ruleId, 'no-complex-sentences')
+  assert.equal(diagnostics[0].severity, 'warn')
+  assert.match(diagnostics[0].message, /grade/)
+  assert.match(diagnostics[0].message, /simplify to 12/)
+  assert.deepEqual(diagnostics[0].range, { start: 0, end: text.length })
+})
+
+test('no-complex-sentences allows short, simple sentences', () => {
+  const text = 'Faircopy checks your copy. It finds weak words. Your page reads better.'
+  const diagnostics = run(noComplexSentences, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-complex-sentences ignores sentences below the word threshold', () => {
+  const text = 'The multifaceted implementation necessitates rigorous examination.'
+  const diagnostics = run(noComplexSentences, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-complex-sentences flags only the complex sentence in mixed text', () => {
+  const prefix = 'Faircopy checks your copy. '
+  const complex = 'The implementation of multifaceted computational methodologies necessitates the rigorous examination of numerous interdependent variables, which consequently produces a substantial augmentation in cognitive load for the average reader.'
+  const text = prefix + complex
+  const diagnostics = run(noComplexSentences, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.deepEqual(diagnostics[0].range, { start: prefix.length, end: text.length })
+})
+
+test('no-complex-sentences respects custom max grade level', () => {
+  const text = 'The quick brown fox jumps over the lazy dog while the sun sets behind the hills and the birds begin to sing in the trees.'
+  const diagnostics = run(noComplexSentences, text, { maxGradeLevel: 1 })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /simplify to 1/)
+})
+
+test('no-complex-sentences respects custom minimum word threshold', () => {
+  const text = 'The implementation of multifaceted computational methodologies necessitates rigorous examination.'
+  const diagnostics = run(noComplexSentences, text, { minWords: 5 })
+
+  assert.equal(diagnostics.length, 1)
+})
+
+test('no-complex-sentences handles empty text', () => {
+  const diagnostics = run(noComplexSentences, '')
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-complex-sentences handles text without sentence terminators', () => {
+  const text = 'The implementation of multifaceted computational methodologies necessitates rigorous examination of interdependent variables'
+  const diagnostics = run(noComplexSentences, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-complex-sentences does not split on common abbreviations', () => {
+  const text = 'Dr. Smith visited at 3 p.m. The implementation of multifaceted computational methodologies necessitates the rigorous examination of numerous interdependent variables.'
+  const diagnostics = run(noComplexSentences, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].range.start, text.indexOf('The implementation'))
+})
+
+test('no-complex-sentences flags sentences ending with question or exclamation marks', () => {
+  const text = 'The implementation of multifaceted computational methodologies necessitates the rigorous examination of numerous interdependent variables!'
+  const diagnostics = run(noComplexSentences, text)
+
+  assert.equal(diagnostics.length, 1)
+})
+
+test('rule registry exposes the new complex-sentences rule', () => {
+  assert.ok(ruleRegistry.has('no-complex-sentences'))
 })

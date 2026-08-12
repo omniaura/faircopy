@@ -1,6 +1,6 @@
 # @faircopy/rules-default
 
-Default ruleset for faircopy. Ships five rules targeting the most common landing-page copy patterns.
+Default ruleset for faircopy. Ships eight rules targeting the most common landing-page copy patterns.
 
 ## Install
 
@@ -11,6 +11,33 @@ npm i @faircopy/rules-default
 ```
 
 ## Rules
+
+### `no-complex-sentences`
+
+Flags individual sentences whose Flesch-Kincaid grade level exceeds a target.
+
+```
+warn[no-complex-sentences]: sentence readability is grade 18.5 — simplify to 12 or below
+```
+
+**Options:**
+
+```ts
+{
+  maxGradeLevel?: number  // Default: 12
+  minWords?: number       // Minimum words before scoring a sentence. Default: 10
+}
+```
+
+**Config example:**
+
+```ts
+rules: {
+  'no-complex-sentences': ['warn', { maxGradeLevel: 10, minWords: 8 }],
+}
+```
+
+---
 
 ### `no-em-dash`
 
