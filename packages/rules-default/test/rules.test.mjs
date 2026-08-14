@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { noComplexSentences, noNonInclusiveLanguage, noRedundantPhrases, noPassiveVoice, ruleRegistry } from '../dist/index.js'
+import { noComplexSentences, noNonInclusiveLanguage, noRedundantPhrases, noPassiveVoice, noCliches, ruleRegistry } from '../dist/index.js'
 
 function run(rule, text, options = {}) {
   return rule.check({
@@ -312,4 +312,58 @@ test('no-complex-sentences flags sentences ending with question or exclamation m
 
 test('rule registry exposes the new complex-sentences rule', () => {
   assert.ok(ruleRegistry.has('no-complex-sentences'))
+})
+
+test('no-cliches flags default clichéd phrases', () => {
+  const text = 'Our world-class, cutting-edge platform is a game changer. At the end of the day, we move the needle.'
+  const diagnostics = run(noCliches, text)
+
+  assert.equal(diagnostics.length, 5)
+  assert.equal(diagnostics[0].ruleId, 'no-cliches')
+  assert.match(diagnostics[0].message, /world-class/)
+  assert.deepEqual(diagnostics[0].range, { start: 4, end: 15 })
+  assert.match(diagnostics[1].message, /cutting-edge/)
+  assert.match(diagnostics[2].message, /game changer/)
+  assert.match(diagnostics[3].message, /at the end of the day/i)
+  assert.match(diagnostics[4].message, /move the needle/)
+  assert.ok(diagnostics.every(diagnostic => diagnostic.severity === 'warn'))
+})
+
+test('no-cliches is case-insensitive', () => {
+  const text = 'This is a WORLD-CLASS solution with Seamless integration.'
+  const diagnostics = run(noCliches, text)
+
+  assert.equal(diagnostics.length, 2)
+  assert.match(diagnostics[0].message, /WORLD-CLASS/)
+  assert.match(diagnostics[1].message, /Seamless/)
+})
+
+test('no-cliches does not match substrings inside longer words', () => {
+  const text = 'The seamlessness of their robustly engineered system is not a game-changingly bad idea.'
+  const diagnostics = run(noCliches, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-cliches respects allowed phrases', () => {
+  const text = 'Our robust, world-class product delivers synergy.'
+  const diagnostics = run(noCliches, text, { allow: ['robust', 'synergy'] })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /world-class/)
+})
+
+test('no-cliches supports custom phrases', () => {
+  const text = 'We should touch base before the launch.'
+  const diagnostics = run(noCliches, text, {
+    phrases: [{ phrase: 'touch base', alternatives: ['talk', 'connect'] }],
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /touch base/)
+  assert.match(diagnostics[0].message, /talk/)
+})
+
+test('rule registry exposes the new no-cliches rule', () => {
+  assert.ok(ruleRegistry.has('no-cliches'))
 })

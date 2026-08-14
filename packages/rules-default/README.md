@@ -1,6 +1,6 @@
 # @faircopy/rules-default
 
-Default ruleset for faircopy. Ships eight rules targeting the most common landing-page copy patterns.
+Default ruleset for faircopy. Ships nine rules targeting the most common landing-page copy patterns.
 
 ## Install
 
@@ -200,6 +200,62 @@ rules: {
 ```
 
 Set `replacement` to an empty string to suggest deleting the phrase entirely.
+
+---
+
+### `no-cliches`
+
+Flags overused or clichéd phrases and suggests fresher alternatives.
+
+Default phrases include:
+
+| Phrase | Suggested alternatives |
+|---|---|
+| `world-class` | `top-tier`, `exceptional`, `outstanding` |
+| `best-in-class` | `leading`, `top-performing`, `category-leading` |
+| `cutting-edge` | `advanced`, `modern`, `latest` |
+| `state-of-the-art` | `advanced`, `modern`, `sophisticated` |
+| `game changer` | `breakthrough`, `transformation`, `major advance` |
+| `think outside the box` | `be creative`, `innovate`, `find a new approach` |
+| `at the end of the day` | `ultimately`, `finally`, `in summary` |
+| `low-hanging fruit` | `easy wins`, `quick opportunities`, `simple targets` |
+| `move the needle` | `make a measurable difference`, `drive results`, `create impact` |
+| `circle back` | `follow up`, `reconnect`, `return to this` |
+| `hit the ground running` | `start quickly`, `get started immediately`, `begin effectively` |
+| `boil the ocean` | `take on too much`, `overcomplicate`, `lose focus` |
+| `paradigm shift` | `fundamental change`, `new approach`, `transformation` |
+| `next level` | `advanced`, `improved`, `elevated` |
+| `seamless` | `smooth`, `effortless`, `frictionless` |
+| `robust` | `strong`, `resilient`, `reliable` |
+| `leverage` | `use`, `take advantage of`, `utilize` |
+| `synergy` | `collaboration`, `combined effect`, `partnership` |
+
+```
+warn[no-cliches]: replace "world-class" with a fresher alternative such as "top-tier, exceptional, outstanding"
+```
+
+**Options:**
+
+```ts
+{
+  phrases?: { phrase: string; alternatives: string[] }[]
+  allow?: string[]
+}
+```
+
+**Config example:**
+
+```ts
+rules: {
+  'no-cliches': ['warn', {
+    phrases: [
+      { phrase: 'world-class', alternatives: ['top-tier', 'exceptional'] },
+      { phrase: 'low-hanging fruit', alternatives: ['easy wins'] },
+    ],
+    allow: ['robust'],
+  }],
+}
+```
 
 ---
 
