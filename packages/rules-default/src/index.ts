@@ -7,6 +7,7 @@ import { noNonInclusiveLanguage } from './no-non-inclusive-language.js'
 import { noRedundantPhrases } from './no-redundant-phrases.js'
 import { noPassiveVoice } from './no-passive-voice.js'
 import { noCliches } from './no-cliches.js'
+import { noRepetitiveSentenceStartings } from './no-repetitive-sentence-startings.js'
 
 export { noComplexSentences } from './no-complex-sentences.js'
 export { noEmDash } from './no-em-dash.js'
@@ -16,6 +17,7 @@ export { noNonInclusiveLanguage } from './no-non-inclusive-language.js'
 export { noRedundantPhrases } from './no-redundant-phrases.js'
 export { noPassiveVoice } from './no-passive-voice.js'
 export { noCliches } from './no-cliches.js'
+export { noRepetitiveSentenceStartings } from './no-repetitive-sentence-startings.js'
 export type { NoComplexSentencesOptions } from './no-complex-sentences.js'
 export type { NoEmDashOptions } from './no-em-dash.js'
 export type { NoWeaselWordsOptions } from './no-weasel-words.js'
@@ -24,6 +26,7 @@ export type { NoNonInclusiveLanguageOptions, NonInclusiveTerm } from './no-non-i
 export type { NoRedundantPhrasesOptions, RedundantPhrase } from './no-redundant-phrases.js'
 export type { NoPassiveVoiceOptions } from './no-passive-voice.js'
 export type { NoClichesOptions, ClichePhrase } from './no-cliches.js'
+export type { NoRepetitiveSentenceStartingsOptions } from './no-repetitive-sentence-startings.js'
 
 /** All built-in rules keyed by their rule ID. */
 export const ruleRegistry: Map<string, Rule> = new Map([
@@ -35,4 +38,5 @@ export const ruleRegistry: Map<string, Rule> = new Map([
   ['no-redundant-phrases', noRedundantPhrases as Rule],
   ['no-passive-voice', noPassiveVoice as Rule],
   ['no-cliches', noCliches as Rule],
+  ['no-repetitive-sentence-startings', noRepetitiveSentenceStartings as Rule],
 ])

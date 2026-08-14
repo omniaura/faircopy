@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { noComplexSentences, noNonInclusiveLanguage, noRedundantPhrases, noPassiveVoice, noCliches, ruleRegistry } from '../dist/index.js'
+import { noComplexSentences, noNonInclusiveLanguage, noRedundantPhrases, noPassiveVoice, noCliches, noRepetitiveSentenceStartings, ruleRegistry } from '../dist/index.js'
 
 function run(rule, text, options = {}) {
   return rule.check({
@@ -366,4 +366,61 @@ test('no-cliches supports custom phrases', () => {
 
 test('rule registry exposes the new no-cliches rule', () => {
   assert.ok(ruleRegistry.has('no-cliches'))
+})
+
+test('no-repetitive-sentence-startings flags three consecutive sentences starting with the same word', () => {
+  const text = 'Faircopy checks your copy. Faircopy finds weak words. Faircopy improves readability.'
+  const diagnostics = run(noRepetitiveSentenceStartings, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].ruleId, 'no-repetitive-sentence-startings')
+  assert.match(diagnostics[0].message, /faircopy/)
+  assert.match(diagnostics[0].message, /3 consecutive sentences/)
+})
+
+test('no-repetitive-sentence-startings ignores short sentences below minWords', () => {
+  const text = 'Go. Go. Go fast now.'
+  const diagnostics = run(noRepetitiveSentenceStartings, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-repetitive-sentence-startings ignores allowed words', () => {
+  const text = 'The cat sat. The dog ran. The bird flew.'
+  const diagnostics = run(noRepetitiveSentenceStartings, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-repetitive-sentence-startings respects custom threshold', () => {
+  const text = 'We shipped the build. We tested every rule. We launched the site. We celebrated the release.'
+  const diagnostics = run(noRepetitiveSentenceStartings, text, { threshold: 4 })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /4 consecutive sentences/)
+})
+
+test('no-repetitive-sentence-startings respects custom allow list', () => {
+  const text = 'We shipped. We tested. We launched.'
+  const diagnostics = run(noRepetitiveSentenceStartings, text, { allow: ['we'] })
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-repetitive-sentence-startings does not flag two consecutive repetitions', () => {
+  const text = 'Faircopy checks copy. Faircopy finds issues. It also explains them.'
+  const diagnostics = run(noRepetitiveSentenceStartings, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-repetitive-sentence-startings handles text without sentence terminators', () => {
+  const text = 'Faircopy checks copy and finds weak words'
+  const diagnostics = run(noRepetitiveSentenceStartings, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('rule registry exposes the new no-repetitive-sentence-startings rule', () => {
+  assert.ok(ruleRegistry.has('no-repetitive-sentence-startings'))
 })
