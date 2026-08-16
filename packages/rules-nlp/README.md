@@ -26,6 +26,7 @@ rules: {
   'no-pronoun-led-claims': 'warn',
   'no-buzzword-stacks': 'warn',
   'no-complex-readability': 'warn',
+  'no-overly-complex-sentences': 'warn',
   'no-vague-quantifiers': 'warn',
   'no-meaningless-modifiers': 'warn',
   'no-superlative-claims': 'warn',
@@ -54,6 +55,7 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 | `no-pronoun-led-claims` | Flag vague sentence openers like `This helps` and `It enables` |
 | `no-buzzword-stacks` | Flag sentences overloaded with abstract benefit nouns |
 | `no-complex-readability` | Flag prose whose Flesch-Kincaid grade level exceeds a target |
+| `no-overly-complex-sentences` | Flag sentences overloaded with coordinating or subordinating conjunctions |
 | `no-vague-quantifiers` | Flag bare quantifiers without numeric anchors |
 | `no-meaningless-modifiers` | Flag intensifiers like `very` and `obviously` that add no information |
 | `no-superlative-claims` | Flag unproven superlatives like `best` and `world-class` |
@@ -122,3 +124,48 @@ Suggested fix: split the sentence around each independent clause.
 ```text
 The engineer reviewed the requirements. They wrote the code, ran the tests, and deployed the application. The team watched and celebrated the release together.
 ```
+
+### `no-overly-complex-sentences`
+
+Sentences packed with conjunctions are often run-ons or nested too deeply. This rule flags any sentence that exceeds a configurable number of coordinating conjunctions, subordinating conjunctions, or total conjunctions.
+
+```ts
+rules: {
+  'no-overly-complex-sentences': 'warn',
+}
+```
+
+Options:
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `maxConjunctions` | `number` | `4` | Maximum total conjunctions allowed per sentence |
+| `maxCoordinating` | `number` | `3` | Maximum coordinating conjunctions allowed per sentence |
+| `maxSubordinating` | `number` | `2` | Maximum subordinating conjunctions allowed per sentence |
+| `coordinating` | `string[]` | `['and', 'but', 'or', 'nor', 'yet', 'so']` | Words treated as coordinating conjunctions |
+| `subordinating` | `string[]` | `['because', 'although', 'though', 'while', 'since', 'unless', 'if', 'when', 'after', 'before', 'until', 'whether', 'once']` | Words treated as subordinating conjunctions |
+| `allowList` | `string[]` | `[]` | Words to ignore when counting |
+
+Example with custom thresholds:
+
+```ts
+'no-overly-complex-sentences': ['warn', {
+  maxConjunctions: 3,
+  maxCoordinating: 2,
+  maxSubordinating: 1,
+}]
+```
+
+Flagged example:
+
+```text
+I ran and swam and biked and hiked and climbed.
+```
+
+Suggested fix: split the list into shorter sentences or use a bulleted list.
+
+```text
+I ran, swam, and biked. Then I hiked and climbed.
+```
+
+Some words, such as `since` or `so`, can be prepositions or adverbs in certain contexts. If the rule is too noisy for your copy, add the word to `allowList`.

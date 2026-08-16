@@ -11,6 +11,7 @@ import {
   noJargon,
   noMeaninglessModifiers,
   noNominalizedPhrases,
+  noOverlyComplexSentences,
   noPronounLedClaims,
   noRedundantPairs,
   noStackedAdjectives,
@@ -709,4 +710,124 @@ test('sentence-complexity reports accurate byte ranges', () => {
 
 test('ruleRegistry contains sentence-complexity', () => {
   assert.ok(ruleRegistry.has('sentence-complexity'))
+})
+
+test('no-overly-complex-sentences flags sentences with too many coordinating conjunctions', () => {
+  const text = 'I ran and swam and biked and hiked and climbed.'
+  const diagnostics = run(noOverlyComplexSentences, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].ruleId, 'no-overly-complex-sentences')
+  assert.match(diagnostics[0].message, /coordinating \(max 3\)/)
+  assert.match(diagnostics[0].message, /consider splitting/)
+  assert.equal(diagnostics[0].severity, 'warn')
+  assert.ok(diagnostics[0].suggest)
+})
+
+test('no-overly-complex-sentences flags sentences with too many subordinating conjunctions', () => {
+  const text = 'Because it rained, we stayed inside, although we wanted to go out, while the sun was shining, since we had planned a picnic.'
+  const diagnostics = run(noOverlyComplexSentences, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /subordinating \(max 2\)/)
+})
+
+test('no-overly-complex-sentences flags sentences exceeding the total conjunction threshold', () => {
+  const text = 'I ran and swam but got tired, although I rested, because the sun was out, while it shone.'
+  const diagnostics = run(noOverlyComplexSentences, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /conjunctions \(max 4\)/)
+})
+
+test('no-overly-complex-sentences allows short simple sentences', () => {
+  const text = 'The fox jumps. The dog sleeps.'
+  const diagnostics = run(noOverlyComplexSentences, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-overly-complex-sentences allows sentences at the default thresholds', () => {
+  const text = 'I ran and swam and biked, although I was tired.'
+  const diagnostics = run(noOverlyComplexSentences, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-overly-complex-sentences respects custom thresholds', () => {
+  const text = 'I ran and swam and biked.'
+  const diagnostics = run(noOverlyComplexSentences, text, { maxCoordinating: 1 })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /coordinating \(max 1\)/)
+})
+
+test('no-overly-complex-sentences respects custom conjunction lists', () => {
+  const text = 'I ran plus swam plus biked plus hiked.'
+  const diagnostics = run(noOverlyComplexSentences, text, {
+    coordinating: ['plus'],
+    maxCoordinating: 2,
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /coordinating \(max 2\)/)
+})
+
+test('no-overly-complex-sentences ignores words in the allow list', () => {
+  const text = 'I ran and swam and biked and hiked and climbed.'
+  const diagnostics = run(noOverlyComplexSentences, text, { allowList: ['and'] })
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-overly-complex-sentences reports accurate byte ranges', () => {
+  const prefix = 'Short sentence. '
+  const complexSentence = 'I ran and swam and biked and hiked and climbed.'
+  const text = prefix + complexSentence
+  const diagnostics = run(noOverlyComplexSentences, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.deepEqual(diagnostics[0].range, { start: prefix.length, end: text.length })
+})
+
+test('no-overly-complex-sentences handles empty text', () => {
+  const diagnostics = run(noOverlyComplexSentences, '')
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-overly-complex-sentences supports multi-word conjunction phrases', () => {
+  const text = 'Even though it rained, we went out, and as if that were not enough, it hailed.'
+  const diagnostics = run(noOverlyComplexSentences, text, {
+    subordinating: ['even though', 'as if', 'because'],
+    maxSubordinating: 1,
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /subordinating \(max 1\)/)
+})
+
+test('no-overly-complex-sentences counts overlapping phrases once', () => {
+  const text = 'As if that were not enough, we stayed.'
+  const diagnostics = run(noOverlyComplexSentences, text, {
+    subordinating: ['as if', 'if'],
+    maxSubordinating: 0,
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /subordinating \(max 0\)/)
+})
+
+test('no-overly-complex-sentences allowList handles multi-word phrases', () => {
+  const text = 'Even though it rained, we went out, and even though it hailed, we stayed.'
+  const diagnostics = run(noOverlyComplexSentences, text, {
+    subordinating: ['even though', 'because'],
+    maxSubordinating: 1,
+    allowList: ['even though'],
+  })
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('ruleRegistry contains no-overly-complex-sentences', () => {
+  assert.ok(ruleRegistry.has('no-overly-complex-sentences'))
 })
