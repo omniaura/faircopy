@@ -15,9 +15,11 @@ import { noOverlyComplexSentences } from './no-overly-complex-sentences.js'
 import { noOverusedAdverbs } from './no-overused-adverbs.js'
 import { noPassiveVoice } from './no-passive-voice.js'
 import { noPronounLedClaims } from './no-pronoun-led-claims.js'
+import { noQualifierCreep } from './no-qualifier-creep.js'
 import { noRedundantPairs } from './no-redundant-pairs.js'
 import { noStackedAdjectives } from './no-stacked-adjectives.js'
 import { noSuperlativeClaims } from './no-superlative-claims.js'
+import { noVagueComparatives } from './no-vague-comparatives.js'
 import { noVagueQuantifiers } from './no-vague-quantifiers.js'
 import { noWeakModals } from './no-weak-modals.js'
 import { sentenceComplexity } from './sentence-complexity.js'
@@ -38,9 +40,11 @@ export { noOverlyComplexSentences } from './no-overly-complex-sentences.js'
 export { noOverusedAdverbs } from './no-overused-adverbs.js'
 export { noPassiveVoice } from './no-passive-voice.js'
 export { noPronounLedClaims } from './no-pronoun-led-claims.js'
+export { noQualifierCreep } from './no-qualifier-creep.js'
 export { noRedundantPairs } from './no-redundant-pairs.js'
 export { noStackedAdjectives } from './no-stacked-adjectives.js'
 export { noSuperlativeClaims } from './no-superlative-claims.js'
+export { noVagueComparatives } from './no-vague-comparatives.js'
 export { noVagueQuantifiers } from './no-vague-quantifiers.js'
 export { noWeakModals } from './no-weak-modals.js'
 export { sentenceComplexity } from './sentence-complexity.js'
@@ -60,9 +64,11 @@ export type { NoOverlyComplexSentencesOptions } from './no-overly-complex-senten
 export type { NoOverusedAdverbsOptions } from './no-overused-adverbs.js'
 export type { NoPassiveVoiceOptions } from './no-passive-voice.js'
 export type { NoPronounLedClaimsOptions } from './no-pronoun-led-claims.js'
+export type { NoQualifierCreepOptions } from './no-qualifier-creep.js'
 export type { NoRedundantPairsOptions } from './no-redundant-pairs.js'
 export type { NoStackedAdjectivesOptions } from './no-stacked-adjectives.js'
 export type { NoSuperlativeClaimsOptions } from './no-superlative-claims.js'
+export type { NoVagueComparativesOptions } from './no-vague-comparatives.js'
 export type { NoVagueQuantifiersOptions } from './no-vague-quantifiers.js'
 export type { NoWeakModalsOptions } from './no-weak-modals.js'
 export type { SentenceComplexityOptions } from './sentence-complexity.js'
@@ -85,9 +91,11 @@ export const ruleRegistry: Map<string, Rule> = new Map([
   ['no-overused-adverbs', noOverusedAdverbs as Rule],
   ['no-passive-voice', noPassiveVoice as Rule],
   ['no-pronoun-led-claims', noPronounLedClaims as Rule],
+  ['no-qualifier-creep', noQualifierCreep as Rule],
   ['no-redundant-pairs', noRedundantPairs as Rule],
   ['no-stacked-adjectives', noStackedAdjectives as Rule],
   ['no-superlative-claims', noSuperlativeClaims as Rule],
+  ['no-vague-comparatives', noVagueComparatives as Rule],
   ['no-vague-quantifiers', noVagueQuantifiers as Rule],
   ['no-weak-modals', noWeakModals as Rule],
   ['sentence-complexity', sentenceComplexity as Rule],

@@ -14,9 +14,11 @@ import {
   noOverlyComplexSentences,
   noOverusedAdverbs,
   noPronounLedClaims,
+  noQualifierCreep,
   noRedundantPairs,
   noStackedAdjectives,
   noSuperlativeClaims,
+  noVagueComparatives,
   noVagueQuantifiers,
   noWeakModals,
   ruleRegistry,
@@ -889,4 +891,134 @@ test('no-overly-complex-sentences allowList handles multi-word phrases', () => {
 
 test('ruleRegistry contains no-overly-complex-sentences', () => {
   assert.ok(ruleRegistry.has('no-overly-complex-sentences'))
+})
+
+test('no-vague-comparatives flags comparative adjectives without a baseline', () => {
+  const text = 'Our editor is faster. It is also easier to use.'
+  const diagnostics = run(noVagueComparatives, text)
+
+  assert.equal(diagnostics.length, 2)
+  assert.equal(diagnostics[0].ruleId, 'no-vague-comparatives')
+  assert.equal(diagnostics[1].ruleId, 'no-vague-comparatives')
+  assert.match(diagnostics[0].message, /faster/)
+  assert.match(diagnostics[1].message, /easier/)
+})
+
+test('no-vague-comparatives ignores comparatives with "than"', () => {
+  const text = 'Our editor is faster than the old one. It is easier than a spreadsheet.'
+  const diagnostics = run(noVagueComparatives, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-vague-comparatives flags explicit more/less patterns', () => {
+  const text = 'Teams need more efficient tools. They want less confusing copy.'
+  const diagnostics = run(noVagueComparatives, text)
+
+  assert.equal(diagnostics.length, 2)
+  assert.match(diagnostics[0].message, /more efficient/)
+  assert.match(diagnostics[1].message, /less confusing/)
+})
+
+test('no-vague-comparatives ignores non-comparative uses of default words', () => {
+  const text = 'We have a great product. It is a better world.'
+  const diagnostics = run(noVagueComparatives, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /better/)
+})
+
+test('no-vague-comparatives respects custom comparatives list', () => {
+  const text = 'This result is superior. That one is inferior.'
+  const diagnostics = run(noVagueComparatives, text, { comparatives: ['superior', 'inferior'] })
+
+  assert.equal(diagnostics.length, 2)
+  assert.match(diagnostics[0].message, /superior/)
+  assert.match(diagnostics[1].message, /inferior/)
+})
+
+test('no-vague-comparatives allows disabling the "than" requirement', () => {
+  const text = 'Our editor is faster than the old one.'
+  const diagnostics = run(noVagueComparatives, text, { requireThan: false })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /faster/)
+})
+
+test('no-vague-comparatives reports accurate byte ranges', () => {
+  const prefix = 'The intro. '
+  const body = 'Our editor is faster. It is also easier.'
+  const text = prefix + body
+  const diagnostics = run(noVagueComparatives, text)
+
+  assert.equal(diagnostics.length, 2)
+  const fasterIndex = text.indexOf('faster')
+  assert.deepEqual(diagnostics[0].range, { start: fasterIndex, end: fasterIndex + 'faster'.length })
+  const easierIndex = text.indexOf('easier')
+  assert.deepEqual(diagnostics[1].range, { start: easierIndex, end: easierIndex + 'easier'.length })
+})
+
+test('no-vague-comparatives handles empty text', () => {
+  const diagnostics = run(noVagueComparatives, '')
+  assert.equal(diagnostics.length, 0)
+})
+
+test('ruleRegistry contains no-vague-comparatives', () => {
+  assert.ok(ruleRegistry.has('no-vague-comparatives'))
+})
+
+test('no-qualifier-creep flags stacked qualifiers before an adjective', () => {
+  const text = 'The result is very really good.'
+  const diagnostics = run(noQualifierCreep, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].ruleId, 'no-qualifier-creep')
+  assert.match(diagnostics[0].message, /very really good/)
+})
+
+test('no-qualifier-creep flags stacked qualifiers before an adverb', () => {
+  const text = 'It works very really well.'
+  const diagnostics = run(noQualifierCreep, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /very really well/)
+})
+
+test('no-qualifier-creep allows a single qualifier', () => {
+  const text = 'The result is very good. It works really well.'
+  const diagnostics = run(noQualifierCreep, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-qualifier-creep respects custom maxQualifiers', () => {
+  const text = 'The result is very really quite good.'
+  const diagnostics = run(noQualifierCreep, text, { maxQualifiers: 2 })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /very really quite good/)
+})
+
+test('no-qualifier-creep respects custom qualifiers', () => {
+  const text = 'The result is highly extremely good.'
+  const diagnostics = run(noQualifierCreep, text, { qualifiers: ['highly', 'extremely'] })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /highly extremely good/)
+})
+
+test('no-qualifier-creep ignores non-qualifier adverbs', () => {
+  const text = 'The result is quickly becoming good.'
+  const diagnostics = run(noQualifierCreep, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-qualifier-creep handles empty text', () => {
+  const diagnostics = run(noQualifierCreep, '')
+  assert.equal(diagnostics.length, 0)
+})
+
+test('ruleRegistry contains no-qualifier-creep', () => {
+  assert.ok(ruleRegistry.has('no-qualifier-creep'))
 })
