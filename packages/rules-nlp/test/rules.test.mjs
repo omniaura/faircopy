@@ -12,6 +12,7 @@ import {
   noMeaninglessModifiers,
   noNominalizedPhrases,
   noOverlyComplexSentences,
+  noOverusedAdverbs,
   noPronounLedClaims,
   noRedundantPairs,
   noStackedAdjectives,
@@ -518,6 +519,60 @@ test('no-adverb-overuse evaluates each sentence independently', () => {
   assert.match(diagnostics[0].message, /quietly/)
 })
 
+test('no-overused-adverbs flags occurrences beyond the default threshold', () => {
+  const text = 'She quickly finished. He quickly left. They quickly agreed. We quickly moved.'
+  const diagnostics = run(noOverusedAdverbs, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].ruleId, 'no-overused-adverbs')
+  assert.equal(diagnostics[0].severity, 'warn')
+  assert.match(diagnostics[0].message, /"quickly" appears 4 times/)
+})
+
+test('no-overused-adverbs reports each excessive occurrence', () => {
+  const text = 'Run fast. Move fast. Think fast. Speak fast. Write fast.'
+  const diagnostics = run(noOverusedAdverbs, text, { threshold: 2 })
+
+  assert.equal(diagnostics.length, 3)
+  assert.ok(diagnostics.every(diagnostic => diagnostic.message.includes('fast')))
+})
+
+test('no-overused-adverbs ignores allowed adverbs', () => {
+  const text = 'Only this works. Only that works. Only these work. Only those work.'
+  const diagnostics = run(noOverusedAdverbs, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-overused-adverbs respects custom adverb list', () => {
+  const text = 'She ran quickly. He ran quickly. They ran quickly.'
+  const diagnostics = run(noOverusedAdverbs, text, { adverbs: ['slowly'], threshold: 1 })
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-overused-adverbs respects custom threshold', () => {
+  const text = 'It happened suddenly. Suddenly, the door opened. She suddenly stopped.'
+  const diagnostics = run(noOverusedAdverbs, text, { threshold: 1 })
+
+  assert.equal(diagnostics.length, 2)
+  assert.ok(diagnostics.every(diagnostic => /suddenly/i.test(diagnostic.message)))
+})
+
+test('no-overused-adverbs skips short adverbs', () => {
+  const text = 'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z.'
+  const diagnostics = run(noOverusedAdverbs, text, { threshold: 1, minLength: 1 })
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-overused-adverbs reports nothing when counts are within threshold', () => {
+  const text = 'She walked slowly. He walked slowly.'
+  const diagnostics = run(noOverusedAdverbs, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
 test('no-absolute-intensifiers flags default intensifier + absolute pairs', () => {
   const text = 'This is very unique and completely finished.'
   const diagnostics = run(noAbsoluteIntensifiers, text)
@@ -612,6 +667,10 @@ test('ruleRegistry contains no-absolute-intensifiers', () => {
 
 test('ruleRegistry contains no-adverb-overuse', () => {
   assert.ok(ruleRegistry.has('no-adverb-overuse'))
+})
+
+test('ruleRegistry contains no-overused-adverbs', () => {
+  assert.ok(ruleRegistry.has('no-overused-adverbs'))
 })
 
 test('sentence-complexity flags sentences that exceed the default word limit', () => {
