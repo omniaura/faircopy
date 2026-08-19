@@ -92,6 +92,32 @@ rules: {
 
 ---
 
+### `no-filler-words`
+
+Bans filler words that pad out a sentence without adding meaning.
+
+```
+error[no-filler-words]: remove "just" — it's filler
+```
+
+**Options:**
+
+```ts
+{
+  words: string[]  // Default: ['just']
+}
+```
+
+**Config example:**
+
+```ts
+rules: {
+  'no-filler-words': ['error', { words: ['just', 'basically', 'literally'] }],
+}
+```
+
+---
+
 ### `no-rhetorical-scaffolding`
 
 Bans two formulaic patterns:

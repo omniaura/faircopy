@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { noComplexSentences, noNonInclusiveLanguage, noRedundantPhrases, noPassiveVoice, noCliches, noRepetitiveSentenceStartings, ruleRegistry } from '../dist/index.js'
+import { noComplexSentences, noNonInclusiveLanguage, noRedundantPhrases, noPassiveVoice, noCliches, noRepetitiveSentenceStartings, noFillerWords, ruleRegistry } from '../dist/index.js'
 
 function run(rule, text, options = {}) {
   return rule.check({
@@ -423,4 +423,46 @@ test('no-repetitive-sentence-startings handles text without sentence terminators
 
 test('rule registry exposes the new no-repetitive-sentence-startings rule', () => {
   assert.ok(ruleRegistry.has('no-repetitive-sentence-startings'))
+})
+
+test('no-filler-words flags "just" by default', () => {
+  const text = 'I just wanted to check in.'
+  const diagnostics = run(noFillerWords, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].severity, 'error')
+  assert.match(diagnostics[0].message, /just/)
+})
+
+test('no-filler-words flags multiple occurrences of "just"', () => {
+  const text = 'Just one issue. It is just a small change.'
+  const diagnostics = run(noFillerWords, text)
+
+  assert.equal(diagnostics.length, 2)
+})
+
+test('no-filler-words ignores non-filler text', () => {
+  const text = 'Shipping faircopy changes how you write.'
+  const diagnostics = run(noFillerWords, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-filler-words respects custom words', () => {
+  const text = 'Basically, we need to move forward.'
+  const diagnostics = run(noFillerWords, text, { words: ['basically'] })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /basically/)
+})
+
+test('no-filler-words handles empty words option by falling back to defaults', () => {
+  const text = 'I just wanted to check in.'
+  const diagnostics = run(noFillerWords, text, { words: [] })
+
+  assert.equal(diagnostics.length, 1)
+})
+
+test('rule registry exposes the new no-filler-words rule', () => {
+  assert.ok(ruleRegistry.has('no-filler-words'))
 })

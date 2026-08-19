@@ -8,6 +8,7 @@ import { noRedundantPhrases } from './no-redundant-phrases.js'
 import { noPassiveVoice } from './no-passive-voice.js'
 import { noCliches } from './no-cliches.js'
 import { noRepetitiveSentenceStartings } from './no-repetitive-sentence-startings.js'
+import { noFillerWords } from './no-filler-words.js'
 
 export { noComplexSentences } from './no-complex-sentences.js'
 export { noEmDash } from './no-em-dash.js'
@@ -18,6 +19,7 @@ export { noRedundantPhrases } from './no-redundant-phrases.js'
 export { noPassiveVoice } from './no-passive-voice.js'
 export { noCliches } from './no-cliches.js'
 export { noRepetitiveSentenceStartings } from './no-repetitive-sentence-startings.js'
+export { noFillerWords } from './no-filler-words.js'
 export type { NoComplexSentencesOptions } from './no-complex-sentences.js'
 export type { NoEmDashOptions } from './no-em-dash.js'
 export type { NoWeaselWordsOptions } from './no-weasel-words.js'
@@ -27,6 +29,7 @@ export type { NoRedundantPhrasesOptions, RedundantPhrase } from './no-redundant-
 export type { NoPassiveVoiceOptions } from './no-passive-voice.js'
 export type { NoClichesOptions, ClichePhrase } from './no-cliches.js'
 export type { NoRepetitiveSentenceStartingsOptions } from './no-repetitive-sentence-startings.js'
+export type { NoFillerWordsOptions } from './no-filler-words.js'
 
 /** All built-in rules keyed by their rule ID. */
 export const ruleRegistry: Map<string, Rule> = new Map([
@@ -39,4 +42,5 @@ export const ruleRegistry: Map<string, Rule> = new Map([
   ['no-passive-voice', noPassiveVoice as Rule],
   ['no-cliches', noCliches as Rule],
   ['no-repetitive-sentence-startings', noRepetitiveSentenceStartings as Rule],
+  ['no-filler-words', noFillerWords as Rule],
 ])
