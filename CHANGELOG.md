@@ -1,3 +1,24 @@
+# [1.16.0](https://github.com/omniaura/faircopy/compare/v1.15.0...v1.16.0) (2026-08-19)
+
+
+### Features
+
+* **rules-default:** add no-cliches rule ([36c3852](https://github.com/omniaura/faircopy/commit/36c3852f979e8c4b77022f6833649d6ea9bad2a1))
+* **rules-default:** add no-complex-sentences readability rule ([ae78cc1](https://github.com/omniaura/faircopy/commit/ae78cc125ce559de196e37be19ef335da2a5fe60))
+* **rules-default:** add no-filler-words lint rule ([8118c55](https://github.com/omniaura/faircopy/commit/8118c55ece6b5e8ea44149437dbda25b8bf560f3)), closes [#1](https://github.com/omniaura/faircopy/issues/1)
+* **rules-default:** add no-non-inclusive-language rule ([99d97a9](https://github.com/omniaura/faircopy/commit/99d97a9948823117da3eaa5d2822bf73da5885fe))
+* **rules-default:** add no-passive-voice lint rule ([5ff7ad1](https://github.com/omniaura/faircopy/commit/5ff7ad1a1f0c69b818ff5308a4be975268dc2c4a))
+* **rules-default:** add no-redundant-phrases rule ([419f9a7](https://github.com/omniaura/faircopy/commit/419f9a79304d6ce7f7bc9c9f1e0fdb1e89ae5611))
+* **rules-default:** add no-repetitive-sentence-startings rule ([063c048](https://github.com/omniaura/faircopy/commit/063c048e8e5f2ad08373e93db53be42bb507bf59))
+* **rules-nlp:** add no-absolute-intensifiers rule ([92f2b56](https://github.com/omniaura/faircopy/commit/92f2b560c030b7cbe8f775c933d543705d2229ce))
+* **rules-nlp:** add no-adverb-overuse rule ([0a674a1](https://github.com/omniaura/faircopy/commit/0a674a1cd4cf843b7a72e7619376f8e199b0aa1b))
+* **rules-nlp:** add no-adverb-overuse rule with tests and docs ([af8a211](https://github.com/omniaura/faircopy/commit/af8a2111a95d7e103f8f1fe0ca8dbacc45b6659d))
+* **rules-nlp:** add no-complex-readability rule ([72ca06d](https://github.com/omniaura/faircopy/commit/72ca06de211ac7017ee2a674371d8bca1a9d26bb))
+* **rules-nlp:** add no-overly-complex-sentences rule ([0b6de15](https://github.com/omniaura/faircopy/commit/0b6de152aa1250b8528c71d2d9e0555bcab6e09e))
+* **rules-nlp:** add no-overused-adverbs rule ([4b4e113](https://github.com/omniaura/faircopy/commit/4b4e11387887b16b67d008f647602d1945b625ae))
+* **rules-nlp:** add no-vague-comparatives and no-qualifier-creep rules ([94c7a93](https://github.com/omniaura/faircopy/commit/94c7a93ce1dfc4b181d4a42089d9db0f0be80854))
+* **rules-nlp:** add sentence-complexity rule ([c3017b3](https://github.com/omniaura/faircopy/commit/c3017b3de8d53d91c404a99a4bfe602aebb79c11)), closes [#sentence-complexity](https://github.com/omniaura/faircopy/issues/sentence-complexity)
+
 # [1.15.0](https://github.com/omniaura/faircopy/compare/v1.14.0...v1.15.0) (2026-07-12)
 
 
