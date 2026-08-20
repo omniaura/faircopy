@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
+  noNonInclusiveLanguage,
   noAbsoluteIntensifiers,
   noAdverbOveruse,
   noBuzzwordStacks,
@@ -411,7 +412,8 @@ test('rule registry exposes all nlp rules', () => {
   assert.ok(ruleRegistry.has('no-vague-quantifiers'))
 })
 
-import { noComplexReadability } from '../dist/index.js'
+import {
+  noComplexReadability } from '../dist/index.js'
 
 test('no-complex-readability flags dense academic prose', () => {
   const text = 'The implementation of multifaceted computational methodologies necessitates the rigorous examination of numerous interdependent variables, which consequently produces a substantial augmentation in cognitive load for the average reader. Furthermore, the proliferation of obfuscatory terminology within technical documentation frequently undermines the accessibility of otherwise straightforward conceptual frameworks. Consequently, practitioners must prioritize clarity and concision when communicating complex ideas to heterogeneous audiences.'
@@ -1021,4 +1023,82 @@ test('no-qualifier-creep handles empty text', () => {
 
 test('ruleRegistry contains no-qualifier-creep', () => {
   assert.ok(ruleRegistry.has('no-qualifier-creep'))
+})
+
+test('no-non-inclusive-language-nlp flags common non-inclusive terms', () => {
+  const text = 'Hey guys, add this to the blacklist and do a sanity check.'
+  const diagnostics = run(noNonInclusiveLanguage, text)
+
+  assert.equal(diagnostics.length, 3)
+  assert.deepEqual(
+    diagnostics.map(d => ({ ruleId: d.ruleId, text: text.slice(d.range.start, d.range.end) })),
+    [
+      { ruleId: 'no-non-inclusive-language-nlp', text: 'guys' },
+      { ruleId: 'no-non-inclusive-language-nlp', text: 'blacklist' },
+      { ruleId: 'no-non-inclusive-language-nlp', text: 'sanity check' },
+    ]
+  )
+})
+
+test('no-non-inclusive-language-nlp suggests alternatives', () => {
+  const text = 'We need more manpower.'
+  const diagnostics = run(noNonInclusiveLanguage, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /workforce, staffing, personnel/)
+})
+
+test('no-non-inclusive-language-nlp avoids verb-only false positives for master', () => {
+  const text = 'She will master the skill.'
+  const diagnostics = run(noNonInclusiveLanguage, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-non-inclusive-language-nlp still flags master as a noun', () => {
+  const text = 'Push to the master branch.'
+  const diagnostics = run(noNonInclusiveLanguage, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(text.slice(diagnostics[0].range.start, diagnostics[0].range.end), 'master')
+})
+
+test('no-non-inclusive-language-nlp avoids partial-word false positives', () => {
+  const text = 'The guyses report was wrong.'
+  const diagnostics = run(noNonInclusiveLanguage, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-non-inclusive-language-nlp respects allowedTerms', () => {
+  const text = 'Add the IP to the whitelist.'
+  const diagnostics = run(noNonInclusiveLanguage, text, { allowedTerms: ['whitelist'] })
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-non-inclusive-language-nlp supports custom terms', () => {
+  const text = 'This is a bespoke problem.'
+  const diagnostics = run(noNonInclusiveLanguage, text, {
+    terms: [{ term: 'bespoke', alternatives: ['custom', 'tailored'] }],
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /custom, tailored/)
+})
+
+test('no-non-inclusive-language-nlp handles empty text', () => {
+  const diagnostics = run(noNonInclusiveLanguage, '')
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-non-inclusive-language-nlp handles text with no flagged terms', () => {
+  const text = 'The team worked together to verify the allowlist.'
+  const diagnostics = run(noNonInclusiveLanguage, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('ruleRegistry contains no-non-inclusive-language-nlp', () => {
+  assert.ok(ruleRegistry.has('no-non-inclusive-language-nlp'))
 })

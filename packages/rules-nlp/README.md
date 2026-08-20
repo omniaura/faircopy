@@ -63,6 +63,7 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 | `no-vague-quantifiers` | Flag bare quantifiers without numeric anchors |
 | `no-meaningless-modifiers` | Flag intensifiers like `very` and `obviously` that add no information |
 | `no-superlative-claims` | Flag unproven superlatives like `best` and `world-class` |
+| `no-non-inclusive-language-nlp` | Flag non-inclusive terms and suggest neutral alternatives |
 | `sentence-complexity` | Flag sentences that exceed a word or clause threshold |
 
 ### `no-absolute-intensifiers`
@@ -249,3 +250,46 @@ Suggested fix: keep the strongest qualifier or replace the phrase with concrete 
 ```text
 The result is excellent.
 ```
+
+### `no-non-inclusive-language-nlp`
+
+Non-inclusive terms can alienate readers. This rule flags common non-inclusive language and suggests neutral alternatives using NLP-aware matching so it understands word boundaries and part-of-speech context.
+
+```ts
+rules: {
+  'no-non-inclusive-language-nlp': 'warn',
+}
+```
+
+Options:
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `terms` | `NonInclusiveTerm[]` | See source | Terms to flag, each with a list of alternatives |
+| `allowedTerms` | `string[]` | `[]` | Terms to allow and skip |
+
+Example with custom terms:
+
+```ts
+'no-non-inclusive-language-nlp': ['warn', {
+  terms: [
+    { term: 'guys', alternatives: ['everyone', 'team', 'folks'] },
+    { term: 'blacklist', alternatives: ['denylist', 'blocklist'] },
+  ],
+  allowedTerms: ['whitelist'],
+}]
+```
+
+Flagged example:
+
+```text
+Hey guys, add this to the blacklist and do a sanity check.
+```
+
+Suggested fix:
+
+```text
+Hey everyone, add this to the blocklist and do a quick check.
+```
+
+The rule uses `compromise` to avoid partial-word matches (e.g., `guyses` is not flagged) and skips verb-only usages of ambiguous words such as `master` in `master the skill`.
