@@ -1,3 +1,10 @@
+# [1.17.0](https://github.com/omniaura/faircopy/compare/v1.16.0...v1.17.0) (2026-08-20)
+
+
+### Features
+
+* **rules-nlp:** add no-non-inclusive-language-nlp rule ([d948725](https://github.com/omniaura/faircopy/commit/d94872563de79f1b181e3e564776edbe4807ea3b))
+
 # [1.16.0](https://github.com/omniaura/faircopy/compare/v1.15.0...v1.16.0) (2026-08-19)
 
 
