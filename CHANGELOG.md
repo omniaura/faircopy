@@ -1,3 +1,10 @@
+## [1.18.1](https://github.com/omniaura/faircopy/compare/v1.18.0...v1.18.1) (2026-08-22)
+
+
+### Bug Fixes
+
+* **no-non-inclusive-language:** default multi-word phrases to exact matching ([4e43044](https://github.com/omniaura/faircopy/commit/4e430447b920b2a32ecc636a51e4f94347b615ff))
+
 # [1.18.0](https://github.com/omniaura/faircopy/compare/v1.17.0...v1.18.0) (2026-08-22)
 
 

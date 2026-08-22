@@ -1,6 +1,6 @@
 {
   "name": "@faircopy/config",
-  "version": "1.18.0",
+  "version": "1.18.1",
   "description": "defineConfig helper and type re-exports for faircopy",
   "type": "module",
   "exports": {
