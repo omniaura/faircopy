@@ -10,6 +10,7 @@ import {
   noFuturePromises,
   noHedgeWords,
   noJargon,
+  noLlmSpeak,
   noMeaninglessModifiers,
   noNominalizedPhrases,
   noOverlyComplexSentences,
@@ -1101,4 +1102,66 @@ test('no-non-inclusive-language-nlp handles text with no flagged terms', () => {
 
 test('ruleRegistry contains no-non-inclusive-language-nlp', () => {
   assert.ok(ruleRegistry.has('no-non-inclusive-language-nlp'))
+})
+
+test('no-llm-speak flags common LLM cliches', () => {
+  const text = 'It\'s important to note that we will delve into the robust, intricate tapestry. Furthermore, the system is crucial.'
+  const diagnostics = run(noLlmSpeak, text)
+
+  assert.equal(diagnostics.length, 7)
+  assert.deepEqual(
+    diagnostics.map(d => ({ ruleId: d.ruleId, text: text.slice(d.range.start, d.range.end) })),
+    [
+      { ruleId: 'no-llm-speak', text: "It's important to note" },
+      { ruleId: 'no-llm-speak', text: 'delve into' },
+      { ruleId: 'no-llm-speak', text: 'robust' },
+      { ruleId: 'no-llm-speak', text: 'intricate' },
+      { ruleId: 'no-llm-speak', text: 'tapestry' },
+      { ruleId: 'no-llm-speak', text: 'Furthermore' },
+      { ruleId: 'no-llm-speak', text: 'crucial' },
+    ]
+  )
+})
+
+test('no-llm-speak suggests alternatives', () => {
+  const text = 'We need to delve into the problem.'
+  const diagnostics = run(noLlmSpeak, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /"explore", "examine"/)
+})
+
+test('no-llm-speak avoids allowed phrases', () => {
+  const text = 'It\'s important to note that the robust system works.'
+  const diagnostics = run(noLlmSpeak, text, {
+    allowedPhrases: ["it's important to note", 'robust'],
+  })
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-llm-speak supports custom phrases', () => {
+  const text = 'This is a bespoke LLM-ism.'
+  const diagnostics = run(noLlmSpeak, text, {
+    phrases: [{ phrase: 'bespoke', alternatives: ['custom', 'tailored'] }],
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /"custom", "tailored"/)
+})
+
+test('no-llm-speak handles empty text', () => {
+  const diagnostics = run(noLlmSpeak, '')
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-llm-speak handles text with no flagged phrases', () => {
+  const text = 'The team shipped the feature on time.'
+  const diagnostics = run(noLlmSpeak, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('ruleRegistry contains no-llm-speak', () => {
+  assert.ok(ruleRegistry.has('no-llm-speak'))
 })

@@ -32,6 +32,7 @@ rules: {
   'no-vague-quantifiers': 'warn',
   'no-meaningless-modifiers': 'warn',
   'no-superlative-claims': 'warn',
+  'no-llm-speak': 'warn',
 }
 ```
 
@@ -64,6 +65,7 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 | `no-meaningless-modifiers` | Flag intensifiers like `very` and `obviously` that add no information |
 | `no-superlative-claims` | Flag unproven superlatives like `best` and `world-class` |
 | `no-non-inclusive-language-nlp` | Flag non-inclusive terms and suggest neutral alternatives |
+| `no-llm-speak` | Flag LLM clichés like `delve into` and `robust` and suggest concrete alternatives |
 | `sentence-complexity` | Flag sentences that exceed a word or clause threshold |
 
 ### `no-absolute-intensifiers`
@@ -293,3 +295,46 @@ Hey everyone, add this to the blocklist and do a quick check.
 ```
 
 The rule uses `compromise` to avoid partial-word matches (e.g., `guyses` is not flagged) and skips verb-only usages of ambiguous words such as `master` in `master the skill`.
+
+### `no-llm-speak`
+
+LLM-generated copy often falls back to padded, abstract phrases that sound authoritative without saying much. This rule flags common LLM clichés and suggests concrete replacements.
+
+```ts
+rules: {
+  'no-llm-speak': 'warn',
+}
+```
+
+Options:
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `phrases` | `LlmSpeakPhrase[]` | See source | Phrases to flag, each with a list of alternatives |
+| `allowedPhrases` | `string[]` | `[]` | Phrases to allow and skip |
+
+Example with custom phrases:
+
+```ts
+'no-llm-speak': ['warn', {
+  phrases: [
+    { phrase: 'delve into', alternatives: ['explore', 'examine'] },
+    { phrase: 'robust', alternatives: ['strong', 'resilient'] },
+  ],
+  allowedPhrases: ['crucial'],
+}]
+```
+
+Flagged example:
+
+```text
+It's important to note that we will delve into the robust, intricate tapestry. Furthermore, the system is crucial.
+```
+
+Suggested fix:
+
+```text
+Note that we will explore the strong, detailed pattern. Also, the system is critical.
+```
+
+The rule uses `compromise` for word-aware matching, so `robustness` is not flagged when the configured phrase is `robust`.
