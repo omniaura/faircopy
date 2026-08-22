@@ -1,3 +1,10 @@
+# [1.18.0](https://github.com/omniaura/faircopy/compare/v1.17.0...v1.18.0) (2026-08-22)
+
+
+### Features
+
+* **rules-nlp:** add no-llm-speak rule ([3f10cf4](https://github.com/omniaura/faircopy/commit/3f10cf40a0a647c8039c9673798b54375ead9af7))
+
 # [1.17.0](https://github.com/omniaura/faircopy/compare/v1.16.0...v1.17.0) (2026-08-20)
 
 
