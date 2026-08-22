@@ -88,10 +88,18 @@ test('no-non-inclusive-language supports exact phrase matching', () => {
   assert.deepEqual(diagnostics[0].range, { start: 5, end: 17 })
 })
 
-test('no-non-inclusive-language matches multi-word phrases as substrings by default', () => {
+test('no-non-inclusive-language uses exact matching for default multi-word phrases', () => {
+  const text = 'Do a sanity check, not a sanity checker.'
+  const diagnostics = run(noNonInclusiveLanguage, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.deepEqual(diagnostics[0].range, { start: 5, end: 17 })
+})
+
+test('no-non-inclusive-language supports substring matching for custom phrases with exact: false', () => {
   const text = 'Do a sanity check, not a sanity checker.'
   const diagnostics = run(noNonInclusiveLanguage, text, {
-    terms: [{ term: 'sanity check', alternatives: ['verification'] }],
+    terms: [{ term: 'sanity check', alternatives: ['verification'], exact: false }],
   })
 
   assert.equal(diagnostics.length, 2)

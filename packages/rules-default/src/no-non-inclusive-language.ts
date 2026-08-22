@@ -25,8 +25,8 @@ const DEFAULT_TERMS: NonInclusiveTerm[] = [
   { term: 'insane', alternatives: ['extreme', 'unbelievable', 'remarkable'] },
   { term: 'dumb', alternatives: ['unhelpful', 'poor', 'uninformed'] },
   { term: 'lame', alternatives: ['unimpressive', 'inadequate', 'weak'] },
-  { term: 'sanity check', alternatives: ['quick check', 'confidence check', 'verification'] },
-  { term: 'blind spot', alternatives: ['unaware area', 'gap', 'oversight'] },
+  { term: 'sanity check', alternatives: ['quick check', 'confidence check', 'verification'], exact: true },
+  { term: 'blind spot', alternatives: ['unaware area', 'gap', 'oversight'], exact: true },
   { term: 'grandfathered', alternatives: ['legacy status', 'exempted'] },
   { term: 'mankind', alternatives: ['humanity', 'humankind', 'people'] },
 ]

@@ -175,7 +175,7 @@ rules: {
 }
 ```
 
-Set `exact: true` on a multi-word term to match the whole phrase with word boundaries. This is useful for phrases like `sanity check`, ensuring `sanity checker` is not flagged.
+Single-word terms always match with word boundaries, so `master` will not flag `masterpiece`. Default multi-word phrases such as `sanity check` and `blind spot` use `exact: true`, so `sanity checker` is not flagged. Set `exact: false` on a custom multi-word term to match it as a substring anywhere in the text.
 
 ---
 
