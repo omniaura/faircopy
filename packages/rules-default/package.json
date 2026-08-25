@@ -1,6 +1,6 @@
 {
   "name": "@faircopy/rules-default",
-  "version": "1.18.1",
+  "version": "1.19.0",
   "description": "Default ruleset for faircopy: no-complex-sentences, no-em-dash, no-weasel-words, no-rhetorical-scaffolding, no-non-inclusive-language, no-redundant-phrases, no-passive-voice, no-cliches, no-repetitive-sentence-startings, no-filler-words",
   "type": "module",
   "exports": {

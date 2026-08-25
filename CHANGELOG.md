@@ -1,3 +1,10 @@
+# [1.19.0](https://github.com/omniaura/faircopy/compare/v1.18.1...v1.19.0) (2026-08-25)
+
+
+### Features
+
+* **rules-nlp:** add no-noun-strings rule ([bd17a6e](https://github.com/omniaura/faircopy/commit/bd17a6e6ced311d32003ae609b03e2590a149ec7))
+
 ## [1.18.1](https://github.com/omniaura/faircopy/compare/v1.18.0...v1.18.1) (2026-08-22)
 
 
