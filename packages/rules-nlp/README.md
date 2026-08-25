@@ -25,6 +25,7 @@ rules: {
   'no-weak-modals': 'warn',
   'no-stacked-adjectives': 'warn',
   'no-nominalized-phrases': 'warn',
+  'no-noun-strings': 'warn',
   'no-pronoun-led-claims': 'warn',
   'no-buzzword-stacks': 'warn',
   'no-complex-readability': 'warn',
@@ -57,6 +58,7 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 | `no-weak-modals` | Flag hedged modal claims like `can help` and `might improve` |
 | `no-stacked-adjectives` | Flag noun phrases with multiple adjectives before the noun |
 | `no-nominalized-phrases` | Flag nominalized `X of Y` phrases like `optimization of onboarding` |
+| `no-noun-strings` | Flag dense strings of consecutive nouns like `user experience design process` |
 | `no-pronoun-led-claims` | Flag vague sentence openers like `This helps` and `It enables` |
 | `no-buzzword-stacks` | Flag sentences overloaded with abstract benefit nouns |
 | `no-complex-readability` | Flag prose whose Flesch-Kincaid grade level exceeds a target |
@@ -338,3 +340,43 @@ Note that we will explore the strong, detailed pattern. Also, the system is crit
 ```
 
 The rule uses `compromise` for word-aware matching, so `robustness` is not flagged when the configured phrase is `robust`.
+
+### `no-noun-strings`
+
+Three or more nouns in a row create dense, hard-to-read compounds. This rule flags consecutive noun strings and suggests rewriting them with verbs or prepositions.
+
+```ts
+rules: {
+  'no-noun-strings': 'warn',
+}
+```
+
+Options:
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `maxConsecutiveNouns` | `number` | `3` | Maximum consecutive nouns allowed before flagging |
+| `allowedPhrases` | `string[]` | `[]` | Phrases to allow and skip |
+
+Example with custom settings:
+
+```ts
+'no-noun-strings': ['warn', {
+  maxConsecutiveNouns: 4,
+  allowedPhrases: ['user experience design process'],
+}]
+```
+
+Flagged example:
+
+```text
+The user experience design process is slow.
+```
+
+Suggested fix:
+
+```text
+The process for designing the user experience is slow.
+```
+
+The rule uses `compromise` for part-of-speech tagging and skips proper nouns such as place names.

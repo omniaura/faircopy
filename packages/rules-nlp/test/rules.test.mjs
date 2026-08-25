@@ -13,6 +13,7 @@ import {
   noLlmSpeak,
   noMeaninglessModifiers,
   noNominalizedPhrases,
+  noNounStrings,
   noOverlyComplexSentences,
   noOverusedAdverbs,
   noPronounLedClaims,
@@ -114,6 +115,79 @@ test('no-nominalized-phrases allows configured concrete nouns', () => {
   const diagnostics = run(noNominalizedPhrases, text)
 
   assert.equal(diagnostics.length, 0)
+})
+
+test('no-noun-strings flags dense consecutive nouns', () => {
+  const text = 'The user experience design process is slow.'
+  const diagnostics = run(noNounStrings, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].ruleId, 'no-noun-strings')
+  assert.match(diagnostics[0].message, /user experience design process/)
+  assert.deepEqual(diagnostics[0].range, { start: 4, end: 34 })
+})
+
+test('no-noun-strings flags shorter strings at the default threshold', () => {
+  const text = 'Use a clear user interface design.'
+  const diagnostics = run(noNounStrings, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /user interface design/)
+})
+
+test('no-noun-strings ignores two-noun compounds', () => {
+  const text = 'The product team shipped the feature.'
+  const diagnostics = run(noNounStrings, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-noun-strings ignores proper nouns', () => {
+  const text = 'The New York City office is open.'
+  const diagnostics = run(noNounStrings, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-noun-strings ignores adjective interruptions', () => {
+  const text = 'The best product team shipped the feature.'
+  const diagnostics = run(noNounStrings, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-noun-strings respects allowed phrases', () => {
+  const text = 'The user experience design process is slow.'
+  const diagnostics = run(noNounStrings, text, {
+    allowedPhrases: ['user experience design process'],
+  })
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-noun-strings respects custom thresholds', () => {
+  const text = 'Use a clear user interface design.'
+  const diagnostics = run(noNounStrings, text, { maxConsecutiveNouns: 4 })
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-noun-strings flags multiple noun strings in one passage', () => {
+  const text = 'The customer support ticket system is slow. Try the web application development framework.'
+  const diagnostics = run(noNounStrings, text)
+
+  assert.equal(diagnostics.length, 2)
+  assert.ok(diagnostics.some(d => d.message.includes('customer support ticket system')))
+  assert.ok(diagnostics.some(d => d.message.includes('web application development framework')))
+})
+
+test('no-noun-strings handles empty text', () => {
+  const diagnostics = run(noNounStrings, '')
+  assert.equal(diagnostics.length, 0)
+})
+
+test('ruleRegistry contains no-noun-strings', () => {
+  assert.ok(ruleRegistry.has('no-noun-strings'))
 })
 
 test('no-redundant-pairs flags default redundant phrases', () => {

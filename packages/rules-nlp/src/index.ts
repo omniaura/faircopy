@@ -13,6 +13,7 @@ import { noLlmSpeak } from './no-llm-speak.js'
 import { noMeaninglessModifiers } from './no-meaningless-modifiers.js'
 import { noNonInclusiveLanguage } from './no-non-inclusive-language.js'
 import { noNominalizedPhrases } from './no-nominalized-phrases.js'
+import { noNounStrings } from './no-noun-strings.js'
 import { noOverlyComplexSentences } from './no-overly-complex-sentences.js'
 import { noOverusedAdverbs } from './no-overused-adverbs.js'
 import { noPassiveVoice } from './no-passive-voice.js'
@@ -40,6 +41,7 @@ export { noLlmSpeak } from './no-llm-speak.js'
 export { noMeaninglessModifiers } from './no-meaningless-modifiers.js'
 export { noNonInclusiveLanguage } from './no-non-inclusive-language.js'
 export { noNominalizedPhrases } from './no-nominalized-phrases.js'
+export { noNounStrings } from './no-noun-strings.js'
 export { noOverlyComplexSentences } from './no-overly-complex-sentences.js'
 export { noOverusedAdverbs } from './no-overused-adverbs.js'
 export { noPassiveVoice } from './no-passive-voice.js'
@@ -66,6 +68,7 @@ export type { NoLlmSpeakOptions } from './no-llm-speak.js'
 export type { NoMeaninglessModifiersOptions } from './no-meaningless-modifiers.js'
 export type { NoNonInclusiveLanguageOptions } from './no-non-inclusive-language.js'
 export type { NoNominalizedPhrasesOptions } from './no-nominalized-phrases.js'
+export type { NoNounStringsOptions } from './no-noun-strings.js'
 export type { NoOverlyComplexSentencesOptions } from './no-overly-complex-sentences.js'
 export type { NoOverusedAdverbsOptions } from './no-overused-adverbs.js'
 export type { NoPassiveVoiceOptions } from './no-passive-voice.js'
@@ -95,6 +98,7 @@ export const ruleRegistry: Map<string, Rule> = new Map([
   ['no-meaningless-modifiers', noMeaninglessModifiers as Rule],
   ['no-non-inclusive-language-nlp', noNonInclusiveLanguage as Rule],
   ['no-nominalized-phrases', noNominalizedPhrases as Rule],
+  ['no-noun-strings', noNounStrings as Rule],
   ['no-overly-complex-sentences', noOverlyComplexSentences as Rule],
   ['no-overused-adverbs', noOverusedAdverbs as Rule],
   ['no-passive-voice', noPassiveVoice as Rule],

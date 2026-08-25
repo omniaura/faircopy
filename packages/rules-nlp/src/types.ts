@@ -17,4 +17,5 @@ export interface MatchView {
 export interface DocView extends MatchView {
   match(pattern: string): MatchView
   sentences(): MatchView
+  terms(): MatchView
 }
