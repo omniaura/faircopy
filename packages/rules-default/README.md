@@ -146,11 +146,28 @@ error[no-rhetorical-scaffolding]: avoid "Without X / With X" — drop the setup 
 
 Flags non-inclusive terms and suggests neutral alternatives.
 
-Default terms include `guys`, `manpower`, `whitelist`, `blacklist`, `master`, `slave`, `crazy`, `insane`, `dumb`, `lame`, `sanity check`, `blind spot`, `grandfathered`, and `mankind`.
-
 ```
 error[no-non-inclusive-language]: replace "guys" with a neutral alternative such as "everyone, team, folks"
 ```
+
+**Default terms:**
+
+| Term | Suggested alternatives |
+|---|---|
+| `guys` | `everyone`, `team`, `folks` |
+| `manpower` | `workforce`, `staffing`, `personnel` |
+| `whitelist` | `allowlist` |
+| `blacklist` | `denylist`, `blocklist` |
+| `master` | `primary`, `main`, `leader` |
+| `slave` | `secondary`, `replica`, `follower` |
+| `crazy` | `unexpected`, `intense`, `extreme` |
+| `insane` | `extreme`, `unbelievable`, `remarkable` |
+| `dumb` | `unhelpful`, `poor`, `uninformed` |
+| `lame` | `unimpressive`, `inadequate`, `weak` |
+| `sanity check` | `quick check`, `confidence check`, `verification` |
+| `blind spot` | `unaware area`, `gap`, `oversight` |
+| `grandfathered` | `legacy status`, `exempted` |
+| `mankind` | `humanity`, `humankind`, `people` |
 
 **Options:**
 
@@ -176,6 +193,8 @@ rules: {
 ```
 
 Single-word terms always match with word boundaries, so `master` will not flag `masterpiece`. Default multi-word phrases such as `sanity check` and `blind spot` use `exact: true`, so `sanity checker` is not flagged. Set `exact: false` on a custom multi-word term to match it as a substring anywhere in the text.
+
+`allowedTerms` is case-insensitive: adding `master` also permits `Master` or `MASTER`.
 
 ---
 

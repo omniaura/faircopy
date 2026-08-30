@@ -116,6 +116,128 @@ test('no-non-inclusive-language is case-insensitive', () => {
   assert.match(diagnostics[1].message, /whitelist/i)
 })
 
+test('no-non-inclusive-language flags terms at start, end, and around punctuation', () => {
+  const text = 'Blacklist. Whitelist, master; slave: guys!'
+  const diagnostics = run(noNonInclusiveLanguage, text)
+
+  assert.equal(diagnostics.length, 5)
+  assert.deepEqual(
+    diagnostics.map(diagnostic => diagnostic.range),
+    [
+      { start: 37, end: 41 },
+      { start: 11, end: 20 },
+      { start: 0, end: 9 },
+      { start: 22, end: 28 },
+      { start: 30, end: 35 },
+    ],
+  )
+})
+
+test('no-non-inclusive-language does not flag terms inside longer words', () => {
+  const text = 'The masterpiece, blacklisted, and mastermind are not flagged.'
+  const diagnostics = run(noNonInclusiveLanguage, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-non-inclusive-language does not flag disguised substrings', () => {
+  const text = 'disguise, guysmanship, and guyser are not the same as guys.'
+  const diagnostics = run(noNonInclusiveLanguage, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.deepEqual(diagnostics[0].range, { start: 54, end: 58 })
+})
+
+test('no-non-inclusive-language flags multiple occurrences of the same term', () => {
+  const text = 'master master master'
+  const diagnostics = run(noNonInclusiveLanguage, text)
+
+  assert.equal(diagnostics.length, 3)
+  assert.ok(diagnostics.every(diagnostic => diagnostic.message.includes('master')))
+})
+
+test('no-non-inclusive-language reports correct severity, ruleId, and help', () => {
+  const text = 'Hey guys.'
+  const diagnostics = run(noNonInclusiveLanguage, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].ruleId, 'no-non-inclusive-language')
+  assert.equal(diagnostics[0].severity, 'error')
+  assert.match(diagnostics[0].message, /guys/)
+  assert.match(diagnostics[0].message, /everyone/)
+  assert.equal(diagnostics[0].help, noNonInclusiveLanguage.help)
+})
+
+test('no-non-inclusive-language maps ranges through a non-identity sourceMap', () => {
+  const text = 'Hey guys.'
+  const sourceMap = text.split('').map((_, index) => index + 10)
+  const diagnostics = noNonInclusiveLanguage.check({
+    text,
+    sourceMap,
+    filePath: 'fixture.astro',
+    options: {},
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.deepEqual(diagnostics[0].range, { start: 14, end: 18 })
+})
+
+test('no-non-inclusive-language allows terms with mixed casing', () => {
+  const text = 'Hey Guys, add this to the Whitelist.'
+  const diagnostics = run(noNonInclusiveLanguage, text, { allowedTerms: ['Guys', 'Whitelist'] })
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-non-inclusive-language replaces defaults when custom terms are provided', () => {
+  const text = 'The master and slave are fine, but the rockstar is not.'
+  const diagnostics = run(noNonInclusiveLanguage, text, {
+    terms: [{ term: 'rockstar', alternatives: ['expert'] }],
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /rockstar/)
+})
+
+test('no-non-inclusive-language supports custom multi-word phrases with exact: false', () => {
+  const text = 'We did a quick sanity check and a sanity checker reviewed it.'
+  const diagnostics = run(noNonInclusiveLanguage, text, {
+    terms: [{ term: 'sanity check', alternatives: ['verification'], exact: false }],
+  })
+
+  assert.equal(diagnostics.length, 2)
+})
+
+test('no-non-inclusive-language supports custom multi-word phrases with exact: true', () => {
+  const text = 'We did a quick sanity check and a sanity checker reviewed it.'
+  const diagnostics = run(noNonInclusiveLanguage, text, {
+    terms: [{ term: 'sanity check', alternatives: ['verification'], exact: true }],
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.deepEqual(diagnostics[0].range, { start: 15, end: 27 })
+})
+
+test('no-non-inclusive-language flags default power metaphors', () => {
+  const text = 'The master branch and slave replica were grandfathered in.'
+  const diagnostics = run(noNonInclusiveLanguage, text)
+
+  assert.equal(diagnostics.length, 3)
+  assert.match(diagnostics[0].message, /master/)
+  assert.match(diagnostics[1].message, /slave/)
+  assert.match(diagnostics[2].message, /grandfathered/)
+})
+
+test('no-non-inclusive-language flags hyphenated and apostrophe variants', () => {
+  const text = 'The master-slave setup and the Master\'s degree are flagged.'
+  const diagnostics = run(noNonInclusiveLanguage, text)
+
+  assert.equal(diagnostics.length, 3)
+  assert.match(diagnostics[0].message, /master/i)
+  assert.match(diagnostics[1].message, /master/i)
+  assert.match(diagnostics[2].message, /slave/i)
+})
+
 test('rule registry exposes the new inclusive-language rule', () => {
   assert.ok(ruleRegistry.has('no-non-inclusive-language'))
 })
