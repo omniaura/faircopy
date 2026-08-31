@@ -25,6 +25,7 @@ import { noSuperlativeClaims } from './no-superlative-claims.js'
 import { noVagueComparatives } from './no-vague-comparatives.js'
 import { noVagueQuantifiers } from './no-vague-quantifiers.js'
 import { noWeakModals } from './no-weak-modals.js'
+import { noWeakVerbs } from './no-weak-verbs.js'
 import { sentenceComplexity } from './sentence-complexity.js'
 
 export { noAbsoluteIntensifiers } from './no-absolute-intensifiers.js'
@@ -53,6 +54,7 @@ export { noSuperlativeClaims } from './no-superlative-claims.js'
 export { noVagueComparatives } from './no-vague-comparatives.js'
 export { noVagueQuantifiers } from './no-vague-quantifiers.js'
 export { noWeakModals } from './no-weak-modals.js'
+export { noWeakVerbs } from './no-weak-verbs.js'
 export { sentenceComplexity } from './sentence-complexity.js'
 export type { NoAbsoluteIntensifiersOptions } from './no-absolute-intensifiers.js'
 export type { NoAdverbOveruseOptions } from './no-adverb-overuse.js'
@@ -80,6 +82,7 @@ export type { NoSuperlativeClaimsOptions } from './no-superlative-claims.js'
 export type { NoVagueComparativesOptions } from './no-vague-comparatives.js'
 export type { NoVagueQuantifiersOptions } from './no-vague-quantifiers.js'
 export type { NoWeakModalsOptions } from './no-weak-modals.js'
+export type { NoWeakVerbsOptions } from './no-weak-verbs.js'
 export type { SentenceComplexityOptions } from './sentence-complexity.js'
 
 /** All NLP rules keyed by their rule ID. */
@@ -110,5 +113,6 @@ export const ruleRegistry: Map<string, Rule> = new Map([
   ['no-vague-comparatives', noVagueComparatives as Rule],
   ['no-vague-quantifiers', noVagueQuantifiers as Rule],
   ['no-weak-modals', noWeakModals as Rule],
+  ['no-weak-verbs', noWeakVerbs as Rule],
   ['sentence-complexity', sentenceComplexity as Rule],
 ])

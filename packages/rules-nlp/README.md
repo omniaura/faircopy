@@ -34,6 +34,7 @@ rules: {
   'no-meaningless-modifiers': 'warn',
   'no-superlative-claims': 'warn',
   'no-llm-speak': 'warn',
+  'no-weak-verbs': 'warn',
 }
 ```
 
@@ -68,6 +69,7 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 | `no-superlative-claims` | Flag unproven superlatives like `best` and `world-class` |
 | `no-non-inclusive-language-nlp` | Flag non-inclusive terms and suggest neutral alternatives |
 | `no-llm-speak` | Flag LLM clichés like `delve into` and `robust` and suggest concrete alternatives |
+| `no-weak-verbs` | Flag vague action verbs like `make` and `perform` and suggest stronger alternatives |
 | `sentence-complexity` | Flag sentences that exceed a word or clause threshold |
 
 ### `no-absolute-intensifiers`
@@ -340,6 +342,49 @@ Note that we will explore the strong, detailed pattern. Also, the system is crit
 ```
 
 The rule uses `compromise` for word-aware matching, so `robustness` is not flagged when the configured phrase is `robust`.
+
+### `no-weak-verbs`
+
+Vague action verbs such as `make`, `perform`, `conduct`, and `carry out` hide the real action. This rule flags weak verbs used as verbs and suggests stronger, more specific alternatives. It uses `compromise` to identify verb inflections, so `made`, `performed`, and `carried out` are also flagged, while noun usages such as `the make of the car` are ignored.
+
+```ts
+rules: {
+  'no-weak-verbs': 'warn',
+}
+```
+
+Options:
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `verbs` | `WeakVerb[]` | `[{ verb: 'make', alternatives: ['create', 'build', 'produce'] }, ...]` | Verbs to flag, each with suggested alternatives |
+| `allowList` | `string[]` | `[]` | Verbs or phrases to allow and skip |
+
+Example with custom verbs:
+
+```ts
+'no-weak-verbs': ['warn', {
+  verbs: [
+    { verb: 'utilize', alternatives: ['use'] },
+    { verb: 'leverage', alternatives: ['use', 'exploit'] },
+  ],
+  allowList: ['make'],
+}]
+```
+
+Flagged example:
+
+```text
+We need to make a decision, perform a review, and carry out the plan.
+```
+
+Suggested fix:
+
+```text
+We need to decide, review, and implement the plan.
+```
+
+Because the rule matches by verb inflection, it may also flag common phrasal verbs and idioms such as `make out`, `make do`, or `made it`. Add those to `allowList` if they are acceptable in your style guide.
 
 ### `no-noun-strings`
 

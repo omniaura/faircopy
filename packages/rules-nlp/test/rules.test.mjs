@@ -24,6 +24,7 @@ import {
   noVagueComparatives,
   noVagueQuantifiers,
   noWeakModals,
+  noWeakVerbs,
   ruleRegistry,
   sentenceComplexity,
 } from '../dist/index.js'
@@ -1238,4 +1239,104 @@ test('no-llm-speak handles text with no flagged phrases', () => {
 
 test('ruleRegistry contains no-llm-speak', () => {
   assert.ok(ruleRegistry.has('no-llm-speak'))
+})
+
+test('no-weak-verbs flags default weak verbs used as verbs', () => {
+  const text = 'We need to make a decision, perform a review, conduct the meeting, and carry out the plan.'
+  const diagnostics = run(noWeakVerbs, text)
+
+  assert.equal(diagnostics.length, 4)
+  assert.ok(diagnostics.every(d => d.ruleId === 'no-weak-verbs'))
+  assert.ok(diagnostics.some(d => d.message.includes('make')))
+  assert.ok(diagnostics.some(d => d.message.includes('perform')))
+  assert.ok(diagnostics.some(d => d.message.includes('conduct')))
+  assert.ok(diagnostics.some(d => d.message.includes('carry out')))
+})
+
+test('no-weak-verbs suggests configured alternatives', () => {
+  const text = 'We need to make a decision.'
+  const diagnostics = run(noWeakVerbs, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /create/)
+  assert.match(diagnostics[0].message, /build/)
+  assert.match(diagnostics[0].message, /produce/)
+  assert.equal(diagnostics[0].severity, 'warn')
+})
+
+test('no-weak-verbs ignores weak verbs used as nouns', () => {
+  const text = 'The make of the car is Toyota. His conduct was good.'
+  const diagnostics = run(noWeakVerbs, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-weak-verbs ignores allowed verbs', () => {
+  const text = 'We need to make a decision.'
+  const diagnostics = run(noWeakVerbs, text, { allowList: ['make'] })
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-weak-verbs supports custom verb lists', () => {
+  const text = 'We will utilize the tool.'
+  const diagnostics = run(noWeakVerbs, text, {
+    verbs: [{ verb: 'utilize', alternatives: ['use'] }],
+  })
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /utilize/)
+  assert.match(diagnostics[0].message, /use/)
+})
+
+test('no-weak-verbs supports custom allowList with custom verbs', () => {
+  const text = 'We will utilize the tool.'
+  const diagnostics = run(noWeakVerbs, text, {
+    verbs: [{ verb: 'utilize', alternatives: ['use'] }],
+    allowList: ['utilize'],
+  })
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-weak-verbs flags inflected forms of weak verbs', () => {
+  const text = 'She made the call. They performed well. We carried out the task.'
+  const diagnostics = run(noWeakVerbs, text)
+
+  assert.equal(diagnostics.length, 3)
+  assert.ok(diagnostics.some(d => d.message.includes('made')))
+  assert.ok(diagnostics.some(d => d.message.includes('performed')))
+  assert.ok(diagnostics.some(d => d.message.includes('carried out')))
+})
+
+test('no-weak-verbs reports accurate byte ranges', () => {
+  const text = 'We need to make a decision.'
+  const diagnostics = run(noWeakVerbs, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.deepEqual(diagnostics[0].range, { start: 11, end: 15 })
+})
+
+test('no-weak-verbs handles empty text', () => {
+  const diagnostics = run(noWeakVerbs, '')
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-weak-verbs handles text with no weak verbs', () => {
+  const text = 'The team shipped the feature on time.'
+  const diagnostics = run(noWeakVerbs, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-weak-verbs is case-insensitive', () => {
+  const text = 'We will MAKE a plan.'
+  const diagnostics = run(noWeakVerbs, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /MAKE/)
+})
+
+test('ruleRegistry contains no-weak-verbs', () => {
+  assert.ok(ruleRegistry.has('no-weak-verbs'))
 })

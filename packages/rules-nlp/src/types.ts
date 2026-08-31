@@ -14,8 +14,13 @@ export interface MatchView {
   json(options?: unknown): JsonOffsetEntry[]
 }
 
+export interface VerbView extends MatchView {
+  json(options?: unknown): JsonOffsetEntry[]
+}
+
 export interface DocView extends MatchView {
   match(pattern: string): MatchView
   sentences(): MatchView
   terms(): MatchView
+  verbs(): VerbView
 }
