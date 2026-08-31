@@ -1,6 +1,6 @@
 {
   "name": "@faircopy/solid",
-  "version": "1.19.0",
+  "version": "1.20.0",
   "description": "SolidJS adapter for faircopy — extracts prose from .tsx and .jsx files",
   "type": "module",
   "exports": {

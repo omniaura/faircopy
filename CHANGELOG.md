@@ -1,3 +1,10 @@
+# [1.20.0](https://github.com/omniaura/faircopy/compare/v1.19.0...v1.20.0) (2026-08-31)
+
+
+### Features
+
+* **rules-nlp:** add no-weak-verbs rule ([2102a85](https://github.com/omniaura/faircopy/commit/2102a854eab091c266e74bccbc8dc9b6711b39b9))
+
 # [1.19.0](https://github.com/omniaura/faircopy/compare/v1.18.1...v1.19.0) (2026-08-25)
 
 
