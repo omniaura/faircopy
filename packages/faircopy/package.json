@@ -22,13 +22,15 @@
     "@faircopy/config": "workspace:*",
     "@faircopy/core": "workspace:*",
     "@faircopy/rules-default": "workspace:*",
-    "@faircopy/rules-nlp": "workspace:*"
+    "@faircopy/rules-nlp": "workspace:*",
+    "@faircopy/templ": "workspace:*"
   },
   "keywords": [
     "linter",
     "copy",
     "marketing",
     "astro",
+    "templ",
     "em-dash",
     "prose"
   ],

@@ -43,6 +43,25 @@ export default defineConfig({
 npx faircopy lint
 ```
 
+### Go templ
+
+Use `@faircopy/templ` to lint visible HTML text, prose attributes, and user-facing Go string literals in `.templ` files:
+
+```sh
+npm i -D faircopy @faircopy/templ
+```
+
+```ts
+import { defineConfig } from '@faircopy/config'
+import { templ } from '@faircopy/templ'
+
+export default defineConfig({
+  files: ['**/*.templ'],
+  adapters: [templ()],
+  rules: { 'no-em-dash': 'error' },
+})
+```
+
 ## CI
 
 ```yaml
@@ -126,6 +145,7 @@ Use a package-qualified ID if two loaded rulesets expose the same bare rule name
 | [`@faircopy/cli`](packages/cli) | `faircopy` binary |
 | [`@faircopy/core`](packages/core) | Engine: types, config loader, file resolver, rule runner |
 | [`@faircopy/astro`](packages/astro) | Astro adapter |
+| [`@faircopy/templ`](packages/templ) | Go templ adapter |
 | [`@faircopy/rules-default`](packages/rules-default) | Default ruleset |
 | [`@faircopy/rules-nlp`](packages/rules-nlp) | Optional NLP-powered ruleset |
 | [`@faircopy/config`](packages/config) | `defineConfig()` helper |
