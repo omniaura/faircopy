@@ -147,6 +147,9 @@ importers:
       '@faircopy/rules-nlp':
         specifier: workspace:*
         version: link:../rules-nlp
+      '@faircopy/templ':
+        specifier: workspace:*
+        version: link:../templ
 
   packages/plugin: {}
 
@@ -215,6 +218,22 @@ importers:
       '@babel/types':
         specifier: ^7.29.0
         version: 7.29.7
+      '@faircopy/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@types/node':
+        specifier: ^25.6.0
+        version: 25.9.5
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(jiti@2.7.0)(typescript@6.0.3)
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+
+  packages/templ:
+    dependencies:
       '@faircopy/core':
         specifier: workspace:*
         version: link:../core
