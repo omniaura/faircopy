@@ -14,6 +14,7 @@ import {
   noMeaninglessModifiers,
   noNominalizedPhrases,
   noNounStrings,
+  noNThings,
   noOverlyComplexSentences,
   noOverusedAdverbs,
   noPronounLedClaims,
@@ -189,6 +190,89 @@ test('no-noun-strings handles empty text', () => {
 
 test('ruleRegistry contains no-noun-strings', () => {
   assert.ok(ruleRegistry.has('no-noun-strings'))
+})
+
+test('no-n-things flags the counted placeholder heading', () => {
+  const text = 'Three things.'
+  const diagnostics = run(noNThings, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].ruleId, 'no-n-things')
+  assert.deepEqual(diagnostics[0].range, { start: 0, end: 12 })
+  assert.equal(text.slice(diagnostics[0].range.start, diagnostics[0].range.end), 'Three things')
+})
+
+test('no-n-things flags numeric and word-number frames', () => {
+  const text = '5 things to know before launch. Twenty-five things broke at once.'
+  const diagnostics = run(noNThings, text)
+
+  assert.equal(diagnostics.length, 2)
+  assert.deepEqual(diagnostics.map(diagnostic => diagnostic.range), [
+    { start: 0, end: 8 },
+    { start: 32, end: 50 },
+  ])
+})
+
+test('no-n-things flags the frame mid-sentence', () => {
+  const text = 'It does three things: caches, retries, and merges.'
+  const diagnostics = run(noNThings, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(text.slice(diagnostics[0].range.start, diagnostics[0].range.end), 'three things')
+})
+
+test('no-n-things leaves one-thing idioms alone at the default minCount', () => {
+  const text = 'One thing led to another. The one thing that matters is latency.'
+  const diagnostics = run(noNThings, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-n-things ignores ordinals and vague values', () => {
+  const text = 'First things first. A few things changed. All things considered, we shipped.'
+  const diagnostics = run(noNThings, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-n-things ignores concrete counted nouns', () => {
+  const text = 'There are three tabs in the sidebar. We tested 12 integrations this month.'
+  const diagnostics = run(noNThings, text)
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-n-things respects allowed phrases', () => {
+  const text = 'Three things matter this quarter.'
+  const diagnostics = run(noNThings, text, {
+    allowedPhrases: ['Three things'],
+  })
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-n-things respects a custom minCount', () => {
+  const text = 'Two things happened.'
+  const diagnostics = run(noNThings, text, { minCount: 3 })
+
+  assert.equal(diagnostics.length, 0)
+})
+
+test('no-n-things respects custom placeholder nouns', () => {
+  const text = '5 tips for better copy.'
+  const diagnostics = run(noNThings, text, { nouns: ['tips', 'tip'] })
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(text.slice(diagnostics[0].range.start, diagnostics[0].range.end), '5 tips')
+})
+
+test('no-n-things handles empty text', () => {
+  const diagnostics = run(noNThings, '')
+  assert.equal(diagnostics.length, 0)
+})
+
+test('ruleRegistry contains no-n-things', () => {
+  assert.ok(ruleRegistry.has('no-n-things'))
 })
 
 test('no-redundant-pairs flags default redundant phrases', () => {
