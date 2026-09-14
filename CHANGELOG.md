@@ -1,3 +1,10 @@
+# [1.21.0](https://github.com/omniaura/faircopy/compare/v1.20.0...v1.21.0) (2026-09-14)
+
+
+### Features
+
+* **rules-nlp:** add no-n-things rule for the counted placeholder tell ([#26](https://github.com/omniaura/faircopy/issues/26)) ([7a086c7](https://github.com/omniaura/faircopy/commit/7a086c79ed66fa6b4b17eca4fdb4062e77ae1726))
+
 # [1.20.0](https://github.com/omniaura/faircopy/compare/v1.19.0...v1.20.0) (2026-08-31)
 
 
