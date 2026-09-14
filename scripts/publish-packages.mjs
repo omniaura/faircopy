@@ -26,8 +26,8 @@ const isPublished = async (name) => {
   for (let attempt = 1; attempt <= 6; attempt += 1) {
     try {
       const response = await fetch(url)
-      if (response.status === 404) return false
       if (response.ok) return true
+      if (response.status === 404) return false
       if (attempt === 6) {
         throw new Error(`npm registry check failed for ${name}@${version}: ${response.status} ${response.statusText}`)
       }
@@ -37,6 +37,32 @@ const isPublished = async (name) => {
       }
     }
     await sleep(1000 * attempt)
+  }
+  return false
+}
+
+// The npm registry serves package data through a CDN that can lag the
+// publish by minutes. A fresh publish can 404 here even though it
+// succeeded, so the post-publish check retries the 404 through that
+// window instead of failing the release (the 1.20.0 and 1.21.0 runs
+// both failed this way while every package had actually published).
+const isPublishedEventually = async (name) => {
+  const encodedName = name.replace('/', '%2f')
+  const url = `https://registry.npmjs.org/${encodedName}/${version}`
+  const attempts = 30
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      const response = await fetch(url)
+      if (response.ok) return true
+      if (response.status !== 404 && response.status !== 403) {
+        throw new Error(`npm registry check failed for ${name}@${version}: ${response.status} ${response.statusText}`)
+      }
+    } catch (error) {
+      if (attempt === attempts) {
+        throw new Error(`npm registry check failed for ${name}@${version}: ${error.message}`)
+      }
+    }
+    await sleep(10000)
   }
   return false
 }
@@ -130,7 +156,7 @@ for (const { dir, manifest: pkg, original, pkgPath } of sortPackagesForPublish(p
 
 const missing = []
 for (const name of publishedPackages) {
-  if (!(await isPublished(name))) missing.push(name)
+  if (!(await isPublishedEventually(name))) missing.push(name)
 }
 if (missing.length > 0) {
   console.error(`Missing published packages for ${version}: ${missing.join(', ')}`)
