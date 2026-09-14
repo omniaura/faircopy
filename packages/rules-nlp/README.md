@@ -34,6 +34,7 @@ rules: {
   'no-meaningless-modifiers': 'warn',
   'no-superlative-claims': 'warn',
   'no-llm-speak': 'warn',
+  'no-n-things': 'warn',
   'no-weak-verbs': 'warn',
 }
 ```
@@ -69,6 +70,7 @@ Package-qualified IDs like `@faircopy/rules-nlp/no-passive-voice` still work and
 | `no-superlative-claims` | Flag unproven superlatives like `best` and `world-class` |
 | `no-non-inclusive-language-nlp` | Flag non-inclusive terms and suggest neutral alternatives |
 | `no-llm-speak` | Flag LLM clichés like `delve into` and `robust` and suggest concrete alternatives |
+| `no-n-things` | Flag the counted placeholder frame like `Three things.` and `5 things to know` |
 | `no-weak-verbs` | Flag vague action verbs like `make` and `perform` and suggest stronger alternatives |
 | `sentence-complexity` | Flag sentences that exceed a word or clause threshold |
 
@@ -425,3 +427,44 @@ The process for designing the user experience is slow.
 ```
 
 The rule uses `compromise` for part-of-speech tagging and skips proper nouns such as place names.
+
+### `no-n-things`
+
+A count plus a placeholder noun — `Three things.`, `5 things to know before launch` — borrows its number for rhythm instead of meaning. The frame is a documented AI-writing tell: the count is chosen because enumerated lists feel punchy, not because the content demanded that many items. Name the items in the heading, or drop the count and state the claim.
+
+```ts
+rules: {
+  'no-n-things': 'warn',
+}
+```
+
+Options:
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `minCount` | `number` | `2` | Minimum cardinal count before flagging; keeps `one thing` idioms alone |
+| `nouns` | `string[]` | `['thing', 'things']` | Placeholder nouns that complete the `N ___` frame |
+| `allowedPhrases` | `string[]` | `[]` | Phrases to allow and skip |
+
+Example with custom settings:
+
+```ts
+'no-n-things': ['warn', {
+  minCount: 3,
+  nouns: ['thing', 'things', 'tips', 'takeaways'],
+}]
+```
+
+Flagged example:
+
+```text
+Three things you should know about memory.
+```
+
+Suggested fix:
+
+```text
+How Ditto remembers your conversations.
+```
+
+The rule uses `compromise` for part-of-speech tagging. Only cardinal counts trigger it — idioms like `First things first`, `All things considered`, and `a few things` are left alone, as are concrete counted nouns like `three tabs`.
