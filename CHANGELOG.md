@@ -1,3 +1,10 @@
+## [1.21.1](https://github.com/omniaura/faircopy/compare/v1.21.0...v1.21.1) (2026-09-15)
+
+
+### Bug Fixes
+
+* **release:** retry the post-publish registry check through CDN propagation ([#27](https://github.com/omniaura/faircopy/issues/27)) ([c583513](https://github.com/omniaura/faircopy/commit/c583513dec857c6a62297f8fe280e2425a3611c1))
+
 # [1.21.0](https://github.com/omniaura/faircopy/compare/v1.20.0...v1.21.0) (2026-09-14)
 
 
