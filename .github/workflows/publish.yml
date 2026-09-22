@@ -2,10 +2,11 @@ name: Release
 
 on:
   push:
-    branches: [main]
+    branches: [main, codex/npm-release-recovery-1220]
 
 jobs:
   release:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     permissions:
@@ -39,3 +40,29 @@ jobs:
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  recover-v1-22-0:
+    if: github.ref == 'refs/heads/codex/npm-release-recovery-1220'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm build
+
+      - name: Publish missing packages at 1.22.0
+        run: node scripts/publish-packages.mjs 1.22.0
