@@ -30,6 +30,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build workspaces
+        run: pnpm build
+
       - name: Publish missing packages at 1.22.0
         run: node scripts/publish-packages.mjs 1.22.0
         env:
