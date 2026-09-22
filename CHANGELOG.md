@@ -1,3 +1,10 @@
+# [1.22.0](https://github.com/omniaura/faircopy/compare/v1.21.1...v1.22.0) (2026-09-22)
+
+
+### Features
+
+* **templ:** add Go template adapter ([#25](https://github.com/omniaura/faircopy/issues/25)) ([c7bc4b6](https://github.com/omniaura/faircopy/commit/c7bc4b68ba20b1a002c5e12223a0dce8a0942aae))
+
 ## [1.21.1](https://github.com/omniaura/faircopy/compare/v1.21.0...v1.21.1) (2026-09-15)
 
 
