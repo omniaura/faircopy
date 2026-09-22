@@ -1,0 +1,40 @@
+{
+  "name": "@faircopy/go",
+  "version": "1.22.0",
+  "description": "Configurable Go message adapter for faircopy with source maps",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "pnpm run build && node --test test/*.test.mjs",
+    "prepublishOnly": "pnpm run build"
+  },
+  "dependencies": {
+    "@faircopy/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/omniaura/faircopy",
+    "directory": "packages/go"
+  },
+  "license": "MIT",
+  "author": "omniaura"
+}

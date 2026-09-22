@@ -62,6 +62,25 @@ export default defineConfig({
 })
 ```
 
+### Go error messages
+
+Use `@faircopy/go` to lint static message arguments passed to configured Go functions:
+
+```sh
+npm i -D faircopy @faircopy/go
+```
+
+```ts
+import { defineConfig } from '@faircopy/config'
+import { go } from '@faircopy/go'
+
+export default defineConfig({
+  files: ['**/*.go'],
+  adapters: [go({ calls: [{ name: 'NewFactory', argumentIndex: 1 }] })],
+  rules: { 'no-em-dash': 'error' },
+})
+```
+
 ## CI
 
 ```yaml
@@ -145,6 +164,7 @@ Use a package-qualified ID if two loaded rulesets expose the same bare rule name
 | [`@faircopy/cli`](packages/cli) | `faircopy` binary |
 | [`@faircopy/core`](packages/core) | Engine: types, config loader, file resolver, rule runner |
 | [`@faircopy/astro`](packages/astro) | Astro adapter |
+| [`@faircopy/go`](packages/go) | Go message adapter |
 | [`@faircopy/templ`](packages/templ) | Go templ adapter |
 | [`@faircopy/rules-default`](packages/rules-default) | Default ruleset |
 | [`@faircopy/rules-nlp`](packages/rules-nlp) | Optional NLP-powered ruleset |

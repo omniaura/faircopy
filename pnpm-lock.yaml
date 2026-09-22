@@ -141,6 +141,9 @@ importers:
       '@faircopy/core':
         specifier: workspace:*
         version: link:../core
+      '@faircopy/go':
+        specifier: workspace:*
+        version: link:../go
       '@faircopy/rules-default':
         specifier: workspace:*
         version: link:../rules-default
@@ -150,6 +153,22 @@ importers:
       '@faircopy/templ':
         specifier: workspace:*
         version: link:../templ
+
+  packages/go:
+    dependencies:
+      '@faircopy/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@types/node':
+        specifier: ^25.6.0
+        version: 25.9.5
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(jiti@2.7.0)(typescript@6.0.3)
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
 
   packages/plugin: {}
 
