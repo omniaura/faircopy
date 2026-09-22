@@ -1,3 +1,10 @@
+# [1.23.0](https://github.com/omniaura/faircopy/compare/v1.22.0...v1.23.0) (2026-09-22)
+
+
+### Features
+
+* **go:** add configurable Go message adapter ([#28](https://github.com/omniaura/faircopy/issues/28)) ([b5e75d1](https://github.com/omniaura/faircopy/commit/b5e75d1c475dd022b638da0128efb0f580479330))
+
 # [1.22.0](https://github.com/omniaura/faircopy/compare/v1.21.1...v1.22.0) (2026-09-22)
 
 
