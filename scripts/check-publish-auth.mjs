@@ -52,7 +52,7 @@ for (const { name } of packages) {
 
   const packument = await fetch(`${registry}/${escaped}`, { method: 'HEAD' })
   if (packument.status === 404) {
-    problems.push(`${name}: not on npm yet. Trusted publishing cannot create a package; a maintainer must publish its first version, then add a trusted publisher for omniaura/faircopy publish.yml.`)
+    problems.push(`${name}: not on npm yet. Trusted publishing cannot create a package; a maintainer must publish its first version, then add a trusted publisher at https://www.npmjs.com/package/${name}/access (GitHub Actions, omniaura/faircopy, workflow publish.yml).`)
     continue
   }
 
@@ -66,7 +66,7 @@ for (const { name } of packages) {
   } else {
     const reason = await describeFailure(exchange)
     console.log(`FAIL ${name}: ${reason}`)
-    problems.push(`${name}: OIDC token exchange failed (${reason}). Add or fix its trusted publisher on npmjs.com: repository omniaura/faircopy, workflow publish.yml.`)
+    problems.push(`${name}: OIDC token exchange failed (${reason}). Add or fix its trusted publisher at https://www.npmjs.com/package/${name}/access (GitHub Actions, omniaura/faircopy, workflow publish.yml).`)
   }
 }
 
