@@ -1,12 +1,23 @@
 #!/usr/bin/env node
 // Publishes every public workspace package at the same version, replacing
 // workspace:* deps with the release version before publish and restoring after.
-import { readFileSync, writeFileSync, readdirSync, statSync } from 'fs'
+//
+// Resumable: versions already on npm are skipped, so rerunning after a partial
+// failure publishes only what is missing. With no argument it publishes the
+// version the workspace packages already declare (the Release workflow's
+// `resume` mode uses this after a failed release commit landed on main).
+import { writeFileSync } from 'fs'
 import { join } from 'path'
 import { execSync } from 'child_process'
+import { escapeName, listPublicPackages, lockstepVersion } from './workspace-packages.mjs'
 
-const version = process.argv[2]
-if (!version) { console.error('Usage: publish-packages.mjs <version>'); process.exit(1) }
+const allPackages = listPublicPackages()
+const declaredVersion = lockstepVersion(allPackages)
+const version = process.argv[2] || declaredVersion
+if (version !== declaredVersion) {
+  console.error(`Refusing to publish ${version}: the workspace packages declare ${declaredVersion}.`)
+  process.exit(1)
+}
 
 const replaceWorkspace = (deps) => {
   if (!deps) return deps
@@ -15,13 +26,12 @@ const replaceWorkspace = (deps) => {
   )
 }
 
-const packageDirs = readdirSync('packages').sort()
 const publishedPackages = []
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 const isPublished = async (name) => {
-  const encodedName = name.replace('/', '%2f')
+  const encodedName = escapeName(name)
   const url = `https://registry.npmjs.org/${encodedName}/${version}`
   for (let attempt = 1; attempt <= 6; attempt += 1) {
     try {
@@ -47,7 +57,7 @@ const isPublished = async (name) => {
 // window instead of failing the release (the 1.20.0 and 1.21.0 runs
 // both failed this way while every package had actually published).
 const isPublishedEventually = async (name) => {
-  const encodedName = name.replace('/', '%2f')
+  const encodedName = escapeName(name)
   const url = `https://registry.npmjs.org/${encodedName}/${version}`
   const attempts = 30
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
@@ -119,22 +129,28 @@ const sortPackagesForPublish = (packages) => {
   return sorted
 }
 
-const packages = []
-for (const dir of packageDirs) {
-  const pkgPath = join('packages', dir, 'package.json')
-  try { statSync(pkgPath) } catch { continue }
+const pending = sortPackagesForPublish(allPackages).map(pkg => pkg.name)
 
-  const original = readFileSync(pkgPath, 'utf8')
-  const pkg = JSON.parse(original)
-  if (pkg.private) continue
-  packages.push({ dir, manifest: pkg, name: pkg.name, original, pkgPath })
+const reportUnpublished = (failure, unconfirmed = pending) => {
+  console.error(`\n${failure}`)
+  console.error(`Not yet published at ${version}: ${unconfirmed.join(', ')}`)
+  console.error('Fix the cause, then run the Release workflow from main with mode=resume;')
+  console.error('it publishes only the versions that are still missing.')
 }
 
-for (const { dir, manifest: pkg, original, pkgPath } of sortPackagesForPublish(packages)) {
+for (const { dir, manifest: pkg, original, pkgPath } of sortPackagesForPublish(allPackages)) {
   publishedPackages.push(pkg.name)
 
-  if (await isPublished(pkg.name)) {
+  let exists
+  try {
+    exists = await isPublished(pkg.name)
+  } catch (error) {
+    reportUnpublished(error.message)
+    process.exit(1)
+  }
+  if (exists) {
     console.log(`${pkg.name}@${version} is already published; skipping.`)
+    pending.shift()
     continue
   }
 
@@ -146,20 +162,33 @@ for (const { dir, manifest: pkg, original, pkgPath } of sortPackagesForPublish(p
   }
 
   writeFileSync(pkgPath, JSON.stringify(patched, null, 2) + '\n')
+  let failure
   try {
     console.log(`Publishing ${pkg.name}@${version}...`)
     publishPackage(dir)
+    pending.shift()
+  } catch (error) {
+    failure = error.message
   } finally {
     writeFileSync(pkgPath, original)
+  }
+  if (failure) {
+    reportUnpublished(failure)
+    process.exit(1)
   }
 }
 
 const missing = []
 for (const name of publishedPackages) {
-  if (!(await isPublishedEventually(name))) missing.push(name)
+  try {
+    if (!(await isPublishedEventually(name))) missing.push(name)
+  } catch (error) {
+    console.error(error.message)
+    missing.push(name)
+  }
 }
 if (missing.length > 0) {
-  console.error(`Missing published packages for ${version}: ${missing.join(', ')}`)
+  reportUnpublished(`Missing published packages for ${version}: ${missing.join(', ')}`, missing)
   process.exit(1)
 }
 

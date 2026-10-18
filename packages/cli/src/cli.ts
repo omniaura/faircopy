@@ -1,6 +1,12 @@
+import { createRequire } from 'node:module'
 import { cac } from 'cac'
 import { runLint } from './commands/lint.js'
 import { runHookStop } from './commands/hook-stop.js'
+
+// Read the version from this package's own manifest at runtime, so it tracks
+// the lockstep release version instead of a hard-coded string. Both src/ and
+// dist/ sit one level below package.json, which npm always ships.
+const { version } = createRequire(import.meta.url)('../package.json') as { version: string }
 
 const cli = cac('faircopy')
 
@@ -17,7 +23,7 @@ cli
   .command('hook-stop', 'Claude Code Stop hook — blocks the turn if lint errors are found')
   .action(runHookStop)
 
-cli.version('0.1.0')
+cli.version(version)
 cli.help()
 
 cli.parse()

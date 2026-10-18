@@ -2,6 +2,8 @@
 
 A copy linter for landing pages. Catches writing-quality bugs in the prose that ships inside your codebase: em-dashes, weasel words, and rhetorical scaffolding patterns.
 
+Maintainers: see the [release and recovery guide](docs/releasing.md) for npm trusted publishing and partial-release recovery.
+
 ```
 error[no-em-dash]: use a sentence break instead of an em-dash
   ┌─ src/pages/index.astro:12:38

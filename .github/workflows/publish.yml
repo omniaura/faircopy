@@ -1,8 +1,34 @@
 name: Release
 
+# Publishes every workspace package to npm at one lockstep version through npm
+# trusted publishing (GitHub OIDC). No npm token is used or needed.
+#
+# - push to main: preflight, then semantic-release (tag, release commit, publish).
+# - workflow_dispatch mode=preflight: only check that every package can publish.
+# - workflow_dispatch mode=release (from main): preflight, then semantic-release,
+#   for rerunning a release whose preflight failed without a new commit.
+# - workflow_dispatch mode=resume (from main): publish whichever packages are
+#   missing at the version already committed on main, after a release failed
+#   part-way. Packages already on npm at that version are skipped.
+#
+# The preflight exchanges this workflow's OIDC token for each package before
+# anything is tagged, so a package without a trusted publisher (for example a
+# brand-new one) fails the run up front instead of after half the set shipped.
+
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: preflight checks publish access only; release runs semantic-release; resume publishes the missing packages at the committed version
+        type: choice
+        options: [preflight, release, resume]
+        default: preflight
+
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 jobs:
   release:
@@ -12,7 +38,7 @@ jobs:
       contents: write      # create GitHub releases + push version commits
       issues: write        # comment on referenced issues
       pull-requests: write # comment on referenced PRs
-      id-token: write      # npm provenance
+      id-token: write      # npm trusted publishing + provenance
 
     steps:
       - uses: actions/checkout@v4
@@ -36,6 +62,15 @@ jobs:
 
       - run: pnpm test
 
-      - run: npx semantic-release
+      - name: Preflight npm trusted publishing for every package
+        run: node scripts/check-publish-auth.mjs
+
+      - name: Release
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || inputs.mode == 'release')
+        run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resume a partially published release
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'resume' && github.ref == 'refs/heads/main'
+        run: node scripts/publish-packages.mjs
