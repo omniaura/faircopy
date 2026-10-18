@@ -1,3 +1,10 @@
+## [1.24.1](https://github.com/omniaura/faircopy/compare/v1.24.0...v1.24.1) (2026-10-18)
+
+
+### Bug Fixes
+
+* **release:** preflight npm trusted publishing and make lockstep releases resumable ([#37](https://github.com/omniaura/faircopy/issues/37)) ([f66b03e](https://github.com/omniaura/faircopy/commit/f66b03e009704b4f7648bc85288d48a2e53f1afc)), closes [#30](https://github.com/omniaura/faircopy/issues/30)
+
 # [1.24.0](https://github.com/omniaura/faircopy/compare/v1.23.0...v1.24.0) (2026-10-18)
 
 
