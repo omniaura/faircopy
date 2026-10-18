@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Release preflight: prove this workflow can publish EVERY public workspace
-// package through npm trusted publishing (GitHub OIDC) before semantic-release
+// Release preflight: verify npm trusted-publishing authentication for every public
+// workspace package through GitHub OIDC before semantic-release
 // creates a tag or pushes a release commit.
 //
 // Why: when npm cannot exchange the workflow's OIDC token for a package it
@@ -76,4 +76,4 @@ if (problems.length > 0) {
   process.exit(1)
 }
 
-console.log(`\nRelease preflight passed: all ${packages.length} packages can publish through trusted publishing.`)
+console.log(`\nRelease preflight passed: all ${packages.length} packages authenticated through trusted publishing.`)

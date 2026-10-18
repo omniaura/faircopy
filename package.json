@@ -6,7 +6,8 @@
   "scripts": {
     "build": "pnpm -r --filter='./packages/*' build",
     "typecheck": "pnpm -r --filter='./packages/*' typecheck",
-    "test": "pnpm -r --filter='./packages/*' test"
+    "test": "pnpm test:release && pnpm -r --filter='./packages/*' test",
+    "test:release": "node --test scripts/test/*.test.mjs"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",

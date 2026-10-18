@@ -131,9 +131,9 @@ const sortPackagesForPublish = (packages) => {
 
 const pending = sortPackagesForPublish(allPackages).map(pkg => pkg.name)
 
-const reportUnpublished = (failure) => {
+const reportUnpublished = (failure, unconfirmed = pending) => {
   console.error(`\n${failure}`)
-  console.error(`Not yet published at ${version}: ${pending.join(', ')}`)
+  console.error(`Not yet published at ${version}: ${unconfirmed.join(', ')}`)
   console.error('Fix the cause, then run the Release workflow from main with mode=resume;')
   console.error('it publishes only the versions that are still missing.')
 }
@@ -141,7 +141,14 @@ const reportUnpublished = (failure) => {
 for (const { dir, manifest: pkg, original, pkgPath } of sortPackagesForPublish(allPackages)) {
   publishedPackages.push(pkg.name)
 
-  if (await isPublished(pkg.name)) {
+  let exists
+  try {
+    exists = await isPublished(pkg.name)
+  } catch (error) {
+    reportUnpublished(error.message)
+    process.exit(1)
+  }
+  if (exists) {
     console.log(`${pkg.name}@${version} is already published; skipping.`)
     pending.shift()
     continue
@@ -173,10 +180,15 @@ for (const { dir, manifest: pkg, original, pkgPath } of sortPackagesForPublish(a
 
 const missing = []
 for (const name of publishedPackages) {
-  if (!(await isPublishedEventually(name))) missing.push(name)
+  try {
+    if (!(await isPublishedEventually(name))) missing.push(name)
+  } catch (error) {
+    console.error(error.message)
+    missing.push(name)
+  }
 }
 if (missing.length > 0) {
-  console.error(`Missing published packages for ${version}: ${missing.join(', ')}`)
+  reportUnpublished(`Missing published packages for ${version}: ${missing.join(', ')}`, missing)
   process.exit(1)
 }
 
