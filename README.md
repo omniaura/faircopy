@@ -106,7 +106,7 @@ Install the plugin to get a stop hook (blocks the turn if lint errors are found)
 |---|---|---|
 | `no-em-dash` | `error` | Ban `—` in marketing copy |
 | `no-weasel-words` | `error` | Ban `actually`, `truly`, `really`, `literally` |
-| `no-rhetorical-scaffolding` | `error` | Ban `X is Y, not Z` and `Without X / With X` patterns |
+| `no-rhetorical-scaffolding` | `error` | Ban `X is Y, not Z`, `Without X / With X`, and standalone `That distinction matters.` announcements |
 | `no-passive-voice` | `warn` | Flag likely passive-voice constructions |
 | `no-complex-readability` | `warn` | Flag prose whose Flesch-Kincaid grade level exceeds a target |
 

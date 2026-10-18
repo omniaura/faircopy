@@ -120,14 +120,16 @@ rules: {
 
 ### `no-rhetorical-scaffolding`
 
-Bans two formulaic patterns:
+Bans three formulaic patterns:
 
 1. `X is Y, not Z` constructions
 2. `Without X... With X...` sentence pairs
+3. Standalone `This/That distinction/difference matters.` importance announcements
 
 ```
 error[no-rhetorical-scaffolding]: avoid "X is Y, not Z" — state the claim directly
 error[no-rhetorical-scaffolding]: avoid "Without X / With X" — drop the setup and make the claim
+error[no-rhetorical-scaffolding]: avoid "That distinction matters" — state the point directly
 ```
 
 **Options:**
@@ -136,9 +138,42 @@ error[no-rhetorical-scaffolding]: avoid "Without X / With X" — drop the setup 
 {
   allowIsNotConstruction?: boolean       // Disable pattern 1. Default false.
   allowWithoutWithConstruction?: boolean // Disable pattern 2. Default false.
+  allowImportanceAnnouncements?: boolean // Disable pattern 3. Default false.
   extraPatterns?: string[]               // Additional regex patterns to ban.
 }
 ```
+
+Importance announcements match only the four combinations of `This` or `That`,
+`distinction` or `difference`, and `matters`, case-insensitively. They must start
+the extracted text, a sentence, or a blank-line-separated paragraph, and end
+with `.`, `!`, `?`, or the end of the extracted text. Whitespace between words
+may include line breaks; surrounding quotes and parentheses are allowed.
+Diagnostics highlight the phrase and terminal punctuation, excluding leading
+whitespace and surrounding quotes. No automatic deletion or replacement is offered.
+
+State the consequence directly:
+
+- Before: `That distinction matters. Only owners can change the file.`
+- After: `Only owners can change the file.`
+
+Substantive uses remain valid, including `That distinction matters because only
+owners can change the file.`, `This difference matters when access changes.`,
+and `The distinction between read and write access determines who can change
+the file.` Clauses continued with a comma, colon, or semicolon are also retained.
+This is a bounded stock-phrase check, not a ban on these words.
+
+Use the existing severity and suppression conventions, or allow only this family
+while retaining the other scaffolding checks:
+
+```ts
+rules: {
+  'no-rhetorical-scaffolding': ['warn', { allowImportanceAnnouncements: true }],
+}
+```
+
+Set the rule to `'off'` to disable every family, or use a rule-specific comment
+such as `// faircopy-ignore-next-line no-rhetorical-scaffolding` for an intentional
+use. The CLI and downstream consumers use the same exported rule and registry.
 
 ---
 
