@@ -1,3 +1,10 @@
+# [1.24.0](https://github.com/omniaura/faircopy/compare/v1.23.0...v1.24.0) (2026-10-18)
+
+
+### Features
+
+* **rules-default:** flag standalone importance announcements ([#39](https://github.com/omniaura/faircopy/issues/39)) ([cb369e0](https://github.com/omniaura/faircopy/commit/cb369e0b1632eb917f9634387de13039dc831ecf))
+
 # [1.23.0](https://github.com/omniaura/faircopy/compare/v1.22.0...v1.23.0) (2026-09-22)
 
 
