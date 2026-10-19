@@ -25,7 +25,7 @@ async function lint(t, source, ruleConfig = 'error', format = 'json') {
     cwd, encoding: 'utf8', timeout: 15_000,
   })
   assert.ifError(result.error)
-  assert.equal(result.stderr, '')
+  assert.match(result.stderr, /^faircopy coverage: matched=1 inspected=1 segments=\d+ characters=\d+ unsupported=0 empty=0 rules=\d+\n$/)
   return result
 }
 

@@ -19,6 +19,9 @@ import { loadConfig } from '@faircopy/core'
 const { config, configPath } = await loadConfig(process.cwd())
 ```
 
+`loadConfigFile(filename)` loads an exact config path with imports resolved
+relative to that file.
+
 ### `resolveFiles(config, cwd?)`
 
 Resolves file globs from `config.files`, respecting `config.ignore` and `.gitignore`.
@@ -56,6 +59,15 @@ Runs a set of resolved rules against a single file using the appropriate adapter
 import { lintFile } from '@faircopy/core'
 const diagnostics = await lintFile(filePath, source, adapters, resolvedRules)
 ```
+
+### `lintFileWithCoverage(filePath, source, adapters, rules)`
+
+Returns `{ diagnostics, coverage: { adapter, segments, characters } }` from one
+extraction pass. `adapter: null` means the extension is unsupported. Zero
+segments/characters means no nonblank prose was extracted. Character counts use
+UTF-16 code units and include retained whitespace. `lintFile()` remains the
+diagnostics-only API for existing callers; use the coverage API when a clean
+result must also prove extraction scope.
 
 ### `parseSeverity(ruleConfig)`
 

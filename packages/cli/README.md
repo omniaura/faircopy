@@ -31,7 +31,17 @@ faircopy --version
 
 - `0` — clean
 - `1` — errors found, or warnings exceeded `--max-warnings`
-- `2` — configuration error
+- `2` — configuration/coverage error: unsupported selected files, no matched files,
+  or no extracted prose across the run
+
+All lint formats report coverage on stderr, even with `--quiet`: selected and
+inspected file counts, prose segments and UTF-16 character counts, unsupported
+and empty file counts, and active resolved rule counts. A supported empty file
+is named in a warning. JSON stdout remains a diagnostic array. Explicit file
+arguments override config globs and resolve relative to the calling directory;
+configured globs resolve relative to the loaded config. `--config` loads that
+exact filename. See [blog copy coverage](../../docs/blog-copy.md) for adapters
+and avoiding duplicate reports from source and generated content.
 
 ## Output formats
 

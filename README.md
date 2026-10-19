@@ -17,7 +17,7 @@ error[no-em-dash]: use a sentence break instead of an em-dash
 ## Install
 
 ```sh
-npm i -D faircopy @faircopy/astro
+npm i -D faircopy @faircopy/astro @faircopy/markdown
 ```
 
 ## Configure
@@ -26,11 +26,11 @@ npm i -D faircopy @faircopy/astro
 // faircopy.config.ts
 import { defineConfig } from '@faircopy/config'
 import { astro } from '@faircopy/astro'
+import { markdown } from '@faircopy/markdown'
 
 export default defineConfig({
-  files: ['src/**/*.astro'],
-  ignore: ['src/content/blog/**'],
-  adapters: [astro()],
+  files: ['src/**/*.astro', 'src/content/blog/**/*.md'],
+  adapters: [astro(), markdown()],
   rules: {
     'no-em-dash': 'error',
     'no-weasel-words': 'error',
@@ -44,6 +44,14 @@ export default defineConfig({
 ```sh
 npx faircopy lint
 ```
+
+Use `@faircopy/markdown` for authored blog prose and `@faircopy/html` for rendered
+HTML. Choose one representation per generated article to avoid duplicate
+findings, or check both when they are independently served/maintained surfaces.
+See [blog copy integration and coverage](docs/blog-copy.md).
+
+The CLI reports inspected files, prose segments, and characters on stderr.
+Unsupported selected files and runs with no inspected prose exit 2.
 
 ### Go templ
 
@@ -166,6 +174,8 @@ Use a package-qualified ID if two loaded rulesets expose the same bare rule name
 | [`@faircopy/cli`](packages/cli) | `faircopy` binary |
 | [`@faircopy/core`](packages/core) | Engine: types, config loader, file resolver, rule runner |
 | [`@faircopy/astro`](packages/astro) | Astro adapter |
+| [`@faircopy/markdown`](packages/markdown) | Markdown prose adapter |
+| [`@faircopy/html`](packages/html) | Rendered HTML prose adapter |
 | [`@faircopy/go`](packages/go) | Go message adapter |
 | [`@faircopy/templ`](packages/templ) | Go templ adapter |
 | [`@faircopy/rules-default`](packages/rules-default) | Default ruleset |

@@ -15,13 +15,13 @@ export type {
   Suggestion,
 } from './types.js'
 
-export { loadConfig, ConfigError, defineConfig } from './config.js'
+export { loadConfig, loadConfigFile, ConfigError, defineConfig } from './config.js'
 export type { LoadConfigResult } from './config.js'
 
 export { resolveFiles } from './resolver.js'
 
-export { lintFile, parseSeverity } from './runner.js'
-export type { ResolvedRule } from './runner.js'
+export { lintFile, lintFileWithCoverage, parseSeverity } from './runner.js'
+export type { ResolvedRule, FileCoverage, FileLintResult } from './runner.js'
 
 export {
   buildAgentJsonPayload,

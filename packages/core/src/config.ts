@@ -27,20 +27,7 @@ export async function loadConfig(cwd: string = process.cwd()): Promise<LoadConfi
       continue
     }
 
-    // File exists — resolve imports relative to the config file's location,
-    // not to faircopy's own package. This lets user configs import from their
-    // own node_modules (@faircopy/config, @faircopy/astro, etc.)
-    try {
-      const jiti = createJiti(pathToFileURL(configPath).href, { moduleCache: false })
-      const mod = await jiti.import(configPath, { default: true }) as FaircopyConfig
-      if (mod && typeof mod === 'object') {
-        return { config: mod, configPath }
-      }
-      throw new ConfigError(`${configPath} has no default export`)
-    } catch (err) {
-      if (err instanceof ConfigError) throw err
-      throw new ConfigError(`Failed to load ${configPath}:\n${(err as Error).message}`)
-    }
+    return loadConfigFile(configPath)
   }
 
   throw new ConfigError(
@@ -48,6 +35,20 @@ export async function loadConfig(cwd: string = process.cwd()): Promise<LoadConfi
     `Expected one of: ${CANDIDATES.join(', ')}\n` +
     `Run \`faircopy init\` to scaffold one.`
   )
+}
+
+/** Load the exact requested file, with imports resolved relative to it. */
+export async function loadConfigFile(filename: string): Promise<LoadConfigResult> {
+  const configPath = path.resolve(filename)
+  try {
+    const jiti = createJiti(pathToFileURL(configPath).href, { moduleCache: false })
+    const mod = await jiti.import(configPath, { default: true }) as FaircopyConfig
+    if (mod && typeof mod === 'object') return { config: mod, configPath }
+    throw new ConfigError(`${configPath} has no default export`)
+  } catch (err) {
+    if (err instanceof ConfigError) throw err
+    throw new ConfigError(`Failed to load ${configPath}:\n${(err as Error).message}`)
+  }
 }
 
 /** Identity function for TypeScript inference. Same as @faircopy/config's defineConfig. */
