@@ -3,14 +3,15 @@ import path from 'node:path'
 import { performance } from 'node:perf_hooks'
 import {
   loadConfig,
+  loadConfigFile,
   resolveFiles,
-  lintFile,
+  lintFileWithCoverage,
   parseSeverity,
   ConfigError,
   formatAgentCompact,
   offsetToLineCol,
 } from '@faircopy/core'
-import type { Diagnostic, ResolvedRule } from '@faircopy/core'
+import type { Diagnostic, FileCoverage, ResolvedRule } from '@faircopy/core'
 import { formatPretty } from '../reporters/pretty.js'
 import { loadRuleRegistries, resolveRuleInRegistries } from '../rule-loader.js'
 
@@ -26,6 +27,7 @@ export interface FileResult {
   filePath: string
   diagnostics: Diagnostic[]
   source: string
+  coverage: FileCoverage
 }
 
 export async function runLint(files: string[], options: LintOptions): Promise<void> {
@@ -33,11 +35,11 @@ export async function runLint(files: string[], options: LintOptions): Promise<vo
   const start = performance.now()
 
   let config: Awaited<ReturnType<typeof loadConfig>>['config']
+  let configPath: string
   try {
-    const configCwd = options.config
-      ? path.dirname(path.resolve(options.config))
-      : cwd
-    config = (await loadConfig(configCwd)).config
+    const loaded = options.config ? await loadConfigFile(options.config) : await loadConfig(cwd)
+    config = loaded.config
+    configPath = loaded.configPath
   } catch (err) {
     const msg = err instanceof ConfigError ? err.message : (err as Error).message
     process.stderr.write(`error: ${msg}\n`)
@@ -46,8 +48,8 @@ export async function runLint(files: string[], options: LintOptions): Promise<vo
   }
 
   const filePaths = files.length > 0
-    ? files.map(f => path.resolve(cwd, f))
-    : await resolveFiles(config, cwd)
+    ? [...new Set(files.map(f => path.resolve(cwd, f)))]
+    : await resolveFiles(config, path.dirname(configPath))
 
   const registries = await loadRuleRegistries(Object.keys(config.rules), config.rulesets)
 
@@ -71,14 +73,35 @@ export async function runLint(files: string[], options: LintOptions): Promise<vo
 
   const adapters = config.adapters ?? []
   const results: FileResult[] = []
+  let unsupported = 0
 
   for (const filePath of filePaths) {
     const source = await readFile(filePath, 'utf-8')
-    let diagnostics = await lintFile(filePath, source, adapters, resolvedRules)
+    const linted = await lintFileWithCoverage(filePath, source, adapters, resolvedRules)
+    let diagnostics = linted.diagnostics
+    if (!linted.coverage.adapter) {
+      unsupported++
+      process.stderr.write(`error: no adapter supports ${filePath}; register an adapter for ${path.extname(filePath) || '(no extension)'}\n`)
+    } else if (linted.coverage.characters === 0) {
+      process.stderr.write(`warn: no prose extracted from ${filePath} by ${linted.coverage.adapter}\n`)
+    }
     if (options.quiet) {
       diagnostics = diagnostics.filter(d => d.severity === 'error')
     }
-    results.push({ filePath, diagnostics, source })
+    results.push({ filePath, diagnostics, source, coverage: linted.coverage })
+  }
+
+  const inspected = results.filter(result => result.coverage.characters > 0).length
+  const segments = results.reduce((sum, result) => sum + result.coverage.segments, 0)
+  const characters = results.reduce((sum, result) => sum + result.coverage.characters, 0)
+  const empty = results.length - unsupported - inspected
+  // stderr keeps JSON diagnostics backwards compatible and compact/GitHub stdout
+  // consumable. Every format, including --quiet, carries the same coverage proof.
+  process.stderr.write(`faircopy coverage: matched=${filePaths.length} inspected=${inspected} segments=${segments} characters=${characters} unsupported=${unsupported} empty=${empty} rules=${resolvedRules.length}\n`)
+  if (unsupported > 0 || inspected === 0) {
+    if (inspected === 0) process.stderr.write('error: no prose inspected; check files, ignores, and registered adapters\n')
+    process.exit(2)
+    return
   }
 
   const elapsed = Math.round(performance.now() - start)

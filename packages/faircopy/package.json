@@ -22,6 +22,8 @@
     "@faircopy/config": "workspace:*",
     "@faircopy/core": "workspace:*",
     "@faircopy/go": "workspace:*",
+    "@faircopy/html": "workspace:*",
+    "@faircopy/markdown": "workspace:*",
     "@faircopy/rules-default": "workspace:*",
     "@faircopy/rules-nlp": "workspace:*",
     "@faircopy/templ": "workspace:*"

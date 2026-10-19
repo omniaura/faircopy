@@ -21,11 +21,39 @@ export async function lintFile(
   adapters: Adapter[],
   rules: ResolvedRule[]
 ): Promise<Diagnostic[]> {
-  const ext = path.extname(filePath)
-  const adapter = adapters.find(a => a.extensions.includes(ext))
-  if (!adapter) return []
+  return (await lintFileWithCoverage(filePath, source, adapters, rules)).diagnostics
+}
 
-  const extractions = await adapter.extract(filePath, source)
+export interface FileCoverage {
+  /** Null means no adapter claimed the selected file. */
+  adapter: string | null
+  segments: number
+  /** UTF-16 code units in nonblank extracted prose, including its whitespace. */
+  characters: number
+}
+
+export interface FileLintResult {
+  diagnostics: Diagnostic[]
+  coverage: FileCoverage
+}
+
+/** Lint once and retain evidence of what was actually extracted. */
+export async function lintFileWithCoverage(
+  filePath: string,
+  source: string,
+  adapters: Adapter[],
+  rules: ResolvedRule[]
+): Promise<FileLintResult> {
+  const ext = path.extname(filePath).toLowerCase()
+  const adapter = adapters.find(a => a.extensions.includes(ext))
+  if (!adapter) return { diagnostics: [], coverage: { adapter: null, segments: 0, characters: 0 } }
+
+  const extractions = (await adapter.extract(filePath, source)).filter(segment => segment.text.trim())
+  const coverage: FileCoverage = {
+    adapter: adapter.name,
+    segments: extractions.length,
+    characters: extractions.reduce((total, segment) => total + segment.text.length, 0),
+  }
   const ignoredLines = collectIgnoredLines(source)
   const diagnostics: Diagnostic[] = []
 
@@ -48,7 +76,7 @@ export async function lintFile(
     }
   }
 
-  return diagnostics
+  return { diagnostics, coverage }
 }
 
 function collectIgnoredLines(source: string): Map<number, Set<string>> {

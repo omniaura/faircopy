@@ -64,7 +64,7 @@ export interface ExtractedText {
   /** The prose itself, with original whitespace preserved. */
   text: string
   /**
-   * For each character index in `text`, the byte offset of that character
+   * For each UTF-16 code-unit index in `text`, the UTF-16 offset of that character
    * in the original source. Length must equal text.length.
    */
   sourceMap: number[]
@@ -106,7 +106,7 @@ export interface Diagnostic {
   severity: Severity
   /** Short, imperative message. One line. */
   message: string
-  /** Byte-offset range within the original source file. */
+  /** UTF-16 code-unit range within the original source file. */
   range: { start: number; end: number }
   reason?: string
   help?: string

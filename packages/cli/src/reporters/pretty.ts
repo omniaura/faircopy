@@ -2,7 +2,7 @@ import pc from 'picocolors'
 import type { Diagnostic } from '@faircopy/core'
 import type { FileResult } from '../commands/lint.js'
 
-export function formatPretty(results: FileResult[], elapsedMs: number): string {
+export function formatPretty(results: Omit<FileResult, 'coverage'>[], elapsedMs: number): string {
   const lines: string[] = []
   let errorCount = 0
   let warnCount = 0
