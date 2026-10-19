@@ -1,3 +1,10 @@
+# [1.25.0](https://github.com/omniaura/faircopy/compare/v1.24.1...v1.25.0) (2026-10-19)
+
+
+### Features
+
+* lint Markdown and HTML prose with explicit coverage ([#40](https://github.com/omniaura/faircopy/issues/40)) ([071228d](https://github.com/omniaura/faircopy/commit/071228d2bb3290fffd0ff82e98a019f804fae720))
+
 ## [1.24.1](https://github.com/omniaura/faircopy/compare/v1.24.0...v1.24.1) (2026-10-18)
 
 
