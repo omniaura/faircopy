@@ -116,7 +116,9 @@ even when assistant framing receives a warning. Customize the programmatic
 profile for another context rather than enabling marketing rules for chat.
 
 HTTP(S) and `www.` URLs are masked while preserving UTF-16 positions, so a
-path containing a style phrase does not trigger a warning. Ordinary quotations
+path containing a style phrase does not trigger a warning. Markdown closing
+delimiters and link labels remain prose; balanced parentheses in URL paths are
+preserved as part of the URL. Ordinary quotations
 and code remain literal input and can trigger advisory warnings. The profile
 does not flag the factual phrase "I work as an AI researcher" or the adverb
 in "she spoke kindly"; it targets assistant introductions and formal requests.

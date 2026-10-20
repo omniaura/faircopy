@@ -155,3 +155,29 @@ test('URL data, human AI facts and ordinary adverbs are clean; quotes/code remai
   const text = 'https://example.com/game-changing\r\n👍🏽 — okay'
   assert.deepEqual(lintChat(text).map(item => item.range), [{ start: text.indexOf('—'), end: text.indexOf('—') + 1 }])
 })
+
+test('URL masking stops at prose delimiters and preserves balanced URL paths', () => {
+  for (const text of [
+    '[guide](https://example.com/game-changing)—later',
+    '[guide](https://example.com/game-changing)Furthermore, hello',
+    '[https://example.com/game-changing]Furthermore, hello',
+    '"https://example.com/game-changing"Furthermore, hello',
+    '<https://example.com/guide|game-changing>',
+  ]) {
+    const diagnostics = lintChat(text)
+    assert.equal(diagnostics.length, 1, text)
+    const start = text.includes('—') ? text.indexOf('—')
+      : text.includes('Furthermore') ? text.indexOf('Furthermore') : text.indexOf('game-changing')
+    assert.equal(diagnostics[0].range.start, start, text)
+    assert.equal(reviewChat(request(text)).status, 'warnings', text)
+  }
+  for (const text of [
+    'https://example.com/wiki_(game-changing)',
+    '[guide](https://example.com/wiki_(game-changing))',
+    '[guide](https://example.com/a_(b_(game-changing)))',
+  ]) assert.equal(reviewChat(request(text)).status, 'clean', text)
+  const context = vm.createContext({})
+  vm.runInContext(bundle, context, { timeout: 2000 })
+  const text = '👍🏽 [guide](https://example.com/game-changing)—later'
+  assert.deepEqual(JSON.parse(context.FaircopyChat.reviewChatJSON(JSON.stringify(request(text)))), reviewChat(request(text)))
+})
