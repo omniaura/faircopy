@@ -50,13 +50,19 @@ export function lintChat(text: string, profile: ChatProfile = createChatProfile(
   const sourceMap = Array.from({ length: text.length }, (_, index) => index)
   // URL text is data, not a pitch or formal request. Mask UTF-16 units without
   // removing them so diagnostics still point into the original message.
-  const prose = text.replace(/(?:https?:\/\/|www\.)[^\s<>"'`\[\]{}|]+/gi, url => {
+  const prose = text.replace(/(?:https?:\/\/|www\.)[^\s<>"'`{}|]+/gi, url => {
     // A closing Markdown delimiter ends the URL. Balanced parentheses inside
     // paths still belong to it (for example a wiki link ending in "_(topic)").
     let depth = 0
+    let brackets = 0
     let end = url.length
     for (let index = 0; index < url.length; index++) {
       if (url[index] === '(') depth++
+      else if (url[index] === '[') brackets++
+      else if (url[index] === ']') {
+        if (brackets === 0) { end = index; break }
+        brackets--
+      }
       else if (url[index] === ')') {
         if (depth === 0) { end = index; break }
         depth--

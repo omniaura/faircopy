@@ -175,6 +175,8 @@ test('URL masking stops at prose delimiters and preserves balanced URL paths', (
     'https://example.com/wiki_(game-changing)',
     '[guide](https://example.com/wiki_(game-changing))',
     '[guide](https://example.com/a_(b_(game-changing)))',
+    'https://[::1]:3000/game-changing',
+    '[guide](https://[2001:db8::1]/game-changing)',
   ]) assert.equal(reviewChat(request(text)).status, 'clean', text)
   const context = vm.createContext({})
   vm.runInContext(bundle, context, { timeout: 2000 })
