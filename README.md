@@ -53,6 +53,15 @@ See [blog copy integration and coverage](docs/blog-copy.md).
 The CLI reports inspected files, prose segments, and characters on stderr.
 Unsupported selected files and runs with no inspected prose exit 2.
 
+### Informal chat
+
+The optional [`@faircopy/chat`](packages/chat/README.md) package reviews literal
+chat drafts with a separate extensible profile. It allows fragments, lowercase,
+emoji, contractions and optional final periods, while flagging em dashes and
+selected formal, assistant and sales phrases. It exposes the existing compact
+Copy for LLM formatter through a bounded JSON contract and a standalone embedded
+JavaScript bundle for runtimes such as Go. Default marketing rules are unchanged.
+
 ### Go templ
 
 Use `@faircopy/templ` to lint visible HTML text, prose attributes, and user-facing Go string literals in `.templ` files:

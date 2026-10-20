@@ -1,0 +1,22 @@
+{
+  "name": "@faircopy/chat",
+  "version": "1.25.0",
+  "description": "Optional informal chat profile and bounded local review contract for Fair Copy",
+  "type": "module",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "bin": { "faircopy-chat-review": "./dist/cli.js" },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup && tsup --config tsup.global.config.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.mjs",
+    "prepublishOnly": "pnpm run build"
+  },
+  "dependencies": { "@faircopy/core": "workspace:*", "@faircopy/rules-default": "workspace:*" },
+  "devDependencies": { "@types/node": "^25.6.0", "tsup": "^8.5.1", "typescript": "^6.0.3" },
+  "engines": { "node": ">=20" },
+  "publishConfig": { "access": "public" },
+  "license": "MIT",
+  "author": "omniaura",
+  "repository": { "type": "git", "url": "git+https://github.com/omniaura/faircopy.git" }
+}
