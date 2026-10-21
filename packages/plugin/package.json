@@ -1,6 +1,6 @@
 {
   "name": "@faircopy/plugin",
-  "version": "1.25.0",
+  "version": "1.26.0",
   "description": "Claude Code plugin for faircopy — stop hook + faircopy skill",
   "type": "module",
   "files": [

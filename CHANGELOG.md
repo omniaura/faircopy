@@ -1,3 +1,11 @@
+# [1.26.0](https://github.com/omniaura/faircopy/compare/v1.25.0...v1.26.0) (2026-10-21)
+
+
+### Features
+
+* **chat:** add a review API server and voice profiles ([#42](https://github.com/omniaura/faircopy/issues/42)) ([4d94767](https://github.com/omniaura/faircopy/commit/4d94767e25c73bf77cc642c721d28080c310d903))
+* **chat:** add informal profile and embedded review contract ([#41](https://github.com/omniaura/faircopy/issues/41)) ([eef6e14](https://github.com/omniaura/faircopy/commit/eef6e14fcf2bc24a2642be0f5076e02800dc064d))
+
 # [1.25.0](https://github.com/omniaura/faircopy/compare/v1.24.1...v1.25.0) (2026-10-19)
 
 
