@@ -6,6 +6,70 @@ sales slogans. It allows fragments, contractions, lowercase, emoji, shorthand,
 links and either presence or absence of a final period. It does not rewrite text.
 Warnings are style suggestions, not evidence that a person used AI.
 
+## HTTP API server
+
+The package also ships `faircopy-chat-server` and the programmatic
+`@faircopy/chat/server` entry point. After building from this repository:
+
+```sh
+node packages/chat/dist/server-cli.js --port 8787
+curl http://127.0.0.1:8787/v1/profiles
+curl -H 'Content-Type: application/json' --data-binary @draft.json http://127.0.0.1:8787/v1/review
+```
+
+`draft.json` contains the same bounded request as the local reviewer:
+
+```json
+{"version":1,"profile":"chat-v1","text":"okay — see you later"}
+```
+
+`GET /health` reports health. `GET /v1/profiles` lists configured profiles and
+their rule settings. `POST /v1/review` returns compact feedback without snippets;
+drafts are neither stored nor logged. Invalid requests return 400, oversized
+input/output 413, and non-JSON bodies 415. All responses disable caching. Each
+request uses the existing 64-KiB body, 16384 UTF-16 code-unit text, 100-finding
+and 16-KiB output limits. Request/header timeouts are 10 seconds, with at most
+32 simultaneous connections. Built-in phrase rules run synchronously; there is
+no worker isolation or hard CPU deadline for operator-supplied programmatic
+rules. Use process supervision for a deployed sidecar.
+
+The CLI binds `127.0.0.1` by default. Set `FAIRCOPY_API_TOKEN` to require
+`Authorization: Bearer ...` on every route. Non-loopback binding requires that
+environment variable. There is no CORS or TLS listener: place any externally
+reachable service behind your authenticated TLS ingress.
+
+To configure your voice, load data-only JSON at startup:
+
+```sh
+node packages/chat/dist/server-cli.js --profile voice.json
+```
+
+```json
+{
+  "version": 1,
+  "id": "my-voice",
+  "rules": {
+    "no-em-dash": "off",
+    "chat-no-formal-language": ["warn", {"allow": ["kindly send"]}],
+    "chat-no-agent-language": ["warn", {"phrases": ["custom padding"]}]
+  }
+}
+```
+
+Use `"profile":"my-voice"` in review requests. Repeat `--profile` for additional
+profiles. The built-in `chat-v1` cannot be replaced. Configuration accepts only
+known chat rules, severities and literal `allow`/`phrases` arrays, with at most
+64 configured phrases of 128 code units each. It loads no JavaScript, regex,
+remote URL or draft-supplied configuration. Profiles are fixed for the lifetime
+of the server; edit the file and restart to change them. A profile is a set of
+style preferences, not a learned impersonation model.
+
+Applications can call `createFaircopyServer({ profiles, token })` and listen on
+their chosen address, using `parseVoiceProfile(json)` for the same bounded
+data-only configuration. A server review is advisory and has no send, approval
+or idempotency token. Existing embedded interpreters and the fixed `reviewChat`
+wire contract continue to work without Node or a network service.
+
 This package does not change the default marketing rules, CLI configuration or
 plugin behavior. Chat text is literal input: adapters, comments such as
 `faircopy-ignore-line`, filesystem config and ruleset loading do not apply.
