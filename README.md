@@ -60,7 +60,10 @@ chat drafts with a separate extensible profile. It allows fragments, lowercase,
 emoji, contractions and optional final periods, while flagging em dashes and
 selected formal, assistant and sales phrases. It exposes the existing compact
 Copy for LLM formatter through a bounded JSON contract and a standalone embedded
-JavaScript bundle for runtimes such as Go. Default marketing rules are unchanged.
+JavaScript bundle for runtimes such as Go. It also ships a launchable
+`faircopy-chat-server` HTTP API with data-only personal voice profiles; see the
+[@faircopy/chat server guide](packages/chat/README.md#http-api-server).
+Default marketing rules are unchanged.
 
 ### Go templ
 
