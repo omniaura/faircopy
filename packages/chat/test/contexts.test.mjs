@@ -133,7 +133,8 @@ test('presets are data in one registry: each entry is resolvable, listed and add
   assert.deepEqual(catalog.presets.map(preset => preset.id), REVIEW_PRESETS.map(preset => preset.id))
   for (const preset of REVIEW_PRESETS) {
     assert.ok(Object.isFrozen(preset) && Object.isFrozen(preset.rules))
-    for (const id of Object.keys(preset.rules)) assert.ok(RULE_CATALOG.has(id), `${preset.id} names ${id}`)
+    const resolved = createPresetProfile(preset.id).rules.map(({ rule }) => rule.id)
+    assert.deepEqual(resolved, Object.keys(preset.rules), `${preset.id} resolves every entry`)
     assert.equal(createPresetProfile(preset.id).context, preset.context)
     assert.equal(review('ok', { profile: preset.id }).profile, preset.id)
   }
@@ -168,4 +169,19 @@ test('server reviews by context and keeps voice profiles on chat', async t => {
   const profiles = await (await fetch(`${base}/v1/profiles`)).json()
   assert.deepEqual(profiles.profiles.map(profile => [profile.id, profile.context]),
     [['general-v1', 'general'], ['chat-v1', 'chat'], ['email-v1', 'email'], ['my-voice', 'chat']])
+})
+
+test('each phrase list is registered once; a preset chooses the ID, message and help it reports', () => {
+  assert.deepEqual([...RULE_CATALOG.keys()].sort(),
+    ['assistant-phrases', 'formal-phrases', 'no-em-dash', 'no-rhetorical-scaffolding', 'sales-phrases'])
+  const text = "I'd be happy to assist. This is game-changing."
+  const chat = lintText(text, createPresetProfile('chat-v1'))
+  const general = lintText(text, createPresetProfile('general-v1'))
+  assert.deepEqual(chat.map(item => item.ruleId), ['chat-no-agent-language', 'chat-no-sales-language'])
+  assert.deepEqual(general.map(item => item.ruleId), ['no-assistant-framing', 'no-sales-slogans'])
+  assert.deepEqual(chat.map(item => item.range), general.map(item => item.range))
+  assert.notEqual(chat[0].help, general[0].help)
+  // A voice profile still overrides the reported ID, not the catalog ID.
+  assert.equal(lintText(text, createPresetProfile('chat-v1', { 'chat-no-agent-language': 'off' })).length, 1)
+  assert.throws(() => createPresetProfile('chat-v1', { 'assistant-phrases': 'off' }), TypeError)
 })

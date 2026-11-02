@@ -1,8 +1,8 @@
 import type { Rule, RuleConfig } from '@faircopy/core'
 import { createPresetProfile } from './presets.js'
 import type { ReviewProfile } from './presets.js'
+import type { ChatPhraseOptions } from './rules.js'
 
-export { noFormalChatLanguage, noAgentChatLanguage, noSalesChatLanguage } from './rules.js'
 export type { ChatPhraseOptions } from './rules.js'
 
 export const CHAT_PROFILE = 'chat-v1' as const
@@ -22,3 +22,16 @@ export function createChatProfile(
 }
 
 export const chatProfile = createChatProfile()
+
+function chatRule(id: string): Rule<ChatPhraseOptions> {
+  const resolved = chatProfile.rules.find(({ rule }) => rule.id === id)
+  if (!resolved) throw new TypeError('chat-v1 lacks a released rule')
+  return resolved.rule as Rule<ChatPhraseOptions>
+}
+
+/** The released chat-v1 rule objects, kept for existing imports. Each is the
+ * shared phrase rule as chat-v1 presents it; the wording lives in presets.ts.
+ */
+export const noFormalChatLanguage = chatRule('chat-no-formal-language')
+export const noAgentChatLanguage = chatRule('chat-no-agent-language')
+export const noSalesChatLanguage = chatRule('chat-no-sales-language')

@@ -19,8 +19,11 @@ intentional informal rules unchanged: it allows fragments, contractions,
 lowercase, emoji, shorthand, links and optional final periods.
 
 Presets are **data**, all in this one package (`src/presets.ts`): an ID, the
-context it serves, a one-line summary and a table of rule IDs and severities.
-The rules they may name live in one catalog (`RULE_CATALOG`, `src/rules.ts`).
+context it serves, a one-line summary and a table of the rule IDs it reports.
+The rules they may use live in one catalog (`RULE_CATALOG`, `src/rules.ts`).
+Each phrase list is registered there once; a preset entry such as
+`{ rule: 'assistant-phrases', message, help }` reports that rule under the
+preset's own ID and wording, so chat and general guidance share one list.
 Adding or revising a preset is a data edit to `REVIEW_PRESETS` (plus
 `CONTEXT_PRESETS` if it becomes a context's default); it is published with the
 next lockstep release of this package, with no new npm package or trusted
@@ -132,11 +135,13 @@ UTF-16 code-unit ranges. `createPresetProfile(id, overrides, extraRules)`
 accepts severity/options overrides for rules the preset names, and extra `Rule`
 objects. Unknown presets, unknown or duplicate rule IDs throw. Phrase-rule
 options are `allow: string[]` and `phrases: string[]`; phrases are literal,
-case-insensitive and permit whitespace between words. Catalog rule IDs are
-`no-em-dash`, `no-assistant-framing`, `no-sales-slogans`,
-`no-rhetorical-scaffolding`, `chat-no-formal-language`, `chat-no-agent-language`
-and `chat-no-sales-language`. `no-em-dash` and `no-rhetorical-scaffolding` and
-the formatter are reused from existing Fair Copy rules.
+case-insensitive and permit whitespace between words. Overrides and findings
+use the IDs a preset reports: `no-em-dash`, `no-assistant-framing`,
+`no-sales-slogans` and `no-rhetorical-scaffolding` in general-v1 and email-v1;
+`no-em-dash`, `chat-no-formal-language`, `chat-no-agent-language` and
+`chat-no-sales-language` in chat-v1. The catalog behind them holds `no-em-dash`,
+`no-rhetorical-scaffolding` (both reused from existing Fair Copy rules) and the
+phrase lists `formal-phrases`, `assistant-phrases` and `sales-phrases`.
 
 `feedback` is the existing `formatAgentCompact` format used by Copy for LLM,
 with `snippets: 'none'` and `chars: true`. Rule messages and help are static

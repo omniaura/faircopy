@@ -4,6 +4,7 @@ import { CHAT_PROFILE, chatProfile } from './profile.js'
 import type { ChatProfile } from './profile.js'
 import {
   CONTEXT_PRESETS, DEFAULT_REVIEW_CONTEXT, PRESET_PROFILES, REVIEW_CONTEXTS, REVIEW_PRESETS, isReviewContext,
+  presetEntrySeverity,
 } from './presets.js'
 import type { ReviewContext, ReviewProfile } from './presets.js'
 
@@ -11,10 +12,12 @@ export { CHAT_PROFILE, chatProfile, createChatProfile, noFormalChatLanguage, noA
 export type { ChatProfile, ChatPhraseOptions } from './profile.js'
 export {
   CONTEXT_PRESETS, DEFAULT_REVIEW_CONTEXT, PRESET_PROFILES, REVIEW_CONTEXTS, REVIEW_PRESETS,
-  createPresetProfile, getPreset, isReviewContext,
+  createPresetProfile, getPreset, isReviewContext, presetEntrySeverity,
 } from './presets.js'
-export type { ReviewContext, ReviewPreset, ReviewProfile } from './presets.js'
-export { RULE_CATALOG, noAssistantFraming, noSalesSlogans, phraseRule, withStaticMessage } from './rules.js'
+export type { PresetRuleEntry, ReviewContext, ReviewPreset, ReviewProfile } from './presets.js'
+export {
+  RULE_CATALOG, assistantPhrases, formalPhrases, phraseRule, presentedAs, salesPhrases, withStaticMessage,
+} from './rules.js'
 
 export const REVIEW_VERSION = 1 as const
 export const CHAT_REVIEW_VERSION = REVIEW_VERSION
@@ -251,7 +254,7 @@ export function describePresets(): PresetCatalog {
     contexts: Object.fromEntries(REVIEW_CONTEXTS.map(context => [context, CONTEXT_PRESETS[context]])) as Record<ReviewContext, string>,
     presets: REVIEW_PRESETS.map(preset => ({
       id: preset.id, context: preset.context, summary: preset.summary,
-      rules: Object.entries(preset.rules).map(([id, config]) => ({ id, severity: typeof config === 'string' ? config : config[0] })),
+      rules: Object.entries(preset.rules).map(([id, entry]) => ({ id, severity: presetEntrySeverity(entry) })),
     })),
     limits: REVIEW_LIMITS,
   }

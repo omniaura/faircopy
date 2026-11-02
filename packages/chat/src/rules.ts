@@ -73,44 +73,50 @@ export const SALES_PHRASES = Object.freeze([
   'take it to the next level', 'supercharge your',
 ])
 
-export const noFormalChatLanguage = phraseRule(
-  'chat-no-formal-language', 'use everyday wording for a chat message', FORMAL_CHAT_PHRASES,
-  'Say what you need directly. Keep the greeting and sign-off brief; use contractions if they fit. Fragments and optional final periods are fine.',
+/** Each phrase list is registered once, under a neutral catalog ID. A preset
+ * decides the rule ID, message and help it reports (see presets.ts), so the
+ * same list can read as chat guidance in one preset and general guidance in
+ * another without a second copy of the rule.
+ */
+export const formalPhrases = phraseRule(
+  'formal-phrases', 'use everyday wording', FORMAL_CHAT_PHRASES,
+  'Say what you need directly. Keep the greeting and sign-off brief.',
 )
 
-export const noAgentChatLanguage = phraseRule(
-  'chat-no-agent-language', 'remove assistant framing and padded explanations', ASSISTANT_PHRASES,
-  'Use the sender\'s own voice. Remove boilerplate about assisting or completing tasks; keep the concrete fact or request. Do not conceal a relevant AI disclosure.',
-)
-
-export const noSalesChatLanguage = phraseRule(
-  'chat-no-sales-language', 'replace sales slogans with a concrete detail', SALES_PHRASES,
-  'Describe what changes or ask the specific question. Avoid pitch language in a personal message; preserve useful facts.',
-)
-
-export const noAssistantFraming = phraseRule(
-  'no-assistant-framing', 'remove assistant framing and padded explanations', ASSISTANT_PHRASES,
+export const assistantPhrases = phraseRule(
+  'assistant-phrases', 'remove assistant framing and padded explanations', ASSISTANT_PHRASES,
   'Write in the author\'s voice. Remove boilerplate about assisting or completing tasks and keep the concrete point. Do not conceal a relevant AI disclosure.',
 )
 
-export const noSalesSlogans = phraseRule(
-  'no-sales-slogans', 'replace the slogan with a concrete detail', SALES_PHRASES,
+export const salesPhrases = phraseRule(
+  'sales-phrases', 'replace the slogan with a concrete detail', SALES_PHRASES,
   'Say what changes, for whom, or by how much. Keep the useful fact and drop the pitch.',
 )
+
+/** Report a catalog rule under a preset's own ID, message and help. Findings
+ * keep their ranges and key order; only those three fields change.
+ */
+export function presentedAs<Options>(rule: Rule<Options>, id: string, message: string, help: string): Rule<Options> {
+  return {
+    ...rule, id, description: message, help,
+    check(input): Diagnostic[] {
+      return rule.check(input).map(finding => ({ ...finding, ruleId: id, message, help }))
+    },
+  }
+}
 
 export const noRhetoricalScaffoldingStatic = withStaticMessage(
   noRhetoricalScaffolding, 'state the claim directly instead of setting up a contrast',
 )
 
 /** Every rule a preset can reference. Adding a rule is a code change; using an
- * existing rule in a new or changed preset is a data change in presets.ts.
+ * existing rule in a new or changed preset, or changing how it reads there, is
+ * a data change in presets.ts.
  */
 export const RULE_CATALOG: ReadonlyMap<string, Rule> = new Map<string, Rule>([
   [noEmDash.id, noEmDash as Rule],
-  [noFormalChatLanguage.id, noFormalChatLanguage as Rule],
-  [noAgentChatLanguage.id, noAgentChatLanguage as Rule],
-  [noSalesChatLanguage.id, noSalesChatLanguage as Rule],
-  [noAssistantFraming.id, noAssistantFraming as Rule],
-  [noSalesSlogans.id, noSalesSlogans as Rule],
+  [formalPhrases.id, formalPhrases as Rule],
+  [assistantPhrases.id, assistantPhrases as Rule],
+  [salesPhrases.id, salesPhrases as Rule],
   [noRhetoricalScaffoldingStatic.id, noRhetoricalScaffoldingStatic as Rule],
 ])
