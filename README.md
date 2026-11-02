@@ -53,15 +53,20 @@ See [blog copy integration and coverage](docs/blog-copy.md).
 The CLI reports inspected files, prose segments, and characters on stderr.
 Unsupported selected files and runs with no inspected prose exit 2.
 
-### Informal chat
+### Reviewing drafts by writing context
 
-The optional [`@faircopy/chat`](packages/chat/README.md) package reviews literal
-chat drafts with a separate extensible profile. It allows fragments, lowercase,
-emoji, contractions and optional final periods, while flagging em dashes and
-selected formal, assistant and sales phrases. It exposes the existing compact
-Copy for LLM formatter through a bounded JSON contract and a standalone embedded
-JavaScript bundle for runtimes such as Go. It also ships a launchable
-`faircopy-chat-server` HTTP API with data-only personal voice profiles; see the
+The optional [`@faircopy/chat`](packages/chat/README.md) package reviews a
+literal draft against a named writing context: `general` (the default, for
+documents and website copy), `email` or `chat`. Each context maps to a preset
+(`general-v1`, `email-v1`, `chat-v1`), and presets are plain data in one
+registry inside the package, so a new preset is a data change rather than a new
+package. `chat-v1` allows fragments, lowercase, emoji, contractions and optional
+final periods while flagging em dashes and selected formal, assistant and sales
+phrases; `general-v1` and `email-v1` accept formal wording, headings and domain
+terms. The package exposes the compact Copy for LLM formatter through a bounded
+JSON contract and a standalone embedded JavaScript bundle for runtimes such as
+Go. It also ships a launchable `faircopy-chat-server` HTTP API with data-only
+personal voice profiles; see the
 [@faircopy/chat server guide](packages/chat/README.md#http-api-server).
 Default marketing rules are unchanged.
 

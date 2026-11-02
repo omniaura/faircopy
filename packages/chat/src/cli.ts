@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-import { CHAT_REVIEW_LIMITS, ChatReviewFailure, reviewChat } from './index.js'
-import type { ChatReviewError } from './index.js'
+import { REVIEW_LIMITS, ChatReviewFailure, limitExceeded, reviewErrorEnvelope, reviewText } from './index.js'
 import { TextDecoder } from 'node:util'
 
 async function main(): Promise<void> {
@@ -12,7 +11,7 @@ async function main(): Promise<void> {
     for await (const chunk of process.stdin) {
       const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk)
       size += buffer.length
-      if (size > CHAT_REVIEW_LIMITS.inputBytes) throw new ChatReviewFailure('limit_exceeded')
+      if (size > REVIEW_LIMITS.inputBytes) throw limitExceeded('input')
       chunks.push(buffer)
     }
     let request: unknown
@@ -21,12 +20,9 @@ async function main(): Promise<void> {
     } catch {
       throw new ChatReviewFailure('invalid_request')
     }
-    response = reviewChat(request)
+    response = reviewText(request)
   } catch (error) {
-    response = {
-      version: 1, profile: 'chat-v1', status: 'error',
-      code: error instanceof ChatReviewFailure ? error.code : 'internal_error',
-    } satisfies ChatReviewError
+    response = reviewErrorEnvelope(error)
     process.exitCode = 2
   }
   process.stdout.write(JSON.stringify(response) + '\n')
