@@ -10,6 +10,6 @@ export default defineConfig({
   target: 'node20',
   // The executable can be copied with its package, without installing a service
   // or resolving workspace dependencies at review time.
-  noExternal: ['@faircopy/core', '@faircopy/rules-default'],
+  noExternal: ['@faircopy/core', '@faircopy/rules-default', '@faircopy/rules-nlp', 'compromise'],
   splitting: false,
 })

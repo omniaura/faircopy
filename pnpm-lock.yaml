@@ -75,6 +75,9 @@ importers:
       '@faircopy/rules-default':
         specifier: workspace:*
         version: link:../rules-default
+      '@faircopy/rules-nlp':
+        specifier: workspace:*
+        version: link:../rules-nlp
     devDependencies:
       '@types/node':
         specifier: ^25.6.0

@@ -1,5 +1,6 @@
 import type { Diagnostic, Rule } from '@faircopy/core'
-import { noEmDash, noRhetoricalScaffolding } from '@faircopy/rules-default'
+import { noCliches, noEmDash, noFillerWords, noRhetoricalScaffolding, noWeaselWords } from '@faircopy/rules-default'
+import { noHedgeWords, noLlmSpeak, noNThings } from '@faircopy/rules-nlp'
 
 /** Code half of the preset system: every rule a preset may name by ID.
  * Presets themselves are plain data in presets.ts.
@@ -102,6 +103,13 @@ export const noRhetoricalScaffoldingStatic = withStaticMessage(
   noRhetoricalScaffolding, 'state the claim directly instead of setting up a contrast',
 )
 
+export const noLlmSpeakStatic = withStaticMessage(noLlmSpeak, 'replace the padded phrase with a direct word')
+export const noNThingsStatic = withStaticMessage(noNThings, 'name the items instead of counting placeholder things')
+export const noHedgeWordsStatic = withStaticMessage(noHedgeWords, 'remove the hedge or give the specific evidence')
+export const noWeaselWordsStatic = withStaticMessage(noWeaselWords, 'remove the reinforcing adverb')
+export const noClichesStatic = withStaticMessage(noCliches, 'replace the cliché with a specific detail')
+export const noFillerWordsStatic = withStaticMessage(noFillerWords, 'remove the filler word')
+
 /** Every rule a preset can reference. Adding a rule is a code change; using an
  * existing rule in a new or changed preset is a data change in presets.ts.
  */
@@ -113,4 +121,10 @@ export const RULE_CATALOG: ReadonlyMap<string, Rule> = new Map<string, Rule>([
   [noAssistantFraming.id, noAssistantFraming as Rule],
   [noSalesSlogans.id, noSalesSlogans as Rule],
   [noRhetoricalScaffoldingStatic.id, noRhetoricalScaffoldingStatic as Rule],
+  [noLlmSpeakStatic.id, noLlmSpeakStatic as Rule],
+  [noNThingsStatic.id, noNThingsStatic as Rule],
+  [noHedgeWordsStatic.id, noHedgeWordsStatic as Rule],
+  [noWeaselWordsStatic.id, noWeaselWordsStatic as Rule],
+  [noClichesStatic.id, noClichesStatic as Rule],
+  [noFillerWordsStatic.id, noFillerWordsStatic as Rule],
 ])

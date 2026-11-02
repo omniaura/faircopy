@@ -29,7 +29,8 @@
   },
   "dependencies": {
     "@faircopy/core": "workspace:*",
-    "@faircopy/rules-default": "workspace:*"
+    "@faircopy/rules-default": "workspace:*",
+    "@faircopy/rules-nlp": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",
