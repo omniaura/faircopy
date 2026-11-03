@@ -2,9 +2,8 @@ import { createServer } from 'node:http'
 import type { Server } from 'node:http'
 import { timingSafeEqual } from 'node:crypto'
 import { TextDecoder } from 'node:util'
-import { formatAgentCompact } from '@faircopy/core/reporting'
 import type { RuleConfig } from '@faircopy/core'
-import { CHAT_REVIEW_LIMITS, ChatReviewFailure, createChatProfile, lintChat } from './index.js'
+import { PRESET_PROFILES, REVIEW_LIMITS, ChatReviewFailure, createChatProfile, getPreset, limitExceeded, reviewErrorEnvelope, reviewText } from './index.js'
 import type { ChatProfile } from './index.js'
 
 export interface FaircopyServerOptions {
@@ -18,7 +17,7 @@ export function parseVoiceProfile(value: unknown): ChatProfile {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new TypeError('Invalid voice profile')
   const profile = value as Record<string, unknown>
   if (profile.version !== 1 || typeof profile.id !== 'string' || !/^[a-z][a-z0-9-]{0,63}$/.test(profile.id)
-    || profile.id === 'chat-v1' || Object.keys(profile).some(key => !['version', 'id', 'rules'].includes(key))
+    || getPreset(profile.id) || Object.keys(profile).some(key => !['version', 'id', 'rules'].includes(key))
     || !profile.rules || typeof profile.rules !== 'object' || Array.isArray(profile.rules)) throw new TypeError('Invalid voice profile')
   const rules = profile.rules as Record<string, unknown>
   let phraseCount = 0
@@ -32,15 +31,16 @@ export function parseVoiceProfile(value: unknown): ChatProfile {
     }
   }
   if (phraseCount > 64) throw new TypeError('Too many voice phrases')
+  // Voice profiles currently customize the chat preset.
   const resolved = createChatProfile(rules as Record<string, RuleConfig>)
-  return { ...resolved, id: profile.id }
+  return { ...resolved, id: profile.id, context: 'chat' }
 }
 
 /** Stateless review API. The caller chooses the listen address; the CLI defaults
  * to loopback. This API has no connector, send, approval or stored-draft state.
  */
 export function createFaircopyServer(options: FaircopyServerOptions = {}): Server {
-  const profiles = new Map<string, ChatProfile>([['chat-v1', createChatProfile()]])
+  const profiles = new Map<string, ChatProfile>(PRESET_PROFILES)
   for (const profile of options.profiles ?? []) {
     if (!/^[a-z][a-z0-9-]{0,63}$/.test(profile.id) || profiles.has(profile.id)) throw new TypeError('Duplicate or invalid profile ID')
     profiles.set(profile.id, profile)
@@ -61,7 +61,7 @@ export function createFaircopyServer(options: FaircopyServerOptions = {}): Serve
     if (req.url === '/health' && req.method === 'GET') { respond(200, { status: 'ok' }); return }
     if (req.url === '/v1/profiles' && req.method === 'GET') {
       respond(200, { profiles: [...profiles.values()].map(profile => ({
-        id: profile.id, rules: profile.rules.map(({ rule, severity, options: settings }) => ({ id: rule.id, severity, options: settings })),
+        id: profile.id, context: profile.context ?? 'custom', rules: profile.rules.map(({ rule, severity, options: settings }) => ({ id: rule.id, severity, options: settings })),
       })) })
       return
     }
@@ -76,33 +76,18 @@ export function createFaircopyServer(options: FaircopyServerOptions = {}): Serve
       for await (const chunk of req.iterator({ destroyOnReturn: false })) {
         const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk)
         size += buffer.length
-        if (size > CHAT_REVIEW_LIMITS.inputBytes) throw new ChatReviewFailure('limit_exceeded')
+        if (size > REVIEW_LIMITS.inputBytes) throw limitExceeded('input')
         chunks.push(buffer)
       }
       let value: unknown
       try { value = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(Buffer.concat(chunks))) }
       catch { throw new ChatReviewFailure('invalid_request') }
-      if (!value || typeof value !== 'object' || Array.isArray(value)) throw new ChatReviewFailure('invalid_request')
-      const request = value as Record<string, unknown>
-      if (request.version !== 1 || typeof request.profile !== 'string' || typeof request.text !== 'string'
-        || Object.keys(request).some(key => !['version', 'profile', 'text'].includes(key))) throw new ChatReviewFailure('invalid_request')
-      const profile = profiles.get(request.profile)
-      if (!profile) throw new ChatReviewFailure('invalid_request')
-      const diagnostics = lintChat(request.text, profile)
-      const errorCount = diagnostics.filter(item => item.severity === 'error').length
-      const warningCount = diagnostics.filter(item => item.severity === 'warn').length
-      const result = {
-        version: 1, profile: profile.id, status: diagnostics.length ? 'warnings' : 'clean',
-        issueCount: diagnostics.length, errorCount, warningCount,
-        feedback: formatAgentCompact([{ source: request.text, diagnostics }], { snippets: 'none', chars: true }),
-      }
-      if (Buffer.byteLength(JSON.stringify(result) + '\n') > CHAT_REVIEW_LIMITS.outputBytes) throw new ChatReviewFailure('limit_exceeded')
-      respond(200, result)
+      respond(200, reviewText(value, profiles))
     } catch (error) {
-      const code = error instanceof ChatReviewFailure ? error.code : 'internal_error'
+      const body = reviewErrorEnvelope(error)
       req.resume()
       res.setHeader('Connection', 'close')
-      respond(code === 'limit_exceeded' ? 413 : code === 'invalid_request' ? 400 : 500, { version: 1, status: 'error', code })
+      respond(body.code === 'limit_exceeded' ? 413 : body.code === 'invalid_request' ? 400 : 500, body)
     }
   })
   server.requestTimeout = 10_000

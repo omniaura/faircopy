@@ -1,7 +1,7 @@
 {
   "name": "@faircopy/chat",
   "version": "1.26.0",
-  "description": "Optional informal chat profile and bounded local review contract for Fair Copy",
+  "description": "Fair Copy draft review by writing context (general, email, chat): one preset registry and a bounded local review contract",
   "type": "module",
   "exports": {
     ".": {
