@@ -1,3 +1,10 @@
+# [1.27.0](https://github.com/omniaura/faircopy/compare/v1.26.0...v1.27.0) (2026-11-03)
+
+
+### Features
+
+* **chat:** review drafts by writing context with one preset registry [DITTO-1422] ([#45](https://github.com/omniaura/faircopy/issues/45)) ([7d23673](https://github.com/omniaura/faircopy/commit/7d236733ad9f6101573b6cfd8e81ef4dfb467e77))
+
 # [1.26.0](https://github.com/omniaura/faircopy/compare/v1.25.0...v1.26.0) (2026-10-21)
 
 
