@@ -28,6 +28,8 @@ const PRESET_DATA: ReviewPreset[] = [
       'no-assistant-framing': 'warn',
       'no-sales-slogans': 'warn',
       'no-rhetorical-scaffolding': 'warn',
+      'no-llm-speak': 'warn',
+      'no-n-things': 'warn',
     },
   },
   {
@@ -50,6 +52,8 @@ const PRESET_DATA: ReviewPreset[] = [
       'no-assistant-framing': 'warn',
       'no-sales-slogans': 'warn',
       'no-rhetorical-scaffolding': 'warn',
+      'no-llm-speak': 'warn',
+      'no-n-things': 'warn',
     },
   },
 ]
