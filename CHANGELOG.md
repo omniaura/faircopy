@@ -1,3 +1,10 @@
+## [1.27.3](https://github.com/omniaura/faircopy/compare/v1.27.2...v1.27.3) (2026-11-07)
+
+
+### Bug Fixes
+
+* **rules-nlp:** skip possessive determiners in noun strings and add a fixture corpus ([#50](https://github.com/omniaura/faircopy/issues/50)) ([052d178](https://github.com/omniaura/faircopy/commit/052d178ec562a4083c84ce0eeee914e37a98ef1c)), closes [#17](https://github.com/omniaura/faircopy/issues/17) [#17](https://github.com/omniaura/faircopy/issues/17)
+
 ## [1.27.2](https://github.com/omniaura/faircopy/compare/v1.27.1...v1.27.2) (2026-11-07)
 
 
