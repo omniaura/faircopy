@@ -1,6 +1,6 @@
 {
   "name": "@faircopy/templ",
-  "version": "1.27.1",
+  "version": "1.27.2",
   "description": "Go templ adapter for faircopy — extracts prose from .templ files with source maps",
   "type": "module",
   "exports": {

@@ -1,6 +1,6 @@
 {
   "name": "@faircopy/markdown",
-  "version": "1.27.1",
+  "version": "1.27.2",
   "description": "Markdown prose adapter for faircopy with source maps",
   "type": "module",
   "exports": {

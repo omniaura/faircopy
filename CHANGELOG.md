@@ -1,3 +1,10 @@
+## [1.27.2](https://github.com/omniaura/faircopy/compare/v1.27.1...v1.27.2) (2026-11-07)
+
+
+### Bug Fixes
+
+* **rules:** stop noun strings at clause boundaries and compare rounded grades ([#49](https://github.com/omniaura/faircopy/issues/49)) ([c8fe203](https://github.com/omniaura/faircopy/commit/c8fe2037a0990570f21148c279175d7ecdd07132)), closes [#43](https://github.com/omniaura/faircopy/issues/43) [#44](https://github.com/omniaura/faircopy/issues/44) [#43](https://github.com/omniaura/faircopy/issues/43) [#44](https://github.com/omniaura/faircopy/issues/44)
+
 ## [1.27.1](https://github.com/omniaura/faircopy/compare/v1.27.0...v1.27.1) (2026-11-07)
 
 
