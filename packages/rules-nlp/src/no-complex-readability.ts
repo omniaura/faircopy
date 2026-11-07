@@ -34,7 +34,8 @@ export const noComplexReadability: Rule<NoComplexReadabilityOptions> = {
     }
 
     const syllables = words.reduce((sum, word) => sum + countSyllables(word), 0)
-    const grade = fleschKincaidGrade(words.length, sentences.length, syllables)
+    // Compare the value the message prints (one decimal place).
+    const grade = Math.round(fleschKincaidGrade(words.length, sentences.length, syllables) * 10) / 10
 
     if (grade <= maxGradeLevel) {
       return []

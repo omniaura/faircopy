@@ -29,15 +29,16 @@ export const noComplexSentences: Rule<NoComplexSentencesOptions> = {
       if (words.length < minWords || words.length === 0) continue
 
       const syllables = words.reduce((sum, word) => sum + countSyllables(word), 0)
-      const grade = fleschKincaidGrade(words.length, 1, syllables)
+      // Compare the value the message prints, so a flagged sentence never reads
+      // as "grade 12.0 — simplify to 12 or below".
+      const roundedGrade = Math.round(fleschKincaidGrade(words.length, 1, syllables) * 10) / 10
 
-      if (grade <= maxGradeLevel) continue
+      if (roundedGrade <= maxGradeLevel) continue
 
       const sourceStart = sourceMap[start]
       const sourceEnd = sourceMap[end - 1]
       if (sourceStart === undefined || sourceEnd === undefined) continue
 
-      const roundedGrade = Math.round(grade * 10) / 10
       const suggest: Suggestion = {
         description: 'Split this sentence into shorter sentences, one idea each.',
         edits: [],
