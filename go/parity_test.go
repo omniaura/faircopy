@@ -9,6 +9,9 @@ import (
 	"testing"
 )
 
+// minGoldenCalls is well under the 11,163 calls tools/goldens.mjs writes.
+const minGoldenCalls = 10000
+
 // TestParity replays every request in testdata/golden.jsonl.gz (generated
 // from the @faircopy/chat bundle by tools/goldens.mjs) and requires the
 // exact same output bytes. FAIRCOPY_GOLDEN points it at another golden file;
@@ -67,6 +70,10 @@ func TestParity(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Logf("%d calls, %d mismatches", calls, bad)
+	// A failed or truncated golden generation must not pass as "no mismatches".
+	if calls < minGoldenCalls {
+		t.Fatalf("%s holds %d calls; want at least %d", path, calls, minGoldenCalls)
+	}
 	if bad > 0 {
 		t.Errorf("parity:\n%s", strings.Join(examples, "\n"))
 	}

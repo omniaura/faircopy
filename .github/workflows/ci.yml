@@ -7,6 +7,8 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -38,6 +40,7 @@ jobs:
       - name: Go engine parity with the fresh bundle
         working-directory: go
         run: |
+          set -o pipefail
           node tools/goldens.mjs ../packages/chat/dist/review.global.js testdata/corpus/*.txt | gzip -n > "$RUNNER_TEMP/golden.jsonl.gz"
           test -z "$(gofmt -l .)"
           go vet ./...

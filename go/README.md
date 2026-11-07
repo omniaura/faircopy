@@ -18,6 +18,20 @@ The three functions return exactly the bytes that the bundle's
 `reviewTextJSON`, `reviewChatJSON` and `describePresetsJSON` return for the same
 input, including the error envelopes for malformed requests and every limit.
 
+A host that adds findings of its own (for example NLP rules) can use the
+structured API instead, and still produce the same feedback text:
+
+```go
+fs, err := faircopy.Lint(text, "general-v1") // []faircopy.Finding, UTF-16 ranges; *faircopy.Failure on limits
+fs = append(fs, more...)
+faircopy.SortFindings(fs)
+feedback := faircopy.FormatFeedback(text, fs)
+summary := faircopy.Summary(fs, "general", "general-v1")
+```
+
+`TestLintMatchesReviews` rebuilds every successful golden review (11,085) from
+these functions and requires the bundle's feedback, summary and counts.
+
 ## What is ported
 
 | Go | TypeScript |
@@ -46,7 +60,8 @@ JavaScript semantics that the port reproduces explicitly:
 
 ## Parity
 
-`go test ./...` replays `testdata/golden.jsonl.gz`: 11,163 calls produced by
+`go test ./...` replays `testdata/golden.jsonl.gz` (and refuses one with fewer
+than 10,000 calls, so a failed generation cannot pass): 11,163 calls produced by
 the bundle over `testdata/corpus/*.txt` and the cases built into
 `tools/goldens.mjs` (every phrase under 25 transformations, rhetorical
 scaffolding edges, URLs and Markdown links, astral characters, case folding,
