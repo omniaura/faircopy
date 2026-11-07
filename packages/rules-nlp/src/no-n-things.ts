@@ -35,6 +35,10 @@ function escapeMatchWord(word: string): string {
   return word.replace(/[^\w-]/g, '')
 }
 
+function trimCountPunctuation(countText: string): string {
+  return countText.replace(/^[(\[{"'“‘]+|[)\]}"'”’]+$/g, '')
+}
+
 /**
  * "Three things." / "5 things to know" borrows its number for rhythm, not
  * content — the count-noun cousin of the rule of three, and a widely
@@ -57,13 +61,15 @@ export const noNThings: Rule<NoNThingsOptions> = {
     if (!nouns.length || text.length === 0) return []
 
     const doc = createDoc(text)
-    const matches = doc
-      .match(`#Value+ (${nouns.join('|')})`)
-      .json({ offset: true, text: true, terms: { offset: true, text: true, tags: true } }) as JsonMatch[]
+    const matches = doc.match(`#Value+ (${nouns.join('|')})`)
 
-    for (const entry of matches) {
-      const terms = entry.terms ?? []
-      if (terms.length < 2) continue
+    // Each match is counted on its own clone. toNumber() rewrites the view it
+    // runs on, so counting on the shared document (and re-finding the phrase by
+    // text) loses a repeated "three things" after the first one.
+    matches.forEach((match) => {
+      const entry = (match.json({ offset: true, text: true, terms: { offset: true, text: true, tags: true } }) as JsonMatch[])[0]
+      const terms = entry?.terms ?? []
+      if (terms.length < 2) return
 
       const firstOffset = terms[0]!.offset
       const lastOffset = terms[terms.length - 1]!.offset
@@ -73,26 +79,28 @@ export const noNThings: Rule<NoNThingsOptions> = {
         typeof lastOffset?.start !== 'number' ||
         typeof lastOffset.length !== 'number'
       ) {
-        continue
+        return
       }
 
       const start = firstOffset.start
       const end = lastOffset.start + lastOffset.length
-      if (end <= start) continue
+      if (end <= start) return
 
       const matchedText = text.slice(start, end)
-      if (allowed.has(normalizePhrase(matchedText))) continue
+      if (allowed.has(normalizePhrase(matchedText))) return
 
       // Only a cardinal count frames the trope. Ordinals ("first things
       // first") and vague values ("a few things") parse to non-numbers here.
-      const countOut = doc.match(matchedText).values?.().toNumber().out('array') ?? []
-      const countText = countOut[0]
-      const count = typeof countText === 'string' ? Number(countText) : Number.NaN
-      if (!Number.isFinite(count) || count < minCount) continue
+      // The count is the value right before the noun, so "one, two, three
+      // things" counts three; brackets and quotes ("(5) things") are trimmed.
+      const countOut = match.clone().values?.().toNumber().out('array') ?? []
+      const countText = trimCountPunctuation(countOut[countOut.length - 1] ?? '')
+      const count = countText ? Number(countText) : Number.NaN
+      if (!Number.isFinite(count) || count < minCount) return
 
       const sourceStart = sourceMap[start]
       const sourceEnd = sourceMap[end - 1]
-      if (sourceStart === undefined || sourceEnd === undefined) continue
+      if (sourceStart === undefined || sourceEnd === undefined) return
 
       diagnostics.push({
         ruleId: 'no-n-things',
@@ -101,7 +109,7 @@ export const noNThings: Rule<NoNThingsOptions> = {
         range: { start: sourceStart, end: sourceEnd + 1 },
         help: noNThings.help,
       })
-    }
+    })
 
     return diagnostics.sort((left, right) => left.range.start - right.range.start)
   },

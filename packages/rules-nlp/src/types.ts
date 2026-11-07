@@ -18,6 +18,8 @@ export interface ValuesView extends MatchView {
 export interface MatchView {
   json(options?: unknown): JsonOffsetEntry[]
   values?(): ValuesView
+  clone(): MatchView
+  forEach(callback: (match: MatchView) => void): MatchView
 }
 
 export interface VerbView extends MatchView {
