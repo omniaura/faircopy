@@ -1477,3 +1477,26 @@ test('no-noun-strings still flags a noun string that follows a boundary', () => 
   assert.match(diagnostics[0].message, /"user experience design process"/)
   assert.deepEqual(diagnostics[0].range, { start: 13, end: 43 })
 })
+
+test('no-noun-strings does not count possessive pronouns as nouns', () => {
+  for (const text of [
+    'Reply and a person on our support team will answer.',
+    'Change the way your team works.',
+  ]) {
+    assert.deepEqual(run(noNounStrings, text), [], text)
+  }
+  const diagnostics = run(noNounStrings, 'Our customer data platform team ships weekly.')
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /"customer data platform team"/)
+  assert.deepEqual(diagnostics[0].range, { start: 4, end: 31 })
+})
+
+test('no-noun-strings does not join nouns across em dashes, en dashes or ellipses', () => {
+  for (const text of [
+    'We fixed the design — memory notes ship today.',
+    'We fixed the design – memory notes ship today.',
+    'We fixed the design… memory notes ship today.',
+  ]) {
+    assert.deepEqual(run(noNounStrings, text), [], text)
+  }
+})

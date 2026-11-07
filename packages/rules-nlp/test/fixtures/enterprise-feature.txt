@@ -1,0 +1,5 @@
+Enterprise-grade security, compliance and governance come standard on every plan.
+
+The implementation of role-based access control enables the optimization of permission management across large organizations. Administrators can configure single sign-on, audit logging and data retention policies from one console.
+
+Our customer data platform team works with your security review team before rollout. Utilize our robust, scalable infrastructure to leverage best-in-class performance at any scale.
