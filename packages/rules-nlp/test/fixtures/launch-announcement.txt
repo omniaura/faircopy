@@ -1,0 +1,5 @@
+Today we are thrilled to announce the launch of Atlas 2.0, a revolutionary new chapter for our customers.
+
+First and foremost, we want to thank each and every one of you for your feedback. In order to build the future of work, we basically rebuilt the product from the ground up.
+
+The new release was designed by our team to be faster, simpler and more reliable. It seems that customers will love the redesigned dashboard experience. Atlas 2.0 will soon support real-time sync, and it may dramatically reduce the time you spend on reporting.

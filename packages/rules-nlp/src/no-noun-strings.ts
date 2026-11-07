@@ -21,12 +21,17 @@ interface TermEntry {
   tags: string[]
 }
 
+// compromise tags possessive determiners as nouns ("our" is Noun+Possessive
+// without Pronoun), which turned "our support team" into a noun string.
+const POSSESSIVE_DETERMINERS = new Set(['my', 'your', 'his', 'her', 'its', 'our', 'their'])
+
 function isCountableNoun(entry: TermEntry): boolean {
-  return entry.tags.includes('Noun') && !entry.tags.includes('ProperNoun')
+  if (!entry.tags.includes('Noun') || entry.tags.includes('ProperNoun') || entry.tags.includes('Pronoun')) return false
+  return !POSSESSIVE_DETERMINERS.has(entry.text.toLowerCase())
 }
 
-/** Sentence terminators, clause punctuation and line breaks end a noun string. */
-const RUN_BOUNDARY = /[.!?,:;\n]/
+/** Sentence terminators, clause punctuation, dashes, ellipses and line breaks end a noun string. */
+const RUN_BOUNDARY = /[.!?,:;\n\u2013\u2014\u2026]/
 
 function normalizePhrase(phrase: string): string {
   return phrase.toLowerCase().replace(/\s+/g, ' ').trim()
