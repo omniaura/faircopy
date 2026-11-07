@@ -1453,3 +1453,27 @@ test('no-weak-verbs is case-insensitive', () => {
 test('ruleRegistry contains no-weak-verbs', () => {
   assert.ok(ruleRegistry.has('no-weak-verbs'))
 })
+
+test('no-noun-strings does not join nouns across sentence boundaries', () => {
+  const text = 'Writers draft memory notes. Editor teams review them.'
+  assert.deepEqual(run(noNounStrings, text), [])
+})
+
+test('no-noun-strings does not join nouns across commas, colons or semicolons', () => {
+  for (const text of [
+    'Our team ships weekly. On the other side, support agents answer mail.',
+    'We run a design token audit competition: submissions are open.',
+    'We ship the memory notes; support agents answer mail.',
+  ]) {
+    assert.deepEqual(run(noNounStrings, text), [], text)
+  }
+})
+
+test('no-noun-strings still flags a noun string that follows a boundary', () => {
+  const text = 'Ship it. The user experience design process is slow.'
+  const diagnostics = run(noNounStrings, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.match(diagnostics[0].message, /"user experience design process"/)
+  assert.deepEqual(diagnostics[0].range, { start: 13, end: 43 })
+})

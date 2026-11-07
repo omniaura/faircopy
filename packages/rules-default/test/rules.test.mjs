@@ -596,3 +596,13 @@ test('no-filler-words handles empty words option by falling back to defaults', (
 test('rule registry exposes the new no-filler-words rule', () => {
   assert.ok(ruleRegistry.has('no-filler-words'))
 })
+
+test('no-complex-sentences does not flag a grade that rounds to the limit', () => {
+  // Unrounded Flesch-Kincaid grade is just above 28, which prints as "28.0".
+  const text = 'Every before opens shared implementation development carefully requirements every before opens shared implementation development carefully.'
+
+  assert.deepEqual(run(noComplexSentences, text, { maxGradeLevel: 28 }), [])
+  const flagged = run(noComplexSentences, text, { maxGradeLevel: 27 })
+  assert.equal(flagged.length, 1)
+  assert.match(flagged[0].message, /grade 28\.0 — simplify to 27 or below/)
+})

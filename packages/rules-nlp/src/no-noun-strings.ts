@@ -25,6 +25,9 @@ function isCountableNoun(entry: TermEntry): boolean {
   return entry.tags.includes('Noun') && !entry.tags.includes('ProperNoun')
 }
 
+/** Sentence terminators, clause punctuation and line breaks end a noun string. */
+const RUN_BOUNDARY = /[.!?,:;\n]/
+
 function normalizePhrase(phrase: string): string {
   return phrase.toLowerCase().replace(/\s+/g, ' ').trim()
 }
@@ -91,7 +94,16 @@ export const noNounStrings: Rule<NoNounStringsOptions> = {
       })
     }
 
+    let previousEnd = 0
     for (const term of terms) {
+      if (runWords.length > 0 && RUN_BOUNDARY.test(text.slice(previousEnd, term.start))) {
+        flushRun()
+        runWords.length = 0
+        runStart = -1
+        runEnd = -1
+      }
+      previousEnd = term.end
+
       if (isCountableNoun(term)) {
         if (runWords.length === 0) {
           runStart = term.start
