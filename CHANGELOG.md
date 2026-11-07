@@ -1,3 +1,10 @@
+## [1.27.1](https://github.com/omniaura/faircopy/compare/v1.27.0...v1.27.1) (2026-11-07)
+
+
+### Bug Fixes
+
+* **rules-nlp:** count each no-n-things match on its own clone [DITTO-2120] ([#47](https://github.com/omniaura/faircopy/issues/47)) ([0d7e244](https://github.com/omniaura/faircopy/commit/0d7e244dc1b19f615023035ed5175e07b2c2b640))
+
 # [1.27.0](https://github.com/omniaura/faircopy/compare/v1.26.0...v1.27.0) (2026-11-03)
 
 

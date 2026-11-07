@@ -1,6 +1,6 @@
 {
   "name": "@faircopy/html",
-  "version": "1.27.0",
+  "version": "1.27.1",
   "description": "HTML prose adapter for faircopy with source maps",
   "type": "module",
   "exports": {
