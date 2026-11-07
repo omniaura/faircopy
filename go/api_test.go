@@ -12,7 +12,7 @@ import (
 // structured API (Lint, FormatFeedback, Summary) and requires the same
 // feedback, summary and counts the bundle produced.
 func TestLintMatchesReviews(t *testing.T) {
-	f, err := os.Open("testdata/golden.jsonl.gz")
+	f, err := os.Open(committedGolden)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -124,10 +124,24 @@ func TestLintMatchesReviews(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Logf("%d reviews rebuilt from Lint, %d limit errors matched", checked, limits)
-	if checked < minGoldenCalls-1000 {
-		t.Fatalf("only %d reviews checked", checked)
+	// Every successful review in the committed goldens, not a floor: a
+	// truncated but well-formed golden file must fail here.
+	if checked != goldenReviews || limits != goldenLimitErrors {
+		t.Fatalf("rebuilt %d reviews and %d limit errors; the committed goldens hold %d and %d", checked, limits, goldenReviews, goldenLimitErrors)
 	}
 	if _, err := Lint("x", "nope-v1"); err == nil {
 		t.Fatal("unknown profile accepted")
+	}
+}
+
+func TestSummaryRejectsUnknownContext(t *testing.T) {
+	if got := Summary(nil, "docs", "general-v1"); got != "" {
+		t.Fatalf("Summary for an unknown context = %q, want empty", got)
+	}
+	if got := Summary(nil, "general", "general-v1"); got != "No Fair Copy findings for general writing (general-v1)." {
+		t.Fatalf("Summary(general) = %q", got)
+	}
+	if got := Summary(nil, "custom", "mine"); got != "No Fair Copy findings for a custom profile (mine)." {
+		t.Fatalf("Summary(custom) = %q", got)
 	}
 }

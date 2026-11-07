@@ -98,8 +98,13 @@ func FormatFeedback(text string, fs []Finding) string {
 	return formatAgentCompact(text, ds)
 }
 
-// Summary is the review's one-sentence summary for a context and profile.
+// Summary is the review's one-sentence summary for a context ("general",
+// "chat", "email", or "custom" for a profile without one) and profile. It
+// returns "" for any other context.
 func Summary(fs []Finding, context, profileID string) string {
+	if context != "custom" && !isReviewContext(context) {
+		return ""
+	}
 	rules := map[string]bool{}
 	for _, f := range fs {
 		rules[f.RuleID] = true

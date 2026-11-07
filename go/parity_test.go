@@ -9,15 +9,25 @@ import (
 	"testing"
 )
 
-// minGoldenCalls is well under the 11,163 calls tools/goldens.mjs writes.
-const minGoldenCalls = 10000
+// What the committed testdata/golden.jsonl.gz holds. Regenerating it
+// changes these; the tests require them exactly so a truncated but
+// well-formed file cannot pass. A golden file passed in FAIRCOPY_GOLDEN (CI's
+// fresh regeneration) only has to clear minGoldenCalls.
+const committedGolden = "testdata/golden.jsonl.gz"
+
+const (
+	goldenCalls       = 11163
+	goldenReviews     = 11085
+	goldenLimitErrors = 15
+	minGoldenCalls    = 10000
+)
 
 // TestParity replays every request in testdata/golden.jsonl.gz (generated
 // from the @faircopy/chat bundle by tools/goldens.mjs) and requires the
 // exact same output bytes. FAIRCOPY_GOLDEN points it at another golden file;
 // CI uses that to check against goldens regenerated from a fresh build.
 func TestParity(t *testing.T) {
-	path := "testdata/golden.jsonl.gz"
+	path := committedGolden
 	if p := os.Getenv("FAIRCOPY_GOLDEN"); p != "" {
 		path = p
 	}
@@ -71,6 +81,9 @@ func TestParity(t *testing.T) {
 	}
 	t.Logf("%d calls, %d mismatches", calls, bad)
 	// A failed or truncated golden generation must not pass as "no mismatches".
+	if path == committedGolden && calls != goldenCalls {
+		t.Fatalf("%s holds %d calls; want exactly %d", path, calls, goldenCalls)
+	}
 	if calls < minGoldenCalls {
 		t.Fatalf("%s holds %d calls; want at least %d", path, calls, minGoldenCalls)
 	}

@@ -60,8 +60,9 @@ JavaScript semantics that the port reproduces explicitly:
 
 ## Parity
 
-`go test ./...` replays `testdata/golden.jsonl.gz` (and refuses one with fewer
-than 10,000 calls, so a failed generation cannot pass): 11,163 calls produced by
+`go test ./...` replays `testdata/golden.jsonl.gz` and requires its exact call
+and review counts, so a failed or truncated generation cannot pass (CI's fresh
+regeneration must clear 10,000 calls): 11,163 calls produced by
 the bundle over `testdata/corpus/*.txt` and the cases built into
 `tools/goldens.mjs` (every phrase under 25 transformations, rhetorical
 scaffolding edges, URLs and Markdown links, astral characters, case folding,
@@ -93,6 +94,9 @@ follows. Regenerate the committed goldens with:
 pnpm --filter @faircopy/chat build
 node go/tools/goldens.mjs packages/chat/dist/review.global.js go/testdata/corpus/*.txt | gzip -9 -n > go/testdata/golden.jsonl.gz
 ```
+
+then update `goldenCalls`, `goldenReviews` and `goldenLimitErrors` in
+`parity_test.go` to the counts the tests report.
 
 ## Benchmarks
 
