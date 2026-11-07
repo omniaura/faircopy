@@ -26,3 +26,20 @@ jobs:
       - run: pnpm typecheck
 
       - run: pnpm test
+
+      # The Go engine (go/) must return byte-identical output to the bundle
+      # this build just produced, so a rule or preset change in TypeScript
+      # fails here until the Go port follows.
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go/go.mod
+          cache-dependency-path: go/go.mod
+
+      - name: Go engine parity with the fresh bundle
+        working-directory: go
+        run: |
+          node tools/goldens.mjs ../packages/chat/dist/review.global.js testdata/corpus/*.txt | gzip -n > "$RUNNER_TEMP/golden.jsonl.gz"
+          test -z "$(gofmt -l .)"
+          go vet ./...
+          go test -count=1 ./...
+          FAIRCOPY_GOLDEN="$RUNNER_TEMP/golden.jsonl.gz" go test -count=1 -run TestParity -v .

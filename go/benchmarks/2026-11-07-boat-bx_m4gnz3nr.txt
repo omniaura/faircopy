@@ -1,0 +1,32 @@
+# go test -run XXX -bench . -benchmem -count 10 -benchtime 1s .
+# shared Boat builder bx_m4gnz3nr (4 vCPU), go1.23.4 linux/amd64, 2026-11-07 03:50-03:52 UTC, load average 2.5 -> 2.3
+BenchmarkReviewTextJSON/1KB-4         	    2844	    503783 ns/op	   80018 B/op	      74 allocs/op
+BenchmarkReviewTextJSON/1KB-4         	    2548	    411745 ns/op	   79587 B/op	      74 allocs/op
+BenchmarkReviewTextJSON/1KB-4         	    2877	    425148 ns/op	   79284 B/op	      74 allocs/op
+BenchmarkReviewTextJSON/1KB-4         	    2415	    538421 ns/op	   80438 B/op	      74 allocs/op
+BenchmarkReviewTextJSON/1KB-4         	    2029	    538685 ns/op	   80473 B/op	      74 allocs/op
+BenchmarkReviewTextJSON/1KB-4         	    2499	    472588 ns/op	   79561 B/op	      74 allocs/op
+BenchmarkReviewTextJSON/1KB-4         	    2190	    456921 ns/op	   79428 B/op	      74 allocs/op
+BenchmarkReviewTextJSON/1KB-4         	    2901	    462057 ns/op	   79615 B/op	      74 allocs/op
+BenchmarkReviewTextJSON/1KB-4         	    2606	    485921 ns/op	   79662 B/op	      74 allocs/op
+BenchmarkReviewTextJSON/1KB-4         	    2820	    467563 ns/op	   79754 B/op	      74 allocs/op
+BenchmarkReviewTextJSON/8KB-4         	     276	   4827314 ns/op	  667844 B/op	     157 allocs/op
+BenchmarkReviewTextJSON/8KB-4         	     210	   6515273 ns/op	  686121 B/op	     169 allocs/op
+BenchmarkReviewTextJSON/8KB-4         	     248	   4823264 ns/op	  666787 B/op	     158 allocs/op
+BenchmarkReviewTextJSON/8KB-4         	     279	   4842755 ns/op	  667462 B/op	     158 allocs/op
+BenchmarkReviewTextJSON/8KB-4         	     289	   3539161 ns/op	  659508 B/op	     153 allocs/op
+BenchmarkReviewTextJSON/8KB-4         	     328	   3512219 ns/op	  661630 B/op	     154 allocs/op
+BenchmarkReviewTextJSON/8KB-4         	     321	   3803584 ns/op	  663837 B/op	     156 allocs/op
+BenchmarkReviewTextJSON/8KB-4         	     319	   3528360 ns/op	  658429 B/op	     152 allocs/op
+BenchmarkReviewTextJSON/8KB-4         	     334	   3948105 ns/op	  662500 B/op	     155 allocs/op
+BenchmarkReviewTextJSON/8KB-4         	     336	   3602064 ns/op	  664813 B/op	     156 allocs/op
+BenchmarkReviewTextJSON/16KB-4        	     140	   8747002 ns/op	 1323737 B/op	     265 allocs/op
+BenchmarkReviewTextJSON/16KB-4        	     136	   8531612 ns/op	 1333495 B/op	     271 allocs/op
+BenchmarkReviewTextJSON/16KB-4        	     129	   9539584 ns/op	 1334334 B/op	     270 allocs/op
+BenchmarkReviewTextJSON/16KB-4        	     129	   8844106 ns/op	 1318449 B/op	     263 allocs/op
+BenchmarkReviewTextJSON/16KB-4        	     100	  10501731 ns/op	 1322575 B/op	     262 allocs/op
+BenchmarkReviewTextJSON/16KB-4        	     115	  10255028 ns/op	 1323932 B/op	     267 allocs/op
+BenchmarkReviewTextJSON/16KB-4        	     100	  10920779 ns/op	 1319354 B/op	     262 allocs/op
+BenchmarkReviewTextJSON/16KB-4        	     100	  11498937 ns/op	 1334763 B/op	     272 allocs/op
+BenchmarkReviewTextJSON/16KB-4        	     120	  10446368 ns/op	 1320355 B/op	     264 allocs/op
+BenchmarkReviewTextJSON/16KB-4        	     116	   9244432 ns/op	 1344505 B/op	     273 allocs/op
