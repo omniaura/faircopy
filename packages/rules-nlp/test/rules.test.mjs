@@ -266,6 +266,35 @@ test('no-n-things respects custom placeholder nouns', () => {
   assert.equal(text.slice(diagnostics[0].range.start, diagnostics[0].range.end), '5 tips')
 })
 
+test('no-n-things flags every repeat of the same phrase', () => {
+  const text = 'Three things matter. Three things broke. Three things shipped.'
+  const diagnostics = run(noNThings, text)
+
+  assert.deepEqual(diagnostics.map(diagnostic => diagnostic.range), [
+    { start: 0, end: 12 },
+    { start: 21, end: 33 },
+    { start: 41, end: 53 },
+  ])
+})
+
+test('no-n-things counts the value right before the noun in a list', () => {
+  const text = 'One, two, three things went wrong.'
+  const diagnostics = run(noNThings, text)
+
+  assert.equal(diagnostics.length, 1)
+  assert.equal(diagnostics[0].range.end, 22)
+  assert.ok(text.slice(diagnostics[0].range.start, diagnostics[0].range.end).endsWith('three things'))
+})
+
+test('no-n-things reads bracketed and quoted counts', () => {
+  const text = 'Read these (5) things first. Then the "7" things after.'
+  const diagnostics = run(noNThings, text)
+
+  assert.equal(diagnostics.length, 2)
+  assert.ok(text.slice(diagnostics[0].range.start, diagnostics[0].range.end).endsWith('5) things'))
+  assert.ok(text.slice(diagnostics[1].range.start, diagnostics[1].range.end).endsWith('7" things'))
+})
+
 test('no-n-things handles empty text', () => {
   const diagnostics = run(noNThings, '')
   assert.equal(diagnostics.length, 0)
